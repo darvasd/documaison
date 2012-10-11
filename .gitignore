@@ -4,3 +4,7 @@
 *.jar
 *.war
 *.ear
+
+hu.documaison.gui/.project/*
+
+.metadata/*
