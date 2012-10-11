@@ -15,6 +15,12 @@ public class Metadata extends DatabaseObject {
 	{
 		// ORMLite needs a no-arg constructor 
 	}
+	
+	public Metadata(String name, String value)
+	{
+		setName(name);
+		setValue(value);
+	}
 
 	/**
 	 * @return the name
@@ -42,5 +48,13 @@ public class Metadata extends DatabaseObject {
 	 */
 	public void setValue(String value) {
 		this.value = value;
+	}
+	
+	public Metadata createCopy()
+	{
+		Metadata ret = new Metadata();
+		ret.name = this.name;
+		ret.value = this.value;
+		return ret;
 	}
 }

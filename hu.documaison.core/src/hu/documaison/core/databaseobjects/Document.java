@@ -10,6 +10,8 @@ import com.j256.ormlite.table.DatabaseTable;
 
 @DatabaseTable(tableName = "Documents")
 public class Document extends DatabaseObject {
+	public static final String TAGS = "tags";
+
 	@DatabaseField(canBeNull = false)
 	private String location;
 	
@@ -23,7 +25,7 @@ public class Document extends DatabaseObject {
 	@DatabaseField(dataType = DataType.BYTE_ARRAY)
 	private byte[] thumbnailBytes;
 
-	@ForeignCollectionField(eager = true)
+	@ForeignCollectionField(eager = true, columnName = TAGS)
 	ForeignCollection<Tag> tags;
 	
 	@ForeignCollectionField(eager = true)

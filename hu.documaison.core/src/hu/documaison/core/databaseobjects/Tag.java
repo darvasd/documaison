@@ -5,25 +5,25 @@ import com.j256.ormlite.table.DatabaseTable;
 
 @DatabaseTable(tableName = "Tags")
 public class Tag {
+	public static final String NAME = "name";
+
 	@DatabaseField(allowGeneratedIdInsert = true, generatedId = true)
 	private int id;
-	
-	@DatabaseField
+
+	@DatabaseField(columnName = NAME, unique = true)
 	private String name;
-	
+
 	@DatabaseField
 	private String colorName;
-	
+
 	@DatabaseField
 	private boolean hidden;
-	
-	public Tag()
-	{
-		// ORMLite needs a no-arg constructor 
+
+	public Tag() {
+		// ORMLite needs a no-arg constructor
 	}
-	
-	public Tag(String name)
-	{
+
+	public Tag(String name) {
 		this.name = name;
 		this.colorName = "red";
 		this.hidden = false;
@@ -37,7 +37,8 @@ public class Tag {
 	}
 
 	/**
-	 * @param id the id to set
+	 * @param id
+	 *            the id to set
 	 */
 	public void setId(int id) {
 		this.id = id;
@@ -51,7 +52,8 @@ public class Tag {
 	}
 
 	/**
-	 * @param name the name to set
+	 * @param name
+	 *            the name to set
 	 */
 	public void setName(String name) {
 		this.name = name;
@@ -65,7 +67,8 @@ public class Tag {
 	}
 
 	/**
-	 * @param colorName the colorName to set
+	 * @param colorName
+	 *            the colorName to set
 	 */
 	public void setColorName(String colorName) {
 		this.colorName = colorName;
@@ -79,10 +82,11 @@ public class Tag {
 	}
 
 	/**
-	 * @param hidden the hidden to set
+	 * @param hidden
+	 *            the hidden to set
 	 */
 	public void setHidden(boolean hidden) {
 		this.hidden = hidden;
 	}
-	
+
 }

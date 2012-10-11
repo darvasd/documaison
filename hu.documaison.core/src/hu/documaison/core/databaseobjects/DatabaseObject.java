@@ -3,7 +3,9 @@ package hu.documaison.core.databaseobjects;
 import com.j256.ormlite.field.DatabaseField;
 
 public abstract class DatabaseObject {
-	@DatabaseField(generatedId = true, allowGeneratedIdInsert = true)
+	public static final String ID = "id";
+	
+	@DatabaseField(generatedId = true, allowGeneratedIdInsert = true, columnName=ID)
 	private int id;
 
 	/**
@@ -16,7 +18,7 @@ public abstract class DatabaseObject {
 	/**
 	 * @param id the id to set
 	 */
-	public void setId(int id) {
+	private void setId(int id) {
 		this.id = id;
 	}
 }
