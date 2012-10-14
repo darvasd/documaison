@@ -32,6 +32,7 @@ public class DatabaseUtils {
 			TableUtils.createTable(connectionSource, Tag.class);
 			TableUtils.createTable(connectionSource, Comment.class);
 			TableUtils.createTable(connectionSource, Metadata.class);
+			TableUtils.createTable(connectionSource, DefaultMetadata.class);
 			TableUtils.createTable(connectionSource, DocumentType.class);
 			TableUtils.createTable(connectionSource, Document.class);
 		} finally {
@@ -44,6 +45,7 @@ public class DatabaseUtils {
 		tryCreateTable(Tag.class);
 		tryCreateTable(Comment.class);
 		tryCreateTable(Metadata.class);
+		tryCreateTable(DefaultMetadata.class);
 		tryCreateTable(DocumentType.class);
 		tryCreateTable(Document.class);
 	}

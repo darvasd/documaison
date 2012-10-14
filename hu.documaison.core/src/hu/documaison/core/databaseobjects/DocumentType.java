@@ -8,18 +8,18 @@ import com.j256.ormlite.table.DatabaseTable;
 
 @DatabaseTable(tableName = "DocumentTypes")
 public class DocumentType extends DatabaseObject {
-	@DatabaseField(canBeNull = false)
+	@DatabaseField
 	private String typeName;
-	
+
 	@DatabaseField
 	private String defaultExt;
-	
+
 	@DatabaseField(dataType = DataType.BYTE_ARRAY)
 	private byte[] defaultThumbnailBytes;
-	
-	@ForeignCollectionField(eager = true)
-	private ForeignCollection<Metadata> defaultMetadataCollection; 
-	
+
+	@ForeignCollectionField(eager = true, foreignFieldName = DefaultMetadata.PARENT)
+	private ForeignCollection<DefaultMetadata> defaultMetadataCollection; 
+
 	public DocumentType()
 	{
 		// ORMLite needs a no-arg constructor 
@@ -70,21 +70,21 @@ public class DocumentType extends DatabaseObject {
 	/**
 	 * @return the defaultMetadataCollection
 	 */
-	public ForeignCollection<Metadata> getDefaultMetadataCollection() {
+	public ForeignCollection<DefaultMetadata> getDefaultMetadataCollection() {
 		return defaultMetadataCollection;
 	}
-	
+
 	/**
 	 * @param metadata the metadata to add to defaults
 	 */
-	public void addMetadata(Metadata metadata) {
+	public void addMetadata(DefaultMetadata metadata) {
 		this.defaultMetadataCollection.add(metadata);
 	}
-	
+
 	/**
 	 * @param metadata the metadata to remove from defaults
 	 */
-	public void removeMetadata(Metadata metadata) {
+	public void removeMetadata(DefaultMetadata metadata) {
 		this.defaultMetadataCollection.remove(metadata);
 	}
 }

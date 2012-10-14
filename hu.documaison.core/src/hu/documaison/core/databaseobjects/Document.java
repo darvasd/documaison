@@ -14,26 +14,26 @@ public class Document extends DatabaseObject {
 
 	@DatabaseField(canBeNull = false)
 	private String location;
-	
+
 	@DatabaseField(foreign = true)
 	private DocumentType type;
-	
+
 	@DatabaseField
 	private Date dateAdded;
-	
+
 	//@DatabaseField(dataType = DataType.SERIALIZABLE)
 	@DatabaseField(dataType = DataType.BYTE_ARRAY)
 	private byte[] thumbnailBytes;
 
 	@ForeignCollectionField(eager = true, columnName = TAGS)
 	ForeignCollection<Tag> tags;
-	
+
 	@ForeignCollectionField(eager = true)
 	private ForeignCollection<Metadata> metadataCollection; 
-	
+
 	@ForeignCollectionField(eager = true)
 	private ForeignCollection<Comment> commentCollection; 
-	
+
 	public Document()
 	{
 		// ORMLite needs a no-arg constructor 
@@ -44,7 +44,7 @@ public class Document extends DatabaseObject {
 		this.type = type;
 		// TODO copy default metadata
 	}
-	
+
 	/**
 	 * @return the location
 	 */
@@ -114,7 +114,7 @@ public class Document extends DatabaseObject {
 	public void addTag(Tag tag) {
 		this.tags.add(tag);
 	}
-	
+
 	/**
 	 * @param tag the tag to remove 
 	 */
@@ -135,14 +135,14 @@ public class Document extends DatabaseObject {
 	public void addMetadata(Metadata metadata) {
 		this.metadataCollection.add(metadata);
 	}
-	
+
 	/**
 	 * @param metadata the metadata to remove
 	 */
 	public void removeMetadata(Metadata metadata) {
 		this.metadataCollection.remove(metadata);
 	}
-	
+
 	/**
 	 * @return the commentCollection
 	 */
@@ -156,7 +156,7 @@ public class Document extends DatabaseObject {
 	public void addComment(Comment comment) {
 		this.commentCollection.add(comment);
 	}
-	
+
 	/**
 	 * @param comment the comment to remove
 	 */

@@ -5,6 +5,7 @@ import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
 
 import hu.documaison.core.database.DatabaseUtils;
+import hu.documaison.core.databaseobjects.DefaultMetadata;
 import hu.documaison.core.databaseobjects.DocumentType;
 import hu.documaison.core.databaseobjects.Metadata;
 import hu.documaison.core.databaseobjects.Tag;
@@ -19,7 +20,7 @@ public class Main {
 		// TEST METHOD!!!
 //		
 //		System.out.println("Hello world, this is DocuMaison.");
-//		DatabaseUtils.createTablesBestEffort();
+		DatabaseUtils.createTablesBestEffort();
 //		
 //		Tag t1 = new Tag("BME");
 //		t1.setColorName("blue");
@@ -57,7 +58,8 @@ public class Main {
 		
 		DocumentType dt = ci.createDocumentType(); //new DocumentType();
 		dt.setTypeName("publikáció");
-		dt.addMetadata(new Metadata("konferencia","SPLST"));
+		
+		dt.addMetadata(new DefaultMetadata("konferencia","SPLST"));
 		ci.addDocumentType(dt);
 	}
 

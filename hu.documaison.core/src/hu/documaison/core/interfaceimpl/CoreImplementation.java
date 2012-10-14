@@ -149,9 +149,9 @@ public class CoreImplementation implements CoreInterface {
 
 			// add
 			Document newDocument = new Document(documentType);
-			for (Metadata md :  documentType.getDefaultMetadataCollection())
+			for (DefaultMetadata md : documentType.getDefaultMetadataCollection())
 			{
-				newDocument.addMetadata(md.createCopy());
+				newDocument.addMetadata(md.createMetadata());
 			}
 			newDocument.setThumbnailBytes(documentType.getDefaultThumbnailBytes().clone());
 			newDocument.setDateAdded(new Date());
