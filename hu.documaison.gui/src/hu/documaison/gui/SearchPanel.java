@@ -1,6 +1,8 @@
 package hu.documaison.gui;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
@@ -29,6 +31,14 @@ public class SearchPanel extends Composite {
 		
 		advancedSearch.setLayoutData(data);
 		advancedSearch.setText("Advanced search");
+		advancedSearch.addSelectionListener(new SelectionAdapter() {
+
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				ViewManager.getDefault().showView("advancedSearch");
+			}
+			
+		});
 		
 		Button newDocument = new Button(this, SWT.PUSH);
 		data = new FormData();

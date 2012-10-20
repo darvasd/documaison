@@ -8,3 +8,5 @@
 hu.documaison.gui/.project/*
 
 .metadata/*
+
+hu.documaison.gui/settings.xml

@@ -11,19 +11,22 @@ import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 
-public class TagItem extends GradientComposite implements MouseListener {
+public class TagItem extends Composite implements MouseListener {
 	
 	private boolean selected = false;
-	private Color gradientStart = new Color(null, 122, 186, 225);
-	private Color gradientEnd = new Color(null, 56, 125, 197);
 	private Color white = new Color(null, 255, 255, 255);
 	private Color black = new Color(null, 0, 0, 0);
-	private Color background = new Color(null, 228, 232, 237);
+	private Color selectionBackground = new Color(null, 43, 89, 190);
 	private Image image = new Image(getDisplay(), "images/tagIcon.png");
 	private Label textLabel;
+	private TagPanel parentTagPanel;
+	private int index;
+	
 
-	public TagItem(Composite parent, int style, String tagName) {
+	public TagItem(Composite parent, int style, int index, String tagName, TagPanel parentTagPanel) {
 		super(parent, style);
+		this.index = index;
+		this.parentTagPanel = parentTagPanel;
 		FormLayout layout = new FormLayout();
 		setLayout(layout);
 		Label imageLabel = new Label(this, SWT.None);
@@ -38,8 +41,7 @@ public class TagItem extends GradientComposite implements MouseListener {
 		data.top = new FormAttachment(imageLabel, 0, SWT.CENTER);
 		data.right = new FormAttachment(100, 0);
 		textLabel.setLayoutData(data);
-		setDefaultBackground(background);
-		
+
 		imageLabel.addMouseListener(this);
 		textLabel.addMouseListener(this);
 		addMouseListener(this);
@@ -48,17 +50,16 @@ public class TagItem extends GradientComposite implements MouseListener {
 
 	
 	public void setSelected(boolean value) {
-		if (selected) {
-			setGradientEnabled(false);
-			textLabel.setForeground(black);
-		} else {
-			setGradientEnabled(true);
-			setGradientStart(gradientStart);
-			setGradientEnd(gradientEnd);
-			textLabel.setForeground(white);
-		}
 		selected = value;
-		redrawComposite();
+		if (selected) {
+			setBackground(selectionBackground);
+			textLabel.setForeground(white);
+			parentTagPanel.addToSelection(this);
+		} else {
+			setBackground(null);
+			textLabel.setForeground(black);
+			parentTagPanel.removeFromSelection(this);
+		}
 	}
 
 	@Override
@@ -66,16 +67,27 @@ public class TagItem extends GradientComposite implements MouseListener {
 	}
 
 	@Override
-	public void mouseDown(MouseEvent arg0) {
-		if (selected == true) {
-			setSelected(false);
+	public void mouseDown(MouseEvent e) {
+		if (((e.stateMask & SWT.CTRL) == SWT.CTRL) || ((e.stateMask & SWT.COMMAND) == SWT.COMMAND)) {
+			setSelected(!selected);
+		} else if ((e.stateMask & SWT.SHIFT) == SWT.SHIFT) {
+			parentTagPanel.multipleSelection(this);
 		} else {
-			setSelected(true);
-		}		
+			if (parentTagPanel.isSelectionEmpty()) {
+				setSelected(!selected);
+			} else {
+				parentTagPanel.clearSelection();
+				setSelected(!selected);
+			}
+		}
 	}
 
 	@Override
 	public void mouseUp(MouseEvent arg0) {
+	}
+	
+	public int getIndex() {
+		return index;
 	}
 	
 	
