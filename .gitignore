@@ -10,3 +10,7 @@ hu.documaison.gui/.project/*
 .metadata/*
 
 hu.documaison.gui/settings.xml
+
+!hu.documaison.settings/jaxb-api.jar
+
+!hu.documaison.settings/jaxb-impl.jar
