@@ -2,7 +2,9 @@ package hu.documaison.dal;
 
 import hu.documaison.dal.database.DatabaseUtils;
 import hu.documaison.data.entities.*;
-import hu.documaison.dal.interfaceimpl.CoreImplementation;
+import hu.documaison.dal.interfaces.DalImplementation;
+import hu.documaison.dal.interfaces.DalInterface;
+import hu.documaison.dal.interfaces.DalSingletonProvider;
 
 public class Main {
 
@@ -47,7 +49,7 @@ public class Main {
 		
 		
 		////
-		CoreImplementation ci = new CoreImplementation();
+		DalInterface ci = DalSingletonProvider.getDalImplementation();
 		
 		DocumentType dt = ci.createDocumentType(); //new DocumentType();
 		dt.setTypeName("publikáció");

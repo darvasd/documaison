@@ -4,7 +4,7 @@ import hu.documaison.data.entities.*;
 
 import java.util.Collection;
 
-public interface CoreInterface {
+public interface DalInterface {
 	// document
 	public Collection<Document> getDocuments();
 	public Collection<Document> getDocuments(Tag tag);

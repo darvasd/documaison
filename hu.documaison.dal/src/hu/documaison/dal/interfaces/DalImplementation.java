@@ -1,11 +1,10 @@
 /**
  * 
  */
-package hu.documaison.dal.interfaceimpl;
+package hu.documaison.dal.interfaces;
 
 import hu.documaison.dal.database.DatabaseUtils;
 import hu.documaison.data.entities.*;
-import hu.documaison.dal.interfaces.CoreInterface;
 
 import java.sql.SQLException;
 import java.util.Collection;
@@ -21,7 +20,7 @@ import com.j256.ormlite.support.ConnectionSource;
  * @author Dani
  * 
  */
-public class CoreImplementation implements CoreInterface {
+class DalImplementation implements DalInterface {
 
 	private <T extends DatabaseObject> T genericCreate(Class<T> c, String info) {
 		// create a connection source to our database
