@@ -147,7 +147,7 @@ public class Document extends DatabaseObject {
 	 * @param metadata
 	 *            the metadata to remove
 	 */
-	public void removeMetadata(Metadata metadata) {
+	public void removeMetadata(AbstractMetadata metadata) {
 		this.metadataCollection.remove(metadata);
 	}
 

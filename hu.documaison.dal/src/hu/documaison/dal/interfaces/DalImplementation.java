@@ -887,32 +887,32 @@ class DalImplementation implements DalInterface {
 					}
 				}
 
-				qbMD.where().eq(Metadata.NAME, expr.getMetadataName());
+				qbMD.where().eq(AbstractMetadata.NAME, expr.getMetadataName());
 				switch (expr.getOperator()) {
 				case eq:
-					where.and().eq(Metadata.VALUE, expr.getValue());
+					where.and().eq(AbstractMetadata.VALUE, expr.getValue());
 					break;
 				case ge:
-					where.and().ge(Metadata.VALUE, expr.getValue());
+					where.and().ge(AbstractMetadata.VALUE, expr.getValue());
 					break;
 				case gt:
-					where.and().gt(Metadata.VALUE, expr.getValue());
+					where.and().gt(AbstractMetadata.VALUE, expr.getValue());
 					break;
 				case contains:
-					where.and().like(Metadata.VALUE,
+					where.and().like(AbstractMetadata.VALUE,
 							"%" + expr.getValue() + "%");
 					break;
 				case le:
-					where.and().le(Metadata.VALUE, expr.getValue());
+					where.and().le(AbstractMetadata.VALUE, expr.getValue());
 					break;
 				case like:
-					where.and().like(Metadata.VALUE, expr.getValue());
+					where.and().like(AbstractMetadata.VALUE, expr.getValue());
 					break;
 				case lt:
-					where.and().lt(Metadata.VALUE, expr.getValue());
+					where.and().lt(AbstractMetadata.VALUE, expr.getValue());
 					break;
 				case neq:
-					where.and().ne(Metadata.VALUE, expr.getValue());
+					where.and().ne(AbstractMetadata.VALUE, expr.getValue());
 					break;
 				default:
 					
