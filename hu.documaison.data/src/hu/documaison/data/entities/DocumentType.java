@@ -1,5 +1,8 @@
 package hu.documaison.data.entities;
 
+import java.sql.SQLException;
+
+import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
@@ -8,6 +11,8 @@ import com.j256.ormlite.table.DatabaseTable;
 
 @DatabaseTable(tableName = "DocumentTypes")
 public class DocumentType extends DatabaseObject {
+	public static final String METADATA = "metadata";
+	
 	@DatabaseField
 	private String typeName;
 
@@ -17,12 +22,17 @@ public class DocumentType extends DatabaseObject {
 	@DatabaseField(dataType = DataType.BYTE_ARRAY)
 	private byte[] defaultThumbnailBytes;
 
-	@ForeignCollectionField(eager = true, foreignFieldName = DefaultMetadata.PARENT)
+	@ForeignCollectionField(eager = true, foreignFieldName = DefaultMetadata.PARENT, columnName = METADATA)
 	private ForeignCollection<DefaultMetadata> defaultMetadataCollection; 
 
 	public DocumentType()
 	{
 		// ORMLite needs a no-arg constructor 
+	}
+	
+	public DocumentType(Dao<DocumentType, Integer> dao) throws SQLException
+	{
+		this.defaultMetadataCollection = dao.getEmptyForeignCollection(METADATA);
 	}
 
 	/**

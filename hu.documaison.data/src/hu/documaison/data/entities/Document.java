@@ -1,7 +1,9 @@
 package hu.documaison.data.entities;
 
+import java.sql.SQLException;
 import java.util.Date;
 
+import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
@@ -11,7 +13,9 @@ import com.j256.ormlite.table.DatabaseTable;
 @DatabaseTable(tableName = "Documents")
 public class Document extends DatabaseObject {
 	public static final String TAGS = "tags";
-
+	public static final String METADATA = "metadata";
+	public static final String COMMENTS = "comments";
+	
 	@DatabaseField(canBeNull = false)
 	private String location;
 
@@ -26,12 +30,12 @@ public class Document extends DatabaseObject {
 	private byte[] thumbnailBytes;
 
 	@ForeignCollectionField(eager = true, columnName = TAGS)
-	ForeignCollection<Tag> tags;
+	private ForeignCollection<Tag> tags;
 
-	@ForeignCollectionField(eager = true)
+	@ForeignCollectionField(eager = true, columnName = METADATA)
 	private ForeignCollection<Metadata> metadataCollection; 
 
-	@ForeignCollectionField(eager = true)
+	@ForeignCollectionField(eager = true, columnName = COMMENTS)
 	private ForeignCollection<Comment> commentCollection; 
 
 	public Document()
@@ -39,9 +43,13 @@ public class Document extends DatabaseObject {
 		// ORMLite needs a no-arg constructor 
 	}
 
-	public Document(DocumentType type)
+	public Document(DocumentType type, Dao<Document, Integer> dao) throws SQLException
 	{
 		this.type = type;
+		dao.getEmptyForeignCollection(TAGS);
+		dao.getEmptyForeignCollection(METADATA);
+		dao.getEmptyForeignCollection(COMMENTS);
+		
 		// TODO copy default metadata
 	}
 

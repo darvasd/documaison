@@ -5,32 +5,42 @@ import hu.documaison.data.entities.*;
 import java.util.Collection;
 
 public interface CoreInterface {
-	// documents
+	// document
 	public Collection<Document> getDocuments();
 	public Collection<Document> getDocuments(Tag tag);
 	public Document getDocument(int id);
 	public Document createDocument(int typeId);
-	public void addDocument(Document document);
 	public void removeDocument(int id);
 	public void updateDocument(Document document);
 	
-	// tags
-	public void addTag(Tag tag);
+	// tag
+	public Tag createTag();
 	public void updateTag(Tag tag);
 	public Collection<Tag> getTags();
 	public Tag getTag(int id);
 	public Tag getTag(String name);
 	public void removeTag(int id);
 	
-	// documentTypes
-	public void addDocumentType(DocumentType documentType);
+	// documentType
 	public DocumentType createDocumentType();
 	public void removeDocumentType(int id);
 	public void updateDocumentType(DocumentType documentType);
 	public Collection<DocumentType> getDocumentTypes();
 	public DocumentType getDocumentType(int id);
 	
-	// comments are accessible from documents
-	// metadata is accessible from documents or documenttypes
-	// 
+	
+	// metadata
+	public Metadata createMetadata();
+	public void updateMetadata(Metadata metadata);
+	public void removeMetadata(int id);
+	
+	// default metadata
+	public DefaultMetadata createDefaultMetadata();
+	public void updateDefaultMetadata(DefaultMetadata metadata);
+	public void removeDefaultMetadata(int id);
+	
+	// comment
+	public Comment createComment();
+	public void updateComment(Comment comment);
+	public void removeComment(int id);
 }

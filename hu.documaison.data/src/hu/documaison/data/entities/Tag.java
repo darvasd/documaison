@@ -4,11 +4,8 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
 @DatabaseTable(tableName = "Tags")
-public class Tag {
+public class Tag extends DatabaseObject {
 	public static final String NAME = "name";
-
-	@DatabaseField(allowGeneratedIdInsert = true, generatedId = true)
-	private int id;
 
 	@DatabaseField(columnName = NAME, unique = true)
 	private String name;
@@ -27,21 +24,6 @@ public class Tag {
 		this.name = name;
 		this.colorName = "red";
 		this.hidden = false;
-	}
-
-	/**
-	 * @return the id
-	 */
-	public int getId() {
-		return id;
-	}
-
-	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public void setId(int id) {
-		this.id = id;
 	}
 
 	/**

@@ -53,7 +53,7 @@ public class Main {
 		dt.setTypeName("publikáció");
 		
 		dt.addMetadata(new DefaultMetadata("konferencia","SPLST"));
-		ci.addDocumentType(dt);
+		ci.updateDocumentType(dt);
 	}
 
 }
