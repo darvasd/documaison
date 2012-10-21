@@ -4,6 +4,7 @@ import java.util.Collection;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.widgets.Button;
@@ -114,6 +115,8 @@ public class DocTypeEditor extends InnerPanel {
 		for (DocumentType d : docTypes) {
 			TreeItem item = new TreeItem(tree, SWT.None);
 			item.setText(d.getTypeName());
+			item.setImage(new Image(null, "images/document.png"));
+			item.setItemCount(5);
 		}
 	}
 
