@@ -16,6 +16,7 @@ import java.util.List;
 
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
+import com.j256.ormlite.stmt.DeleteBuilder;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.stmt.Where;
 import com.j256.ormlite.support.ConnectionSource;
@@ -915,14 +916,15 @@ class DalImplementation implements DalInterface {
 					where.and().ne(AbstractMetadata.VALUE, expr.getValue());
 					break;
 				default:
-					
+
 					break;
 				}
 
 				notFirst = true;
 			}
 
-			System.out.println("Search for: " + where.getStatement()); //TODO: delete
+			System.out.println("Search for: " + where.getStatement()); // TODO:
+																		// delete
 			List<Document> ret = dao.query(qb.prepare());
 
 			// return
@@ -941,5 +943,47 @@ class DalImplementation implements DalInterface {
 		}
 
 		return null;
+	}
+
+	@Override
+	public void addTagToDocument(Tag tag, Document document) {
+		DocumentTagConnection dtc = genericCreate(DocumentTagConnection.class,
+				"addTagToDocument");
+		dtc.setDocument(document);
+		dtc.setTag(tag);
+		genericUpdate(dtc, DocumentTagConnection.class, "addTagToDocument");
+	}
+
+	@Override
+	public void removeTagFromDocument(Tag tag, Document document) {
+		// create a connection source to our database
+		ConnectionSource connectionSource = null;
+
+		try {
+			// create connection
+			connectionSource = DatabaseUtils.getConnectionSource();
+
+			// instantiate the dao
+			Dao<DocumentTagConnection, Integer> dao = DaoManager.createDao(
+					connectionSource, DocumentTagConnection.class);
+
+			// query
+			DeleteBuilder<DocumentTagConnection, Integer> db = dao
+					.deleteBuilder();
+			db.where().eq(DocumentTagConnection.DOCUMENTID, document.getId())
+					.and().eq(DocumentTagConnection.TAGID, tag.getId());
+			dao.delete(db.prepare());
+		} catch (SQLException e) {
+			HandleSQLException(e, "removeTagFromDocument");
+		} finally {
+			// close connection
+			if (connectionSource != null) {
+				try {
+					connectionSource.close();
+				} catch (SQLException e) {
+					HandleSQLException(e, "removeTagFromDocument");
+				}
+			}
+		}
 	}
 }

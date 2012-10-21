@@ -22,6 +22,9 @@ public interface DalInterface {
 	public Tag getTag(String name);
 	public void removeTag(int id);
 	
+	public void addTagToDocument(Tag tag, Document document);
+	public void removeTagFromDocument(Tag tag, Document document);
+	
 	// documentType
 	public DocumentType createDocumentType();
 	public void removeDocumentType(int id);

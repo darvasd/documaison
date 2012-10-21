@@ -19,6 +19,14 @@ public class Comment extends DatabaseObject {
 	@DatabaseField(canBeNull = true, foreign = true, columnName = PARENT)
 	protected Document parent;
 	
+	public Document getParent() {
+		return parent;
+	}
+
+	public void setParent(Document parent) {
+		this.parent = parent;
+	}
+
 	public Comment()
 	{
 		// ORMLite needs a no-arg constructor 
