@@ -89,6 +89,7 @@ public class DocumentType extends DatabaseObject {
 	 */
 	public void addMetadata(DefaultMetadata metadata) {
 		this.defaultMetadataCollection.add(metadata);
+		//metadata.setParent(this);
 	}
 
 	/**

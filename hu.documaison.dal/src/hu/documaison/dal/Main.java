@@ -2,7 +2,6 @@ package hu.documaison.dal;
 
 import hu.documaison.dal.database.DatabaseUtils;
 import hu.documaison.data.entities.*;
-import hu.documaison.dal.interfaces.DalImplementation;
 import hu.documaison.dal.interfaces.DalInterface;
 import hu.documaison.dal.interfaces.DalSingletonProvider;
 
@@ -52,10 +51,43 @@ public class Main {
 		DalInterface ci = DalSingletonProvider.getDalImplementation();
 		
 		DocumentType dt = ci.createDocumentType(); //new DocumentType();
-		dt.setTypeName("publikáció");
+		dt.setTypeName("publication");
 		
-		dt.addMetadata(new DefaultMetadata("konferencia","SPLST"));
-		ci.updateDocumentType(dt);
+		// version1
+		DefaultMetadata dmd = ci.createDefaultMetadata();
+		dmd.setName("conference");
+		dmd.setValue("SPLST");
+		dmd.setParent(dt);
+		ci.updateDefaultMetadata(dmd);
+		
+		// version2
+		DefaultMetadata dmd2 = new DefaultMetadata();
+		dmd2.setName("year");
+		dmd2.setValue("2011");
+		dmd2.setParent(dt);
+		dt.addMetadata(dmd2);
+
+		// delete_test
+		DefaultMetadata dmd3 = ci.createDefaultMetadata();
+		dmd3.setName("TOBEDELETED");
+		dmd3.setValue("xxx");
+		dmd3.setParent(dt);
+		ci.updateDefaultMetadata(dmd3);
+		
+		// and now delete the last md
+		ci.removeDefaultMetadata(dmd3.getId());
+		
+		// list things
+		System.out.println("Listing things");
+		for (DocumentType dt1 : ci.getDocumentTypes())
+		{
+			System.out.println("Documenttype: " + dt1.getId() + "   " + dt1.getTypeName());
+			for (DefaultMetadata m : dt1.getDefaultMetadataCollection())
+			{
+				System.out.println("  "+m.getName() + " = " + m.getValue());
+			}
+		}
+		
 	}
 
 }

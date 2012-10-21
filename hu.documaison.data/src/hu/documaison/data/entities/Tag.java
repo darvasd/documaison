@@ -6,6 +6,7 @@ import com.j256.ormlite.table.DatabaseTable;
 @DatabaseTable(tableName = "Tags")
 public class Tag extends DatabaseObject {
 	public static final String NAME = "name";
+	public static final String PARENT = "parent";
 
 	@DatabaseField(columnName = NAME, unique = true)
 	private String name;
@@ -15,6 +16,9 @@ public class Tag extends DatabaseObject {
 
 	@DatabaseField
 	private boolean hidden;
+	
+	@DatabaseField(canBeNull = true, foreign = true, columnName = PARENT)
+	protected Document parent;
 
 	public Tag() {
 		// ORMLite needs a no-arg constructor

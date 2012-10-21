@@ -239,7 +239,7 @@ class DalImplementation implements DalInterface {
 					connectionSource, DocumentType.class);
 
 			// add
-			DocumentType documentType = new DocumentType();
+			DocumentType documentType = new DocumentType(dao);
 			dao.create(documentType);
 			return documentType;
 

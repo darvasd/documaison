@@ -8,7 +8,7 @@ public class DefaultMetadata extends DatabaseObject {
 	public static final String PARENT = "parent";
 	// ugly duplication but OrmLite doesn't really support inheritance
 
-	@DatabaseField(canBeNull = false)
+	@DatabaseField(canBeNull = true)
 	protected String name;
 
 	@DatabaseField(canBeNull = true)
@@ -21,10 +21,10 @@ public class DefaultMetadata extends DatabaseObject {
 		// ORMLite needs a no-arg constructor
 	}
 
-	public DefaultMetadata(String name, String value) {
-		setName(name);
-		setValue(value);
-	}
+//	public DefaultMetadata(String name, String value) {
+//		setName(name);
+//		setValue(value);
+//	}
 
 	/**
 	 * @return the name

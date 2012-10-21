@@ -7,11 +7,17 @@ import com.j256.ormlite.table.DatabaseTable;
 
 @DatabaseTable(tableName="Comments")
 public class Comment extends DatabaseObject {
+	public static final String PARENT = "parent";
+	
+	
 	@DatabaseField
 	private String message;
 	
 	@DatabaseField
 	private Date createdDate;
+	
+	@DatabaseField(canBeNull = true, foreign = true, columnName = PARENT)
+	protected Document parent;
 	
 	public Comment()
 	{
