@@ -3,6 +3,7 @@ package hu.documaison.data.entities;
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
+import com.sun.xml.internal.bind.v2.runtime.reflect.Accessor.SetterOnlyReflection;
 
 @DatabaseTable(tableName = "Metadata")
 public class Metadata extends DatabaseObject {
@@ -27,9 +28,9 @@ public class Metadata extends DatabaseObject {
 		// ORMLite needs a no-arg constructor
 	}
 
-	public Metadata(String name, String value) {
-		setName(name);
-		setValue(value);
+	public Metadata(MetadataType type, Document parent) {
+		setMetadataType(type);
+		setParent(parent);
 	}
 
 	public MetadataType getMetadataType() {

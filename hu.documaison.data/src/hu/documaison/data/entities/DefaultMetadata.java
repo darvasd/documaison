@@ -24,6 +24,11 @@ public class DefaultMetadata extends DatabaseObject {
 	public DefaultMetadata() {
 		// ORMLite needs a no-arg constructor
 	}
+	
+	public DefaultMetadata(MetadataType type, DocumentType parent) {
+		setMetadataType(type);
+		setParent(parent);
+	}
 
 	public Metadata createMetadata() {
 		Metadata ret = new Metadata();
