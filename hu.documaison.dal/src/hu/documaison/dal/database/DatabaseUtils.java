@@ -1,6 +1,8 @@
 package hu.documaison.dal.database;
 
 import hu.documaison.data.entities.*;
+import hu.documaison.settings.SettingsData;
+import hu.documaison.settings.SettingsManager;
 
 import java.sql.SQLException;
 
@@ -9,8 +11,26 @@ import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 
 public class DatabaseUtils {
-	private static final String databaseUrl = "jdbc:sqlite:d:/temp/documaison.sqlite:documaison";
+	private static String databaseUrl = "jdbc:sqlite:d:/temp/documaison.sqlite:documaison";
+	private static final String databaseUrlTemplate = "jdbc:sqlite:%path%:documaison";
 
+	static
+	{
+		loadDatabasePath();
+	}
+	
+	private static void loadDatabasePath()
+	{
+		SettingsData settingsData;
+		try {
+			settingsData = SettingsManager.getCurrentSettings();
+			String path = settingsData.getDatabaseFileLocation().replace('\\', '/');
+			databaseUrl = databaseUrlTemplate.replaceFirst("%path%", path);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public static ConnectionSource getConnectionSource() throws SQLException {
 		ConnectionSource connectionSource = new JdbcConnectionSource(
 				databaseUrl);
