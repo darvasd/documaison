@@ -19,3 +19,9 @@ hu.documaison.gui/settings.xml
 !*/sqlite*.jar
 
 !hu.documaison.gui/opal-0.9.5.jar
+
+hu.documaison.dal/documaison.db:documaison
+
+hu.documaison.dal/settings.xml
+
+hu.documaison.gui/documaison.db:documaison

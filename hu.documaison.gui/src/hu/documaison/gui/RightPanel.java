@@ -1,5 +1,6 @@
 package hu.documaison.gui;
 
+import hu.documaison.gui.doctype.DocTypeEditor;
 import hu.documaison.gui.search.AdvancedSearchPanel;
 import hu.documaison.gui.settings.SettingsPanel;
 
@@ -45,6 +46,7 @@ public class RightPanel extends Composite{
 		
 		AdvancedSearchPanel asp = new AdvancedSearchPanel(multiPanel, SWT.NONE);
 		multiPanel.addSheet(asp, "advancedSearch");
+		
 		asp.addHomeSelectionListener(new SelectionAdapter() {
 			
 			@Override
@@ -64,6 +66,9 @@ public class RightPanel extends Composite{
 			}
 			
 		});
+		
+		DocTypeEditor dte = new DocTypeEditor(multiPanel, SWT.NONE);
+		multiPanel.addSheet(dte, "doctypeeditor");
 		
 		
 	}
