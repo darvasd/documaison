@@ -1,11 +1,11 @@
 /**
  * 
  */
-package hu.documaison.core.interfaceimpl;
+package hu.documaison.dal.interfaceimpl;
 
-import hu.documaison.core.database.DatabaseUtils;
-import hu.documaison.core.databaseobjects.*;
-import hu.documaison.core.interfaces.CoreInterface;
+import hu.documaison.dal.database.DatabaseUtils;
+import hu.documaison.dal.databaseobjects.*;
+import hu.documaison.dal.interfaces.CoreInterface;
 
 import java.sql.SQLException;
 import java.util.Collection;

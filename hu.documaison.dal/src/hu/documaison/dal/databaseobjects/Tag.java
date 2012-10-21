@@ -1,4 +1,4 @@
-package hu.documaison.core.databaseobjects;
+package hu.documaison.dal.databaseobjects;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;

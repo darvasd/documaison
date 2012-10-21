@@ -1,4 +1,4 @@
-package hu.documaison.core.databaseobjects;
+package hu.documaison.data.entities;
 
 import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DataType;

@@ -1,6 +1,6 @@
-package hu.documaison.core.database;
+package hu.documaison.dal.database;
 
-import hu.documaison.core.databaseobjects.*;
+import hu.documaison.dal.databaseobjects.*;
 
 import java.sql.SQLException;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;

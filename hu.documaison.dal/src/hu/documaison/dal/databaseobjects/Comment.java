@@ -1,4 +1,4 @@
-package hu.documaison.core.databaseobjects;
+package hu.documaison.dal.databaseobjects;
 
 import java.util.Date;
 

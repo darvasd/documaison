@@ -1,6 +1,6 @@
-package hu.documaison.core.interfaces;
+package hu.documaison.dal.interfaces;
 
-import hu.documaison.core.databaseobjects.*;
+import hu.documaison.dal.databaseobjects.*;
 
 import java.util.Collection;
 
