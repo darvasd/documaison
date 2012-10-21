@@ -36,6 +36,7 @@ public class DatabaseUtils {
 			TableUtils.createTable(connectionSource, DefaultMetadata.class);
 			TableUtils.createTable(connectionSource, DocumentType.class);
 			TableUtils.createTable(connectionSource, Document.class);
+			TableUtils.createTable(connectionSource, DocumentTagConnection.class);
 		} finally {
 			connectionSource.close();
 		}
@@ -49,6 +50,7 @@ public class DatabaseUtils {
 		tryCreateTable(DefaultMetadata.class);
 		tryCreateTable(DocumentType.class);
 		tryCreateTable(Document.class);
+		tryCreateTable(DocumentTagConnection.class);
 	}
 
 	private static <T> void tryCreateTable(Class<T> tableClass) {

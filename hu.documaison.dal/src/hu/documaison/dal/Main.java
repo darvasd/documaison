@@ -52,6 +52,7 @@ public class Main {
 		
 		DocumentType dt = ci.createDocumentType(); //new DocumentType();
 		dt.setTypeName("publication");
+		ci.updateDocumentType(dt);
 		
 		// version1
 		DefaultMetadata dmd = ci.createDefaultMetadata();
@@ -86,8 +87,7 @@ public class Main {
 			{
 				System.out.println("  "+m.getName() + " = " + m.getValue());
 			}
-		}
-		
+		}		
 	}
 
 }

@@ -1,7 +1,10 @@
 package hu.documaison.data.entities;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.ForeignCollection;
@@ -15,7 +18,7 @@ public class Document extends DatabaseObject {
 	public static final String TAGS = "tags";
 	public static final String METADATA = "metadata";
 	public static final String COMMENTS = "comments";
-	
+
 	@DatabaseField(canBeNull = false)
 	private String location;
 
@@ -25,31 +28,30 @@ public class Document extends DatabaseObject {
 	@DatabaseField
 	private Date dateAdded;
 
-	//@DatabaseField(dataType = DataType.SERIALIZABLE)
+	// @DatabaseField(dataType = DataType.SERIALIZABLE)
 	@DatabaseField(dataType = DataType.BYTE_ARRAY)
 	private byte[] thumbnailBytes;
 
 	@ForeignCollectionField(eager = true, columnName = TAGS)
-	private ForeignCollection<Tag> tags;
+	private ForeignCollection<DocumentTagConnection> tags;
 
 	@ForeignCollectionField(eager = true, columnName = METADATA)
-	private ForeignCollection<Metadata> metadataCollection; 
+	private ForeignCollection<Metadata> metadataCollection;
 
 	@ForeignCollectionField(eager = true, columnName = COMMENTS)
-	private ForeignCollection<Comment> commentCollection; 
+	private ForeignCollection<Comment> commentCollection;
 
-	public Document()
-	{
-		// ORMLite needs a no-arg constructor 
+	public Document() {
+		// ORMLite needs a no-arg constructor
 	}
 
-	public Document(DocumentType type, Dao<Document, Integer> dao) throws SQLException
-	{
+	public Document(DocumentType type, Dao<Document, Integer> dao)
+			throws SQLException {
 		this.type = type;
 		dao.getEmptyForeignCollection(TAGS);
 		dao.getEmptyForeignCollection(METADATA);
 		dao.getEmptyForeignCollection(COMMENTS);
-		
+
 		// TODO copy default metadata
 	}
 
@@ -61,7 +63,8 @@ public class Document extends DatabaseObject {
 	}
 
 	/**
-	 * @param location the location to set
+	 * @param location
+	 *            the location to set
 	 */
 	public void setLocation(String location) {
 		this.location = location;
@@ -75,7 +78,8 @@ public class Document extends DatabaseObject {
 	}
 
 	/**
-	 * @param type the type to set
+	 * @param type
+	 *            the type to set
 	 */
 	public void setType(DocumentType type) {
 		this.type = type;
@@ -89,7 +93,8 @@ public class Document extends DatabaseObject {
 	}
 
 	/**
-	 * @param dateAdded the dateAdded to set
+	 * @param dateAdded
+	 *            the dateAdded to set
 	 */
 	public void setDateAdded(Date dateAdded) {
 		this.dateAdded = dateAdded;
@@ -103,7 +108,8 @@ public class Document extends DatabaseObject {
 	}
 
 	/**
-	 * @param thumbnailBytes the thumbnailBytes to set
+	 * @param thumbnailBytes
+	 *            the thumbnailBytes to set
 	 */
 	public void setThumbnailBytes(byte[] thumbnailBytes) {
 		this.thumbnailBytes = thumbnailBytes;
@@ -112,22 +118,14 @@ public class Document extends DatabaseObject {
 	/**
 	 * @return the tags
 	 */
-	public ForeignCollection<Tag> getTags() {
-		return tags;
-	}
-
-	/**
-	 * @param tag the tag to add 
-	 */
-	public void addTag(Tag tag) {
-		this.tags.add(tag);
-	}
-
-	/**
-	 * @param tag the tag to remove 
-	 */
-	public void removeTag(Tag tag) {
-		this.tags.remove(tag);
+	public Collection<Tag> getTags() {
+		List<Tag> ret = new ArrayList<Tag>();
+		if (this.tags != null) {
+			for (DocumentTagConnection dtc : this.tags) {
+				ret.add(dtc.getTag());
+			}
+		}
+		return ret;
 	}
 
 	/**
@@ -138,14 +136,16 @@ public class Document extends DatabaseObject {
 	}
 
 	/**
-	 * @param metadata the metadata to add
+	 * @param metadata
+	 *            the metadata to add
 	 */
 	public void addMetadata(Metadata metadata) {
 		this.metadataCollection.add(metadata);
 	}
 
 	/**
-	 * @param metadata the metadata to remove
+	 * @param metadata
+	 *            the metadata to remove
 	 */
 	public void removeMetadata(Metadata metadata) {
 		this.metadataCollection.remove(metadata);
@@ -159,14 +159,16 @@ public class Document extends DatabaseObject {
 	}
 
 	/**
-	 * @param comment the comment to add
+	 * @param comment
+	 *            the comment to add
 	 */
 	public void addComment(Comment comment) {
 		this.commentCollection.add(comment);
 	}
 
 	/**
-	 * @param comment the comment to remove
+	 * @param comment
+	 *            the comment to remove
 	 */
 	public void removeComment(Comment comment) {
 		this.commentCollection.remove(comment);

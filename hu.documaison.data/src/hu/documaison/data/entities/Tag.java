@@ -1,12 +1,14 @@
 package hu.documaison.data.entities;
 
+import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 
 @DatabaseTable(tableName = "Tags")
 public class Tag extends DatabaseObject {
 	public static final String NAME = "name";
-	public static final String PARENT = "parent";
+	public static final String DOCUMENTS = "documents";
 
 	@DatabaseField(columnName = NAME, unique = true)
 	private String name;
@@ -17,8 +19,8 @@ public class Tag extends DatabaseObject {
 	@DatabaseField
 	private boolean hidden;
 	
-	@DatabaseField(canBeNull = true, foreign = true, columnName = PARENT)
-	protected Document parent;
+	@ForeignCollectionField(eager = false, columnName = DOCUMENTS)
+	private ForeignCollection<Tag> documents;
 
 	public Tag() {
 		// ORMLite needs a no-arg constructor
