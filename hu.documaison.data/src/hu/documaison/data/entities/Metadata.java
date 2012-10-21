@@ -6,12 +6,14 @@ import com.j256.ormlite.table.DatabaseTable;
 @DatabaseTable(tableName = "Metadata")
 public class Metadata extends DatabaseObject {
 	public static final String PARENT = "parent";
+	public static final String VALUE = "value";
+	public static final String NAME = "name";
 	// ugly duplication but OrmLite doesn't really support inheritance
 
-	@DatabaseField(canBeNull = false)
+	@DatabaseField(canBeNull = false, columnName = NAME)
 	protected String name;
 
-	@DatabaseField(canBeNull = true)
+	@DatabaseField(canBeNull = true, columnName = VALUE)
 	protected String value;
 
 	@DatabaseField(canBeNull = true, foreign = true, columnName = PARENT)

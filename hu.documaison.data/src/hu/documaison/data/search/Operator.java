@@ -7,6 +7,6 @@ public enum Operator {
 	gt,
 	le,
 	ge,
-	in,
+	contains,
 	like
 }

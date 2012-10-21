@@ -5,6 +5,9 @@ package hu.documaison.dal.interfaces;
 
 import hu.documaison.dal.database.DatabaseUtils;
 import hu.documaison.data.entities.*;
+import hu.documaison.data.search.BoolOperator;
+import hu.documaison.data.search.Expression;
+import hu.documaison.data.search.SearchExpression;
 
 import java.sql.SQLException;
 import java.util.Collection;
@@ -14,6 +17,7 @@ import java.util.List;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.stmt.QueryBuilder;
+import com.j256.ormlite.stmt.Where;
 import com.j256.ormlite.support.ConnectionSource;
 
 /**
@@ -115,7 +119,6 @@ class DalImplementation implements DalInterface {
 		}
 	}
 
-	
 	@Override
 	public Comment createComment() {
 		// create a connection source to our database
@@ -846,5 +849,97 @@ class DalImplementation implements DalInterface {
 				}
 			}
 		}
+	}
+
+	@Override
+	public Collection<Document> searchDocuments(SearchExpression sexpr) {
+		// create a connection source to our database
+		ConnectionSource connectionSource = null;
+
+		try {
+			// create connection
+			connectionSource = DatabaseUtils.getConnectionSource();
+
+			// instantiate the dao
+			Dao<Document, Integer> dao = DaoManager.createDao(connectionSource,
+					Document.class);
+
+			// instantiate the metadata dao
+			Dao<Metadata, Integer> daoMD = DaoManager.createDao(
+					connectionSource, Metadata.class);
+
+			// query
+			QueryBuilder<Document, Integer> qb = dao.queryBuilder();
+			QueryBuilder<Metadata, Integer> qbMD = daoMD.queryBuilder();
+
+			qb.join(qbMD);
+
+			// TODO: review
+			Where<Metadata, Integer> where = qbMD.where();
+			Boolean notFirst = false;
+			for (Expression expr : sexpr.getExpressions()) {
+				// Expression-ök összefûzése
+				if (notFirst) {
+					if (sexpr.getBoolOperator() == BoolOperator.or) {
+						where.or();
+					} else {
+						where.and();
+					}
+				}
+
+				qbMD.where().eq(Metadata.NAME, expr.getMetadataName());
+				switch (expr.getOperator()) {
+				case eq:
+					where.and().eq(Metadata.VALUE, expr.getValue());
+					break;
+				case ge:
+					where.and().ge(Metadata.VALUE, expr.getValue());
+					break;
+				case gt:
+					where.and().gt(Metadata.VALUE, expr.getValue());
+					break;
+				case contains:
+					where.and().like(Metadata.VALUE,
+							"%" + expr.getValue() + "%");
+					break;
+				case le:
+					where.and().le(Metadata.VALUE, expr.getValue());
+					break;
+				case like:
+					where.and().like(Metadata.VALUE, expr.getValue());
+					break;
+				case lt:
+					where.and().lt(Metadata.VALUE, expr.getValue());
+					break;
+				case neq:
+					where.and().ne(Metadata.VALUE, expr.getValue());
+					break;
+				default:
+					
+					break;
+				}
+
+				notFirst = true;
+			}
+
+			System.out.println("Search for: " + where.getStatement()); //TODO: delete
+			List<Document> ret = dao.query(qb.prepare());
+
+			// return
+			return ret;
+		} catch (SQLException e) {
+			HandleSQLException(e, "searchDocuments(SearchExpression)");
+		} finally {
+			// close connection
+			if (connectionSource != null) {
+				try {
+					connectionSource.close();
+				} catch (SQLException e) {
+					HandleSQLException(e, "searchDocuments(SearchExpression)");
+				}
+			}
+		}
+
+		return null;
 	}
 }

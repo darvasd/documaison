@@ -1,6 +1,7 @@
 package hu.documaison.dal.interfaces;
 
 import hu.documaison.data.entities.*;
+import hu.documaison.data.search.SearchExpression;
 
 import java.util.Collection;
 
@@ -43,4 +44,7 @@ public interface DalInterface {
 	public Comment createComment();
 	public void updateComment(Comment comment);
 	public void removeComment(int id);
+	
+	// search
+	public Collection<Document> searchDocuments(SearchExpression expr);
 }
