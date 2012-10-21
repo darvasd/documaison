@@ -1,6 +1,6 @@
 package hu.documaison.dal.interfaces;
 
-import hu.documaison.dal.databaseobjects.*;
+import hu.documaison.data.entities.*;
 
 import java.util.Collection;
 

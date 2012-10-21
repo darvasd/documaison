@@ -18,6 +18,7 @@ public abstract class DatabaseObject {
 	/**
 	 * @param id the id to set
 	 */
+	@SuppressWarnings("unused")
 	private void setId(int id) {
 		this.id = id;
 	}

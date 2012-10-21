@@ -4,7 +4,7 @@
 package hu.documaison.dal.interfaceimpl;
 
 import hu.documaison.dal.database.DatabaseUtils;
-import hu.documaison.dal.databaseobjects.*;
+import hu.documaison.data.entities.*;
 import hu.documaison.dal.interfaces.CoreInterface;
 
 import java.sql.SQLException;

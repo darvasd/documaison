@@ -1,8 +1,9 @@
 package hu.documaison.dal.database;
 
-import hu.documaison.dal.databaseobjects.*;
+import hu.documaison.data.entities.*;
 
 import java.sql.SQLException;
+
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;

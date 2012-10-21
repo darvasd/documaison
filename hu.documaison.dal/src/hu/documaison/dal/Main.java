@@ -1,14 +1,7 @@
 package hu.documaison.dal;
 
-import com.j256.ormlite.support.ConnectionSource;
-import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.dao.DaoManager;
-
 import hu.documaison.dal.database.DatabaseUtils;
-import hu.documaison.dal.databaseobjects.DefaultMetadata;
-import hu.documaison.dal.databaseobjects.DocumentType;
-import hu.documaison.dal.databaseobjects.Metadata;
-import hu.documaison.dal.databaseobjects.Tag;
+import hu.documaison.data.entities.*;
 import hu.documaison.dal.interfaceimpl.CoreImplementation;
 
 public class Main {
