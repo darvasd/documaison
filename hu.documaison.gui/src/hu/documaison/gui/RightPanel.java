@@ -1,5 +1,6 @@
 package hu.documaison.gui;
 
+import hu.documaison.gui.search.AdvancedSearchPanel;
 import hu.documaison.gui.settings.SettingsPanel;
 
 import javax.swing.plaf.multi.MultiPopupMenuUI;

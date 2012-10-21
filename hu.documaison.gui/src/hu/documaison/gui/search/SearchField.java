@@ -1,4 +1,4 @@
-package hu.documaison.gui;
+package hu.documaison.gui.search;
 
 import java.util.ArrayList;
 

@@ -1,4 +1,6 @@
-package hu.documaison.gui;
+package hu.documaison.gui.search;
+
+import hu.documaison.gui.ViewManager;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;

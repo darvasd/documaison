@@ -1,4 +1,7 @@
-package hu.documaison.gui;
+package hu.documaison.gui.search;
+
+import hu.documaison.gui.ISearchFieldProvider;
+import hu.documaison.gui.TestTagProvider;
 
 import java.util.ArrayList;
 
