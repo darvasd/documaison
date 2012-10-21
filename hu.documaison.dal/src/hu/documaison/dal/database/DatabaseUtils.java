@@ -11,8 +11,8 @@ import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 
 public class DatabaseUtils {
-	private static String databaseUrl = "jdbc:sqlite:d:/temp/documaison.sqlite:documaison";
-	private static final String databaseUrlTemplate = "jdbc:sqlite:%path%:documaison";
+	private static String databaseUrl = "jdbc:sqlite:d:/temp/documaison.sqlite";
+	private static final String databaseUrlTemplate = "jdbc:sqlite:%path%";
 
 	static
 	{
