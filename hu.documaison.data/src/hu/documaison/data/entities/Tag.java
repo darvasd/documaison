@@ -20,7 +20,7 @@ public class Tag extends DatabaseObject {
 	private boolean hidden;
 	
 	@ForeignCollectionField(eager = false, columnName = DOCUMENTS)
-	private ForeignCollection<Tag> documents;
+	private ForeignCollection<DocumentTagConnection> dtcs;
 
 	public Tag() {
 		// ORMLite needs a no-arg constructor

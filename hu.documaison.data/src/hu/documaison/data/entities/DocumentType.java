@@ -1,6 +1,7 @@
 package hu.documaison.data.entities;
 
 import java.sql.SQLException;
+import java.util.Collection;
 
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.ForeignCollection;
@@ -80,7 +81,7 @@ public class DocumentType extends DatabaseObject {
 	/**
 	 * @return the defaultMetadataCollection
 	 */
-	public ForeignCollection<DefaultMetadata> getDefaultMetadataCollection() {
+	public Collection<DefaultMetadata> getDefaultMetadataCollection() {
 		return defaultMetadataCollection;
 	}
 

@@ -131,7 +131,7 @@ public class Document extends DatabaseObject {
 	/**
 	 * @return the metadataCollection
 	 */
-	public ForeignCollection<Metadata> getMetadataCollection() {
+	public Collection<Metadata> getMetadataCollection() {
 		return metadataCollection;
 	}
 
@@ -154,7 +154,7 @@ public class Document extends DatabaseObject {
 	/**
 	 * @return the commentCollection
 	 */
-	public ForeignCollection<Comment> getCommentCollection() {
+	public Collection<Comment> getCommentCollection() {
 		return commentCollection;
 	}
 
