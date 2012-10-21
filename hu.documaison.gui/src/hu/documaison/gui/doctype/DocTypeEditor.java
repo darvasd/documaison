@@ -1,6 +1,9 @@
 package hu.documaison.gui.doctype;
 
+import java.util.ArrayList;
 import java.util.Collection;
+
+import javax.xml.bind.helpers.DefaultValidationEventHandler;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
@@ -16,12 +19,18 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 
 import hu.documaison.Application;
+import hu.documaison.data.entities.DefaultMetadata;
 import hu.documaison.data.entities.DocumentType;
+import hu.documaison.data.entities.Metadata;
 import hu.documaison.gui.InnerPanel;
 
 public class DocTypeEditor extends InnerPanel {
 
 	private Tree tree;
+	private Button removeDocTypeBtn;
+	private Button addMetadataBtn;
+	private Button editMetadataBtn;
+	private Button removeMetadataBtn;
 
 	public DocTypeEditor(Composite parent, int style) {
 		super(parent, style, "Document type manager");
@@ -60,7 +69,7 @@ public class DocTypeEditor extends InnerPanel {
 		loadDocTypes();
 		//treeComposite.setContent(tree);
 		
-		Button removeDocTypeBtn = new Button(this, SWT.PUSH);
+		removeDocTypeBtn = new Button(this, SWT.PUSH);
 		removeDocTypeBtn.setText("Remove type");
 		removeDocTypeBtn.setEnabled(false);
 		data = new FormData();
@@ -69,7 +78,7 @@ public class DocTypeEditor extends InnerPanel {
 		data.left = new FormAttachment(tree, 10);
 		removeDocTypeBtn.setLayoutData(data);
 		
-		Button addMetadataBtn = new Button(this, SWT.PUSH);
+		addMetadataBtn = new Button(this, SWT.PUSH);
 		addMetadataBtn.setText("Add new metadata");
 		addMetadataBtn.setEnabled(false);
 		data = new FormData();
@@ -78,7 +87,7 @@ public class DocTypeEditor extends InnerPanel {
 		data.left = new FormAttachment(tree, 10);
 		addMetadataBtn.setLayoutData(data);
 		
-		Button editMetadataBtn = new Button(this, SWT.PUSH);
+		editMetadataBtn = new Button(this, SWT.PUSH);
 		editMetadataBtn.setText("Edit metadata");
 		editMetadataBtn.setEnabled(false);
 		data = new FormData();
@@ -87,7 +96,7 @@ public class DocTypeEditor extends InnerPanel {
 		data.left = new FormAttachment(tree, 10);
 		editMetadataBtn.setLayoutData(data);
 		
-		Button removeMetadataBtn = new Button(this, SWT.PUSH);
+		removeMetadataBtn = new Button(this, SWT.PUSH);
 		removeMetadataBtn.setText("Remove metadata");
 		removeMetadataBtn.setEnabled(false);
 		data = new FormData();
@@ -104,7 +113,57 @@ public class DocTypeEditor extends InnerPanel {
 		tree.addListener(SWT.SetData, new Listener() {
 			public void handleEvent(Event e) {
 				TreeItem item = (TreeItem)e.item;
-				System.out.println(item);
+				TreeItem parent = item.getParentItem();
+				DocumentType parentDT = (DocumentType)parent.getData("docType");
+				DefaultMetadata[] metadata = (DefaultMetadata[])parent.getData("metadata");
+				if (metadata == null) {
+					metadata = parentDT.getDefaultMetadataCollection().toArray(new DefaultMetadata[0]);
+					parent.setData("metadata", metadata);
+				}
+				DefaultMetadata currentMeta = metadata[e.index];
+				String dv = "";
+				if (currentMeta.getValue() != null && currentMeta.getValue().isEmpty() == false) {
+					dv = " (" + currentMeta.getValue() + ")";
+				}
+				
+				item.setText(currentMeta.getName() + " : " + currentMeta.getMetadataType() + dv);
+				item.setImage(new Image(null, "images/info.png"));
+				
+			}
+		});
+		
+		tree.addListener(SWT.Selection, new Listener() {
+			public void handleEvent(Event e) {
+				TreeItem item = (TreeItem)e.item;
+				if (item.getParentItem() == null) {
+					removeDocTypeBtn.setEnabled(true);
+					removeMetadataBtn.setEnabled(false);
+					addMetadataBtn.setEnabled(true);
+					editMetadataBtn.setEnabled(false);
+				} else {
+					removeDocTypeBtn.setEnabled(true);
+					removeMetadataBtn.setEnabled(true);
+					addMetadataBtn.setEnabled(true);
+					editMetadataBtn.setEnabled(true);
+				}
+			}
+		});
+		
+		addMetadataBtn.addListener(SWT.Selection, new Listener() {
+			public void handleEvent(Event e) {
+				TreeItem item = tree.getSelection()[0];
+				while (item.getParentItem() != null) {
+					item = item.getParentItem();
+				}
+				DocumentType dt = (DocumentType)item.getData("docType");
+				NewMetadataDialog dialog = new NewMetadataDialog();
+				dialog.showAndHandle(getShell(), dt);
+				DocumentType type = Application.getBll().getDocumentType(dt.getId());
+				item.setItemCount(type.getDefaultMetadataCollection().size());
+				item.setData("metadata", type.getDefaultMetadataCollection().toArray(new DefaultMetadata[0]));
+				item.setData("docType", type);
+				tree.redraw();
+				item.setExpanded(true);
 			}
 		});
 	}
@@ -115,9 +174,17 @@ public class DocTypeEditor extends InnerPanel {
 		for (DocumentType d : docTypes) {
 			TreeItem item = new TreeItem(tree, SWT.None);
 			item.setText(d.getTypeName());
+			int metadataCount = d.getDefaultMetadataCollection().size();
 			item.setImage(new Image(null, "images/document.png"));
-			item.setItemCount(5);
+			item.setData(d);
+			item.setData("docType", d);
+			if (metadataCount == 0) {
+				item.setItemCount(1);
+				TreeItem childItem = new TreeItem(item, SWT.NONE);
+				childItem.setText("No metadata provided for this type");
+			} else {
+				item.setItemCount(metadataCount);
+			}
 		}
 	}
-
 }
