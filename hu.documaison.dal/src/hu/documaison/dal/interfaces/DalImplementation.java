@@ -417,6 +417,10 @@ class DalImplementation implements DalInterface {
 
 	@Override
 	public Collection<Document> getDocuments(Tag tag) {
+		return getDocumentsByTagId(tag.getId());
+	}
+	
+	private Collection<Document> getDocumentsByTagId(int tagId) {
 		// create a connection source to our database
 		ConnectionSource connectionSource = null;
 
@@ -428,23 +432,30 @@ class DalImplementation implements DalInterface {
 			Dao<Document, Integer> dao = DaoManager.createDao(connectionSource,
 					Document.class);
 
+			Dao<DocumentTagConnection, Integer> daoTags = DaoManager.createDao(connectionSource,
+					DocumentTagConnection.class);
+
 			// query
 			QueryBuilder<Document, Integer> qb = dao.queryBuilder();
-			// qb.selectRaw("*");
-			qb.where().in(Document.TAGS, tag.getId());
+			QueryBuilder<DocumentTagConnection, Integer> qbTags = 
+					daoTags.queryBuilder();
+			
+			qbTags.where().eq(DocumentTagConnection.TAGID, tagId);
+			qb.join(qbTags);
+			System.out.println("Query: " + qb.prepareStatementString());
 			List<Document> ret = dao.query(qb.prepare());
 
 			// return
 			return ret;
 		} catch (SQLException e) {
-			HandleSQLException(e, "getDocuments(Tag)");
+			HandleSQLException(e, "getDocumentsByTagId(int)");
 		} finally {
 			// close connection
 			if (connectionSource != null) {
 				try {
 					connectionSource.close();
 				} catch (SQLException e) {
-					HandleSQLException(e, "getDocuments(Tag)");
+					HandleSQLException(e, "getDocumentsByTagId(int)");
 				}
 			}
 		}
