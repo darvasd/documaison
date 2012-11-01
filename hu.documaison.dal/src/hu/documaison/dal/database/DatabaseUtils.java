@@ -7,16 +7,23 @@ import hu.documaison.settings.SettingsManager;
 import java.sql.SQLException;
 
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
+import com.j256.ormlite.logger.LocalLog;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 
 public class DatabaseUtils {
 	private static String databaseUrl = "jdbc:sqlite:d:/temp/documaison.sqlite";
 	private static final String databaseUrlTemplate = "jdbc:sqlite:%path%";
+	private static final String ORMLITE_LOG_LEVEL = com.j256.ormlite.logger.Log.Level.WARNING.name();
+		// possible log_level values: TRACE, DEBUG, INFO, WARNING, ERROR, FATAL
+	
 
 	static
 	{
 		loadDatabasePath();
+		System.setProperty(LocalLog.LOCAL_LOG_LEVEL_PROPERTY, ORMLITE_LOG_LEVEL);
+		// set log output to file:
+		//System.setProperty(LocalLog.LOCAL_LOG_FILE_PROPERTY, "ormlite.log");
 	}
 	
 	private static void loadDatabasePath()
