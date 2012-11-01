@@ -12,6 +12,7 @@ import hu.documaison.data.search.Expression;
 import hu.documaison.data.search.SearchExpression;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -416,7 +417,20 @@ class DalImplementation implements DalInterface {
 	}
 
 	@Override
-	public Collection<Document> getDocuments(Tag tag) {
+	public Collection<Document> getDocumentsByTags(List<Tag> tags) {
+		if (tags == null){
+			return new ArrayList<Document>();
+		}
+		
+		ArrayList<Integer> tagIds = new ArrayList<Integer>();
+		for (Tag t : tags){
+			tagIds.add(t.getId());
+		}
+		return getDocumentsByTagIds(tagIds);
+	}
+	
+	@Override
+	public Collection<Document> getDocumentsByTag(Tag tag) {
 		return getDocumentsByTagId(tag.getId());
 	}
 	
@@ -442,6 +456,50 @@ class DalImplementation implements DalInterface {
 			
 			qbTags.where().eq(DocumentTagConnection.TAGID, tagId);
 			qb.join(qbTags);
+			System.out.println("Query: " + qb.prepareStatementString());
+			List<Document> ret = dao.query(qb.prepare());
+
+			// return
+			return ret;
+		} catch (SQLException e) {
+			HandleSQLException(e, "getDocumentsByTagId(int)");
+		} finally {
+			// close connection
+			if (connectionSource != null) {
+				try {
+					connectionSource.close();
+				} catch (SQLException e) {
+					HandleSQLException(e, "getDocumentsByTagId(int)");
+				}
+			}
+		}
+
+		return null;
+	}
+	
+	private Collection<Document> getDocumentsByTagIds(List<Integer> tagIds) {
+		// create a connection source to our database
+		ConnectionSource connectionSource = null;
+
+		try {
+			// create connection
+			connectionSource = DatabaseUtils.getConnectionSource();
+
+			// instantiate the dao
+			Dao<Document, Integer> dao = DaoManager.createDao(connectionSource,
+					Document.class);
+
+			Dao<DocumentTagConnection, Integer> daoTags = DaoManager.createDao(connectionSource,
+					DocumentTagConnection.class);
+
+			// query
+			QueryBuilder<Document, Integer> qb = dao.queryBuilder();
+			QueryBuilder<DocumentTagConnection, Integer> qbTags = 
+					daoTags.queryBuilder();
+			
+			qbTags.where().in(DocumentTagConnection.TAGID, tagIds);
+			qb.join(qbTags);
+			qb.distinct();
 			System.out.println("Query: " + qb.prepareStatementString());
 			List<Document> ret = dao.query(qb.prepare());
 
@@ -1017,4 +1075,6 @@ class DalImplementation implements DalInterface {
 			}
 		}
 	}
+
+	
 }

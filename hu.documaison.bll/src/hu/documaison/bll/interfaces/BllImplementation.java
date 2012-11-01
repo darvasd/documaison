@@ -12,6 +12,7 @@ import hu.documaison.data.exceptions.UnknownDocumentTypeException;
 import hu.documaison.data.search.SearchExpression;
 
 import java.util.Collection;
+import java.util.List;
 
 public class BllImplementation implements BllInterface {
 
@@ -95,9 +96,9 @@ public class BllImplementation implements BllInterface {
 	}
 
 	@Override
-	public Collection<Document> getDocuments(Tag tag) {
+	public Collection<Document> getDocumentsByTag(Tag tag) {
 		DalInterface dal = DalSingletonProvider.getDalImplementation();
-		return dal.getDocuments(tag);
+		return dal.getDocumentsByTag(tag);
 	}
 
 	@Override
@@ -212,6 +213,12 @@ public class BllImplementation implements BllInterface {
 	public void updateTag(Tag tag) {
 		DalInterface dal = DalSingletonProvider.getDalImplementation();
 		dal.updateTag(tag);
+	}
+
+	@Override
+	public Collection<Document> getDocumentsByTags(java.util.List<Tag> tags) {
+		DalInterface dal = DalSingletonProvider.getDalImplementation();
+		return dal.getDocumentsByTags(tags);
 	}
 
 }

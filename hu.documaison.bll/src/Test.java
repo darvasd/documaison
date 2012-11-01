@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.List;
+
 import hu.documaison.bll.interfaces.BllImplementation;
 import hu.documaison.bll.interfaces.BllInterface;
 import hu.documaison.data.entities.*;
@@ -16,14 +19,24 @@ public class Test {
 		try {
 			DocumentType dt = bll.createDocumentType();
 			System.out.println(dt.getId());
-			Document doc = bll.createDocument(dt.getId());
-			System.out.println("DocId=" + doc.getId());
-			Tag t = bll.createTag("überfontos");
+			Document doc1 = bll.createDocument(dt.getId());
+			Document doc2 = bll.createDocument(dt.getId());
+			Document doc3 = bll.createDocument(dt.getId());
+			Document doc4 = bll.createDocument(dt.getId());
 			
-			bll.addTagToDocument(t, doc);
+			Tag t1 = bll.createTag("überfontos");
+			Tag t2 = bll.createTag("unalmas");
+			
+			bll.addTagToDocument(t1, doc1);
+			bll.addTagToDocument(t1, doc2);
+			bll.addTagToDocument(t2, doc2);
+			bll.addTagToDocument(t2, doc3);
 			
 			System.out.println("Documents with tag:");
-			for (Document d : bll.getDocuments(t))
+			List<Tag> tags = new ArrayList<Tag>();
+			tags.add(t1);
+			tags.add(t2);
+			for (Document d : bll.getDocumentsByTags(tags))
 			{
 				System.out.println(d.getId());
 			}

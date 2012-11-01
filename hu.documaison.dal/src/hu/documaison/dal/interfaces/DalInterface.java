@@ -9,7 +9,8 @@ import java.util.Collection;
 public interface DalInterface {
 	// document
 	public Collection<Document> getDocuments();
-	public Collection<Document> getDocuments(Tag tag);
+	public Collection<Document> getDocumentsByTag(Tag tag);
+	public Collection<Document> getDocumentsByTags(java.util.List<Tag> tags);
 	public Document getDocument(int id);
 	public Document createDocument(int typeId) throws UnknownDocumentTypeException;
 	public void removeDocument(int id);

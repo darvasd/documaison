@@ -27,7 +27,9 @@ public interface BllInterface {
 
 	public Collection<Document> getDocuments();
 
-	public Collection<Document> getDocuments(Tag tag);
+	public Collection<Document> getDocumentsByTag(Tag tag);
+	
+	public Collection<Document> getDocumentsByTags(java.util.List<Tag> tags);
 
 	public DocumentType getDocumentType(int id);
 
