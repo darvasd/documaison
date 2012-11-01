@@ -1,6 +1,7 @@
 package hu.documaison.bll.interfaces;
 
 import hu.documaison.data.entities.*;
+import hu.documaison.data.exceptions.UnknownDocumentTypeException;
 import hu.documaison.data.search.SearchExpression;
 
 import java.util.Collection;
@@ -12,7 +13,7 @@ public interface BllInterface {
 
 	public DefaultMetadata createDefaultMetadata(DocumentType parent);
 
-	public Document createDocument(int documentTypeId);
+	public Document createDocument(int documentTypeId) throws UnknownDocumentTypeException;
 
 	public DocumentType createDocumentType();
 

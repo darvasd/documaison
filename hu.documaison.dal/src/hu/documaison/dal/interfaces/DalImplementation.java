@@ -5,6 +5,8 @@ package hu.documaison.dal.interfaces;
 
 import hu.documaison.dal.database.DatabaseUtils;
 import hu.documaison.data.entities.*;
+import hu.documaison.data.exceptions.UnknownDocumentException;
+import hu.documaison.data.exceptions.UnknownDocumentTypeException;
 import hu.documaison.data.search.BoolOperator;
 import hu.documaison.data.search.Expression;
 import hu.documaison.data.search.SearchExpression;
@@ -187,12 +189,15 @@ class DalImplementation implements DalInterface {
 	}
 
 	@Override
-	public Document createDocument(int typeId) {
+	public Document createDocument(int typeId) throws UnknownDocumentTypeException {
 		// create a connection source to our database
 		ConnectionSource connectionSource = null;
 
 		try {
 			DocumentType documentType = this.getDocumentType(typeId);
+			if (documentType == null){
+				throw new UnknownDocumentTypeException(typeId);
+			}
 
 			// create connection
 			connectionSource = DatabaseUtils.getConnectionSource();
@@ -203,9 +208,11 @@ class DalImplementation implements DalInterface {
 
 			// add
 			Document newDocument = new Document(documentType, dao);
-			for (DefaultMetadata md : documentType
-					.getDefaultMetadataCollection()) {
-				newDocument.addMetadata(md.createMetadata());
+			if (documentType.getDefaultMetadataCollection() != null) {
+				for (DefaultMetadata md : documentType
+						.getDefaultMetadataCollection()) {
+					newDocument.addMetadata(md.createMetadata());
+				}
 			}
 			newDocument.setThumbnailBytes(documentType
 					.getDefaultThumbnailBytes().clone());

@@ -8,6 +8,7 @@ import hu.documaison.data.entities.Document;
 import hu.documaison.data.entities.DocumentType;
 import hu.documaison.data.entities.Metadata;
 import hu.documaison.data.entities.Tag;
+import hu.documaison.data.exceptions.UnknownDocumentTypeException;
 import hu.documaison.data.search.SearchExpression;
 
 import java.util.Collection;
@@ -38,16 +39,19 @@ public class BllImplementation implements BllInterface {
 	}
 
 	@Override
-	public Document createDocument(int documentTypeId) {
+	public Document createDocument(int documentTypeId) throws UnknownDocumentTypeException {
 		DalInterface dal = DalSingletonProvider.getDalImplementation();
 		DocumentType dtype = dal.getDocumentType(documentTypeId);
 		Document document = dal.createDocument(documentTypeId);
-		for (DefaultMetadata dmetadata : dtype.getDefaultMetadataCollection()) {
-			Metadata metadata = dal.createMetadata();
-			metadata.setName(dmetadata.getName());
-			metadata.setValue(dmetadata.getValue());
-			metadata.setParent(document);
-			dal.updateMetadata(metadata);
+		if (dtype.getDefaultMetadataCollection() != null) {
+			for (DefaultMetadata dmetadata : dtype
+					.getDefaultMetadataCollection()) {
+				Metadata metadata = dal.createMetadata();
+				metadata.setName(dmetadata.getName());
+				metadata.setValue(dmetadata.getValue());
+				metadata.setParent(document);
+				dal.updateMetadata(metadata);
+			}
 		}
 		return document;
 	}

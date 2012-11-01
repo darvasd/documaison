@@ -1,6 +1,7 @@
 package hu.documaison.dal.interfaces;
 
 import hu.documaison.data.entities.*;
+import hu.documaison.data.exceptions.UnknownDocumentTypeException;
 import hu.documaison.data.search.SearchExpression;
 
 import java.util.Collection;
@@ -10,7 +11,7 @@ public interface DalInterface {
 	public Collection<Document> getDocuments();
 	public Collection<Document> getDocuments(Tag tag);
 	public Document getDocument(int id);
-	public Document createDocument(int typeId);
+	public Document createDocument(int typeId) throws UnknownDocumentTypeException;
 	public void removeDocument(int id);
 	public void updateDocument(Document document);
 	
