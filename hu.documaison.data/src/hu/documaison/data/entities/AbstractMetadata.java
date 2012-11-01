@@ -16,12 +16,12 @@ public abstract class AbstractMetadata extends DatabaseObject {
 
 	@DatabaseField(dataType = DataType.ENUM_INTEGER)
 	protected MetadataType metadataType = MetadataType.Text;
-	
+
 	@DatabaseField(canBeNull = true, columnName = NAME)
-	protected String name;
-	
+	protected String name; // TODO must not be null
+
 	@DatabaseField(canBeNull = true, columnName = VALUE)
-	protected String value;
+	protected String value = null;
 
 	public AbstractMetadata() {
 		super();
@@ -79,8 +79,51 @@ public abstract class AbstractMetadata extends DatabaseObject {
 		return this.value;
 	}
 
+	private static boolean isInteger(String str) {
+		try {
+			Integer.parseInt(str);
+			return true;
+		} catch (NumberFormatException e) {
+			return false;
+		}
+	}
+
+	private static boolean isDate(String str) {
+		try {
+			DATEFORMAT.parse(str);
+			return true;
+		} catch (ParseException e) {
+			return false;
+		}
+	}
+
 	public void setMetadataType(MetadataType metadataType) {
+		MetadataType oldType = this.metadataType;
 		this.metadataType = metadataType;
+
+		if (oldType == this.metadataType) {
+			return;
+		}
+
+		switch (this.metadataType) {
+		case Text:
+			// there is no need to modify anything
+			break;
+		case Date:
+			if (oldType == MetadataType.Text && isDate(this.value)) {
+				// the value won't be changed
+			} else {
+				this.value = null;
+			}
+			break;
+		case Integer:
+			if (oldType == MetadataType.Text && isInteger(this.value)) {
+				// the value won't be changed
+			} else {
+				this.value = null;
+			}
+			break;
+		}
 	}
 
 	/**
