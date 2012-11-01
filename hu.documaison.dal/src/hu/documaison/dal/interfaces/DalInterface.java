@@ -16,7 +16,7 @@ public interface DalInterface {
 	public void updateDocument(Document document);
 	
 	// tag
-	public Tag createTag();
+	public Tag createTag(String name);
 	public void updateTag(Tag tag);
 	public Collection<Tag> getTags();
 	public Tag getTag(int id);

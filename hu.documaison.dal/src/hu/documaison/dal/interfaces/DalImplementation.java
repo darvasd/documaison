@@ -313,7 +313,7 @@ class DalImplementation implements DalInterface {
 	}
 
 	@Override
-	public Tag createTag() {
+	public Tag createTag(String name) {
 		return genericCreate(Tag.class, "createTag");
 	}
 

@@ -19,7 +19,7 @@ public interface BllInterface {
 
 	public Metadata createMetadata(Document parent);
 
-	public Tag createTag();
+	public Tag createTag(String name);
 
 	public Collection<DocumentType> getAllDocumentTypes();
 

@@ -10,7 +10,7 @@ public class Tag extends DatabaseObject {
 	public static final String NAME = "name";
 	public static final String DOCUMENTS = "documents";
 
-	@DatabaseField(columnName = NAME, unique = true)
+	@DatabaseField(columnName = NAME)
 	private String name;
 
 	@DatabaseField

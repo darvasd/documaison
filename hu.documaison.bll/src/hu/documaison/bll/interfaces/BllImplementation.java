@@ -71,9 +71,9 @@ public class BllImplementation implements BllInterface {
 	}
 
 	@Override
-	public Tag createTag() {
+	public Tag createTag(String name) {
 		DalInterface dal = DalSingletonProvider.getDalImplementation();
-		return dal.createTag();
+		return dal.createTag(name);
 	}
 
 	@Override

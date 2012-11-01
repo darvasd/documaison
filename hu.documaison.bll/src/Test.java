@@ -18,9 +18,7 @@ public class Test {
 			System.out.println(dt.getId());
 			Document doc = bll.createDocument(dt.getId());
 			System.out.println("DocId=" + doc.getId());
-			Tag t = bll.createTag();
-			t.setName("überfontos");
-			bll.updateTag(t);
+			Tag t = bll.createTag("überfontos");
 			
 			bll.addTagToDocument(t, doc);
 			
