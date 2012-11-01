@@ -30,6 +30,18 @@ import com.j256.ormlite.support.ConnectionSource;
 class DalImplementation implements DalInterface {
 
 	private <T extends DatabaseObject> T genericCreate(Class<T> c, String info) {
+		T instance;
+		try {
+			instance = c.newInstance();
+		} catch (InstantiationException e) {
+			return null;
+		} catch (IllegalAccessException e) {
+			return null;
+		}
+		return genericCreate(c, instance, info);
+	}
+	
+	private <T extends DatabaseObject> T genericCreate(Class<T> c, T instance, String info) {
 		// create a connection source to our database
 		ConnectionSource connectionSource = null;
 
@@ -41,14 +53,9 @@ class DalImplementation implements DalInterface {
 			Dao<T, Integer> dao = DaoManager.createDao(connectionSource, c);
 
 			// add
-			T ret = c.newInstance();
+			T ret = instance;
 			dao.create(ret);
 			return ret;
-
-		} catch (IllegalAccessException e) {
-			return null;
-		} catch (InstantiationException e) {
-			return null;
 		} catch (SQLException e) {
 			HandleSQLException(e, info);
 		} finally {
@@ -189,13 +196,14 @@ class DalImplementation implements DalInterface {
 	}
 
 	@Override
-	public Document createDocument(int typeId) throws UnknownDocumentTypeException {
+	public Document createDocument(int typeId)
+			throws UnknownDocumentTypeException {
 		// create a connection source to our database
 		ConnectionSource connectionSource = null;
 
 		try {
 			DocumentType documentType = this.getDocumentType(typeId);
-			if (documentType == null){
+			if (documentType == null) {
 				throw new UnknownDocumentTypeException(typeId);
 			}
 
@@ -214,8 +222,10 @@ class DalImplementation implements DalInterface {
 					newDocument.addMetadata(md.createMetadata());
 				}
 			}
-			newDocument.setThumbnailBytes(documentType
-					.getDefaultThumbnailBytes().clone());
+			if (documentType.getDefaultThumbnailBytes() != null) {
+				newDocument.setThumbnailBytes(documentType
+						.getDefaultThumbnailBytes().clone());
+			}
 			newDocument.setDateAdded(new Date());
 
 			dao.create(newDocument);
@@ -954,10 +964,13 @@ class DalImplementation implements DalInterface {
 
 	@Override
 	public void addTagToDocument(Tag tag, Document document) {
-		DocumentTagConnection dtc = genericCreate(DocumentTagConnection.class,
-				"addTagToDocument");
+		DocumentTagConnection dtc = new DocumentTagConnection();
 		dtc.setDocument(document);
 		dtc.setTag(tag);
+		
+		dtc = genericCreate(DocumentTagConnection.class, dtc,
+				"addTagToDocument");
+		
 		genericUpdate(dtc, DocumentTagConnection.class, "addTagToDocument");
 	}
 

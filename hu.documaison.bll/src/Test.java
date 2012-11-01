@@ -1,6 +1,6 @@
 import hu.documaison.bll.interfaces.BllImplementation;
 import hu.documaison.bll.interfaces.BllInterface;
-import hu.documaison.data.entities.DocumentType;
+import hu.documaison.data.entities.*;
 import hu.documaison.data.exceptions.UnknownDocumentTypeException;
 
 
@@ -16,7 +16,20 @@ public class Test {
 		try {
 			DocumentType dt = bll.createDocumentType();
 			System.out.println(dt.getId());
-			bll.createDocument(dt.getId());
+			Document doc = bll.createDocument(dt.getId());
+			System.out.println("DocId=" + doc.getId());
+			Tag t = bll.createTag();
+			t.setName("überfontos");
+			bll.updateTag(t);
+			
+			bll.addTagToDocument(t, doc);
+			
+			System.out.println("Documents with tag:");
+			for (Document d : bll.getDocuments(t))
+			{
+				System.out.println(d.getId());
+			}
+			
 		} catch (UnknownDocumentTypeException e) {
 			e.printStackTrace();
 		}

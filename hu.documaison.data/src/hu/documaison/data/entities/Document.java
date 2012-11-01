@@ -19,7 +19,7 @@ public class Document extends DatabaseObject {
 	public static final String METADATA = "metadata";
 	public static final String COMMENTS = "comments";
 
-	@DatabaseField(canBeNull = false)
+	@DatabaseField
 	private String location;
 
 	@DatabaseField(foreign = true)
