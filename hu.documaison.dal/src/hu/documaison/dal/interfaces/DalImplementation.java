@@ -217,19 +217,24 @@ class DalImplementation implements DalInterface {
 
 			// add
 			Document newDocument = new Document(documentType, dao);
-			if (documentType.getDefaultMetadataCollection() != null) {
-				for (DefaultMetadata md : documentType
-						.getDefaultMetadataCollection()) {
-					newDocument.addMetadata(md.createMetadata());
-				}
-			}
-			if (documentType.getDefaultThumbnailBytes() != null) {
-				newDocument.setThumbnailBytes(documentType
-						.getDefaultThumbnailBytes().clone());
-			}
-			newDocument.setDateAdded(new Date());
-
 			dao.create(newDocument);
+			
+			// set properties
+			
+			// following lines moved to BLL
+//			if (documentType.getDefaultMetadataCollection() != null) {
+//				for (DefaultMetadata md : documentType
+//						.getDefaultMetadataCollection()) {
+//					newDocument.addMetadata(md.createMetadata());
+//				}
+//			}
+//			if (documentType.getDefaultThumbnailBytes() != null) {
+//				newDocument.setThumbnailBytes(documentType
+//						.getDefaultThumbnailBytes().clone());
+//			}
+			newDocument.setDateAdded(new Date());
+			dao.update(newDocument);
+			
 			return newDocument;
 
 		} catch (SQLException e) {
