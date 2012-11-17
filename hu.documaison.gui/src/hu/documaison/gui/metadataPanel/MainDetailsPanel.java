@@ -27,6 +27,8 @@ public class MainDetailsPanel extends Composite {
 
 	private final Link commentLink;
 	private final Document document;
+	private final Label tagLabel;
+	private TagViewer tags;
 
 	public MainDetailsPanel(Composite parent, int style, Document doc) {
 		super(parent, style);
@@ -89,19 +91,14 @@ public class MainDetailsPanel extends Composite {
 		data.top = new FormAttachment(thumbnailLabel, 5);
 		browseThumbnail.setLayoutData(data);
 
-		Label tagLabel = new Label(this, SWT.NONE);
+		tagLabel = new Label(this, SWT.NONE);
 		tagLabel.setText("Tags:");
 		data = new FormData();
 		data.left = new FormAttachment(0, 0);
 		data.top = new FormAttachment(thumbnailImage, 5);
 		tagLabel.setLayoutData(data);
 
-		TagViewer tags = new TagViewer(this, SWT.NONE, doc);
-		data = new FormData();
-		data.left = new FormAttachment(0, 0);
-		data.top = new FormAttachment(tagLabel, 0);
-		data.right = new FormAttachment(100, -10);
-		tags.setLayoutData(data);
+		showTags(doc);
 
 		addEventHandlers();
 	}
@@ -112,7 +109,22 @@ public class MainDetailsPanel extends Composite {
 			public void handleEvent(Event e) {
 				CommentDialog dialog = new CommentDialog();
 				dialog.showAndHandle(getShell(), document);
+				Application.getBll().updateDocument(document);
+				showTags(document);
 			}
 		});
+	}
+
+	private void showTags(Document doc) {
+		if (tags != null) {
+			tags.dispose();
+		}
+		tags = new TagViewer(this, SWT.NONE, doc);
+		FormData data = new FormData();
+		data.left = new FormAttachment(0, 0);
+		data.top = new FormAttachment(tagLabel, 0);
+		data.right = new FormAttachment(100, -10);
+		tags.setLayoutData(data);
+		layout();
 	}
 }

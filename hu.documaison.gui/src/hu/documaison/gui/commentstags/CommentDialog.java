@@ -26,7 +26,7 @@ public class CommentDialog {
 
 		Shell dialog = new Shell(parent, SWT.APPLICATION_MODAL | SWT.BORDER
 				| SWT.CLOSE | SWT.TITLE);
-		dialog.setText("Add new metadata");
+		dialog.setText("Comments");
 		dialog.setSize(300, 300);
 		dialog.setLayout(new FillLayout());
 
