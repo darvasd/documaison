@@ -1,6 +1,7 @@
 package hu.documaison.gui;
 
 import hu.documaison.gui.doctype.DocTypeEditor;
+import hu.documaison.gui.document.MetadataInputPanel;
 import hu.documaison.gui.document.NewDocumentPanel;
 import hu.documaison.gui.search.AdvancedSearchPanel;
 import hu.documaison.gui.settings.SettingsPanel;
@@ -65,8 +66,11 @@ public class RightPanel extends Composite {
 		DocTypeEditor dte = new DocTypeEditor(multiPanel, SWT.NONE);
 		multiPanel.addSheet(dte, "doctypeeditor");
 
+		MetadataInputPanel metadataInputPanel = new MetadataInputPanel(
+				multiPanel, SWT.NONE);
+		multiPanel.addSheet(metadataInputPanel, "metaedit");
+
 		NewDocumentPanel newPanel = new NewDocumentPanel(multiPanel, SWT.NONE);
 		multiPanel.addSheet(newPanel, "newDocument");
-
 	}
 }

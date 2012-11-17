@@ -51,9 +51,10 @@ public class MultiPanel extends Composite {
 		return sheet;
 	}
 
-	public void selectSheet(String id, InnerPanel previous) {
+	public InnerPanel selectSheet(String id, InnerPanel previous) {
 		InnerPanel sheet = selectSheet(id);
 		sheet.setPreviousPanel(previous);
 		sheet.showed();
+		return sheet;
 	}
 }

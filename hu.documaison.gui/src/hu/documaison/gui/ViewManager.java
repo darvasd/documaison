@@ -26,16 +26,18 @@ public class ViewManager {
 		}
 	}
 
-	public void showView(InnerPanel view) {
+	public InnerPanel showView(InnerPanel view) {
 		if (viewer != null) {
-			viewer.selectSheet(view);
+			return viewer.selectSheet(view);
 		}
+		return null;
 	}
 
-	public void showView(String id, InnerPanel previous) {
+	public InnerPanel showView(String id, InnerPanel previous) {
 		if (viewer != null) {
-			viewer.selectSheet(id, previous);
+			return viewer.selectSheet(id, previous);
 		}
+		return null;
 	}
 
 }

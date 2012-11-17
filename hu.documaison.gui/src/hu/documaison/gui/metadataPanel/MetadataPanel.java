@@ -1,6 +1,8 @@
 package hu.documaison.gui.metadataPanel;
 
 import hu.documaison.Application;
+import hu.documaison.data.entities.Document;
+import hu.documaison.data.entities.Metadata;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
@@ -8,9 +10,15 @@ import org.eclipse.swt.widgets.Composite;
 import org.mihalis.opal.propertyTable.PTProperty;
 import org.mihalis.opal.propertyTable.PropertyTable;
 import org.mihalis.opal.propertyTable.editor.PTComboEditor;
+import org.mihalis.opal.propertyTable.editor.PTDateEditor;
 import org.mihalis.opal.propertyTable.editor.PTFileEditor;
+import org.mihalis.opal.propertyTable.editor.PTIntegerEditor;
+import org.mihalis.opal.propertyTable.editor.PTStringEditor;
+import org.mihalis.opal.propertyTable.editor.PTURLEditor;
 
 public class MetadataPanel extends Composite {
+
+	private PropertyTable pTable;
 
 	public MetadataPanel(Composite parent, int style) {
 		super(parent, style);
@@ -40,7 +48,20 @@ public class MetadataPanel extends Composite {
 		// combo.add(dt.getTypeName());
 		// }
 
-		PropertyTable pTable = new PropertyTable(this, SWT.None);
+		pTable = new PropertyTable(this, SWT.None);
+		pTable.viewAsFlatList();
+		pTable.hideButtons();
+		pTable.hideDescription();
+
+		pTable.addProperty(new PTProperty("Location", "", "")
+				.setEditor(new PTFileEditor()));
+	}
+
+	public void setDocument(Document doc) {
+		if (pTable != null) {
+			pTable.dispose();
+		}
+		pTable = new PropertyTable(this, SWT.BORDER);
 		pTable.viewAsFlatList();
 		pTable.hideButtons();
 		pTable.hideDescription();
@@ -50,8 +71,37 @@ public class MetadataPanel extends Composite {
 		pTable.addProperty(new PTProperty("Document type", "", "")
 				.setEditor(combo));
 
-		pTable.addProperty(new PTProperty("Location", "", "")
-				.setEditor(new PTFileEditor()));
-	}
+		String loc = doc.getLocation();
+		if (loc.startsWith("http://")) {
+			pTable.addProperty(new PTProperty("loc", "Location (URL)", null,
+					loc).setEditor(new PTURLEditor()));
+		} else {
+			pTable.addProperty(new PTProperty("loc", "Location (file)", null,
+					loc).setEditor(new PTFileEditor()));
+		}
 
+		// tüptürüpp
+		for (Metadata mtdt : doc.getMetadataCollection()) {
+			switch (mtdt.getMetadataType()) {
+			case Date:
+				pTable.addProperty(new PTProperty("mtdt_" + mtdt.getId(), mtdt
+						.getName(), null, mtdt.getDateValue())
+						.setEditor(new PTDateEditor()));
+				break;
+			case Integer:
+				pTable.addProperty(new PTProperty("mtdt_" + mtdt.getId(), mtdt
+						.getName(), null, mtdt.getIntValue())
+						.setEditor(new PTIntegerEditor()));
+				break;
+			case Text:
+			default:
+				pTable.addProperty(new PTProperty("mtdt_" + mtdt.getId(), mtdt
+						.getName(), null, mtdt.getValue())
+						.setEditor(new PTStringEditor()));
+				break;
+
+			}
+		}
+
+	}
 }

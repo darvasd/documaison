@@ -1,11 +1,15 @@
 package hu.documaison.gui.document;
 
 import hu.documaison.Application;
+import hu.documaison.data.entities.Document;
 import hu.documaison.data.entities.DocumentType;
+import hu.documaison.data.exceptions.UnknownDocumentTypeException;
 import hu.documaison.gui.InnerPanel;
+import hu.documaison.gui.NotifactionWindow;
 import hu.documaison.gui.ViewManager;
 
 import java.io.File;
+import java.util.HashMap;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Font;
@@ -27,6 +31,7 @@ public class NewDocumentPanel extends InnerPanel {
 	private Combo typeCombo;
 	private Button nextBtn;
 	private Text locText;
+	private HashMap<String, Integer> typeIdMap;
 
 	public NewDocumentPanel(Composite parent, int style) {
 		super(parent, style, "Add new document");
@@ -128,6 +133,27 @@ public class NewDocumentPanel extends InnerPanel {
 				validate();
 			}
 		});
+
+		nextBtn.addListener(SWT.Selection, new Listener() {
+			@Override
+			public void handleEvent(Event e) {
+				try {
+					Document doc = Application.getBll().createDocument(
+							typeIdMap.get(typeCombo.getItem(typeCombo
+									.getSelectionIndex())));
+					doc.setLocation(locText.getText());
+					MetadataInputPanel panel = (MetadataInputPanel) (ViewManager
+							.getDefault().showView("metaedit",
+							NewDocumentPanel.this));
+					panel.setDocument(doc);
+				} catch (UnknownDocumentTypeException e1) {
+					NotifactionWindow.showError("Unknown type",
+							"Failed to load the definition of the selected type. ("
+									+ e1.getMessage() + ")");
+				}
+
+			}
+		});
 	}
 
 	@Override
@@ -139,8 +165,10 @@ public class NewDocumentPanel extends InnerPanel {
 
 	private void loadDocTypes() {
 		typeCombo.removeAll();
+		typeIdMap = new HashMap<String, Integer>();
 		for (DocumentType dt : Application.getBll().getDocumentTypes()) {
 			typeCombo.add(dt.getTypeName());
+			typeIdMap.put(dt.getTypeName(), dt.getId());
 		}
 	}
 
