@@ -58,6 +58,7 @@ public class MetadataPanel extends Composite {
 	}
 
 	public void setDocument(Document doc) {
+		Application.getBll().updateDocument(doc);
 		if (pTable != null) {
 			pTable.dispose();
 		}
