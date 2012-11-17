@@ -120,7 +120,7 @@ public class BllImplementation implements BllInterface {
 	}
 
 	@Override
-	public DocumentType getDocumentType(int id) {
+	public DocumentType getDocumentType(int id) throws UnknownDocumentTypeException {
 		DalInterface dal = DalSingletonProvider.getDalImplementation();
 		return dal.getDocumentType(id);
 	}
@@ -138,7 +138,7 @@ public class BllImplementation implements BllInterface {
 	}
 
 	@Override
-	public Tag getTag(String name) {
+	public Tag getTag(String name) throws UnknownTagException {
 		DalInterface dal = DalSingletonProvider.getDalImplementation();
 		return dal.getTag(name);
 	}

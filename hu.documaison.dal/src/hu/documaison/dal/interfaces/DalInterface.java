@@ -25,7 +25,7 @@ public interface DalInterface {
 	public void updateTag(Tag tag);
 	public Collection<Tag> getTags();
 	public Tag getTag(int id) throws UnknownTagException;
-	public Tag getTag(String name);
+	public Tag getTag(String name) throws UnknownTagException;
 	public void removeTag(int id);
 	
 	public void addTagToDocument(Tag tag, Document document) throws InvalidParameterException;
@@ -36,7 +36,7 @@ public interface DalInterface {
 	public void removeDocumentType(int id);
 	public void updateDocumentType(DocumentType documentType);
 	public Collection<DocumentType> getDocumentTypes();
-	public DocumentType getDocumentType(int id);
+	public DocumentType getDocumentType(int id) throws UnknownDocumentTypeException;
 	
 	
 	// metadata

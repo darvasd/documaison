@@ -35,13 +35,13 @@ public interface BllInterface {
 	
 	public Collection<Document> getDocumentsByTags(java.util.List<Tag> tags);
 
-	public DocumentType getDocumentType(int id);
+	public DocumentType getDocumentType(int id) throws UnknownDocumentTypeException;
 
 	public Collection<DocumentType> getDocumentTypes();
 
 	public Tag getTag(int id) throws UnknownTagException;
 
-	public Tag getTag(String name);
+	public Tag getTag(String name) throws UnknownTagException;
 
 	public Collection<Tag> getTags();
 

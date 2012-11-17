@@ -542,7 +542,7 @@ class DalImplementation implements DalInterface {
 	}
 
 	@Override
-	public DocumentType getDocumentType(int id) {
+	public DocumentType getDocumentType(int id) throws UnknownDocumentTypeException {
 		// create a connection source to our database
 		ConnectionSource connectionSource = null;
 
@@ -556,7 +556,10 @@ class DalImplementation implements DalInterface {
 
 			// query
 			DocumentType ret = dao.queryForId(id);
-
+			if (ret == null){
+				throw new UnknownDocumentTypeException(id);
+			}
+			
 			// return
 			return ret;
 		} catch (SQLException e) {
@@ -677,7 +680,7 @@ class DalImplementation implements DalInterface {
 	// }
 
 	@Override
-	public Tag getTag(String name) {
+	public Tag getTag(String name) throws UnknownTagException {
 		// create a connection source to our database
 		ConnectionSource connectionSource = null;
 
@@ -692,7 +695,10 @@ class DalImplementation implements DalInterface {
 			// query
 			Tag ret = dao.queryForFirst(dao.queryBuilder().where()
 					.eq(Tag.NAME, name).prepare());
-
+			if (ret == null){
+				throw new UnknownTagException(0);
+			}
+			
 			// return
 			return ret;
 		} catch (SQLException e) {
