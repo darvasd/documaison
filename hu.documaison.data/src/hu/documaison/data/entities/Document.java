@@ -20,7 +20,7 @@ public class Document extends DatabaseObject {
 	@DatabaseField
 	private String location;
 
-	@DatabaseField(foreign = true)
+	@DatabaseField(foreign = true, foreignAutoRefresh = true)
 	private DocumentType type;
 
 	@DatabaseField
