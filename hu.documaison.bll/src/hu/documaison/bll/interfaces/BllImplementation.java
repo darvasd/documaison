@@ -12,8 +12,6 @@ import hu.documaison.data.exceptions.UnknownDocumentTypeException;
 import hu.documaison.data.search.SearchExpression;
 
 import java.util.Collection;
-import java.util.Date;
-import java.util.List;
 
 public class BllImplementation implements BllInterface {
 
@@ -41,7 +39,8 @@ public class BllImplementation implements BllInterface {
 	}
 
 	@Override
-	public Document createDocument(int documentTypeId) throws UnknownDocumentTypeException {
+	public Document createDocument(int documentTypeId)
+			throws UnknownDocumentTypeException {
 		DalInterface dal = DalSingletonProvider.getDalImplementation();
 		DocumentType dtype = dal.getDocumentType(documentTypeId);
 		Document document = dal.createDocument(documentTypeId);
@@ -55,12 +54,11 @@ public class BllImplementation implements BllInterface {
 				dal.updateMetadata(metadata);
 			}
 		}
-		
+
 		if (dtype.getDefaultThumbnailBytes() != null) {
-			document.setThumbnailBytes(dtype
-					.getDefaultThumbnailBytes().clone());
+			document.setThumbnailBytes(dtype.getDefaultThumbnailBytes().clone());
 		}
-		
+
 		dal.updateDocument(document);
 		Document savedDoc = dal.getDocument(document.getId());
 		return savedDoc;

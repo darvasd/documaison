@@ -20,6 +20,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Listener;
@@ -32,6 +33,7 @@ public class NewDocumentPanel extends InnerPanel {
 	private Button nextBtn;
 	private Text locText;
 	private HashMap<String, Integer> typeIdMap;
+	private Button browseButton;
 
 	public NewDocumentPanel(Composite parent, int style) {
 		super(parent, style, "Add new document");
@@ -48,7 +50,7 @@ public class NewDocumentPanel extends InnerPanel {
 		data.right = new FormAttachment(100, -20);
 		locLabel.setLayoutData(data);
 
-		Button browseButton = new Button(this, SWT.PUSH);
+		browseButton = new Button(this, SWT.PUSH);
 		browseButton.setText("Browse");
 		data = new FormData();
 		data.top = new FormAttachment(locLabel);
@@ -152,6 +154,17 @@ public class NewDocumentPanel extends InnerPanel {
 									+ e1.getMessage() + ")");
 				}
 
+			}
+		});
+
+		browseButton.addListener(SWT.Selection, new Listener() {
+			@Override
+			public void handleEvent(Event e) {
+				FileDialog dialog = new FileDialog(getShell());
+				String path = dialog.open();
+				if (path != null) {
+					locText.setText(path);
+				}
 			}
 		});
 	}

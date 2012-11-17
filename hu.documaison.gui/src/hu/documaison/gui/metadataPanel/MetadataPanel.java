@@ -4,10 +4,14 @@ import hu.documaison.Application;
 import hu.documaison.data.entities.Document;
 import hu.documaison.data.entities.Metadata;
 
+import java.util.Date;
+import java.util.HashMap;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.mihalis.opal.propertyTable.PTProperty;
+import org.mihalis.opal.propertyTable.PTPropertyChangeListener;
 import org.mihalis.opal.propertyTable.PropertyTable;
 import org.mihalis.opal.propertyTable.editor.PTComboEditor;
 import org.mihalis.opal.propertyTable.editor.PTDateEditor;
@@ -19,45 +23,17 @@ import org.mihalis.opal.propertyTable.editor.PTURLEditor;
 public class MetadataPanel extends Composite {
 
 	private PropertyTable pTable;
+	private Document doc;
+	private HashMap<String, Metadata> metadataMap;
 
 	public MetadataPanel(Composite parent, int style) {
 		super(parent, style);
 		setLayout(new FillLayout());
-
-		// Table table = new Table(this, SWT.NO_SCROLL | SWT.SINGLE);
-		// // table.setBackground(new Color(null, 188, 0, 10));
-		// table.setLinesVisible(true);
-		// table.setHeaderVisible(true);
-		// TableColumn col1 = new TableColumn(table, SWT.NONE);
-		// TableColumn col2 = new TableColumn(table, SWT.NONE);
-		// col1.setText("Name");
-		// col1.setWidth(150);
-		// col1.setResizable(true);
-		// col2.setText("Value");
-		// col2.pack();
-		// col2.setWidth(300);
-		// col2.setResizable(true);
-		//
-		// TableItem typeItem = new TableItem(table, SWT.NONE);
-		// typeItem.setText(0, "Document type");
-		// TableEditor editor = new TableEditor(table);
-		// CCombo combo = new CCombo(table, SWT.NONE);
-		// editor.grabHorizontal = true;
-		// editor.setEditor(combo, typeItem, 1);
-		// for (DocumentType dt : Application.getBll().getDocumentTypes()) {
-		// combo.add(dt.getTypeName());
-		// }
-
 	}
 
 	public void setDocument(Document doc) {
-		if (pTable != null) {
-			pTable.dispose();
-		}
-		pTable = new PropertyTable(this, SWT.BORDER);
-		pTable.viewAsFlatList();
-		pTable.hideButtons();
-		pTable.hideDescription();
+		this.doc = doc;
+		createNewPropTable();
 
 		PTComboEditor combo = new PTComboEditor(true, Application.getBll()
 				.getDocumentTypes().toArray());
@@ -75,23 +51,25 @@ public class MetadataPanel extends Composite {
 		}
 
 		// tüptürüpp
+		metadataMap = new HashMap<String, Metadata>();
 		if (doc.getMetadataCollection() != null) {
 			for (Metadata mtdt : doc.getMetadataCollection()) {
+				metadataMap.put("" + mtdt.getId(), mtdt);
 				switch (mtdt.getMetadataType()) {
 				case Date:
-					pTable.addProperty(new PTProperty("mtdt_" + mtdt.getId(),
-							mtdt.getName(), null, mtdt.getDateValue())
+					pTable.addProperty(new PTProperty(mtdt.getName(), ""
+							+ mtdt.getId(), null, mtdt.getDateValue())
 							.setEditor(new PTDateEditor()));
 					break;
 				case Integer:
-					pTable.addProperty(new PTProperty(mtdt.getName(), "mtdt_"
+					pTable.addProperty(new PTProperty(mtdt.getName(), ""
 							+ mtdt.getId(), null, mtdt.getIntValue())
 							.setEditor(new PTIntegerEditor()));
 					break;
 				case Text:
 				default:
-					pTable.addProperty(new PTProperty("mtdt_" + mtdt.getId(),
-							mtdt.getName(), null, mtdt.getValue())
+					pTable.addProperty(new PTProperty(mtdt.getName(), ""
+							+ mtdt.getId(), null, mtdt.getValue())
 							.setEditor(new PTStringEditor()));
 					break;
 
@@ -101,4 +79,37 @@ public class MetadataPanel extends Composite {
 		layout();
 
 	}
+
+	private void createNewPropTable() {
+		if (pTable != null) {
+			pTable.dispose();
+		}
+		pTable = new PropertyTable(this, SWT.BORDER);
+		pTable.viewAsFlatList();
+		pTable.hideButtons();
+		pTable.hideDescription();
+
+		pTable.addChangeListener(new PTPropertyChangeListener() {
+
+			@Override
+			public void propertyHasChanged(PTProperty prop) {
+				Metadata mtdt = metadataMap.get(prop.getDisplayName());
+				switch (mtdt.getMetadataType()) {
+				case Date:
+					mtdt.setValue((Date) prop.getValue());
+					break;
+				case Integer:
+					mtdt.setValue((Integer) prop.getValue());
+					break;
+				case Text:
+				default:
+					mtdt.setValue((String) prop.getValue());
+					break;
+
+				}
+				Application.getBll().updateDocument(doc);
+			}
+		});
+	}
+
 }
