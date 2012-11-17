@@ -5,6 +5,7 @@ import hu.documaison.data.entities.Document;
 import hu.documaison.data.entities.Tag;
 import hu.documaison.data.exceptions.InvalidParameterException;
 import hu.documaison.data.exceptions.UnableToCreateException;
+import hu.documaison.data.exceptions.UnknownDocumentException;
 import hu.documaison.data.exceptions.UnknownTagException;
 import hu.documaison.gui.NotifactionWindow;
 
@@ -33,7 +34,13 @@ public class AddTagDialog {
 	private Shell dialog;
 
 	public void showAndHandle(Shell parent, final Document document) {
-		doc = document;
+		try {
+			doc = Application.getBll().getDocument(document.getId());
+		} catch (UnknownDocumentException e) {
+			doc = document;
+			NotifactionWindow.showError("Database error",
+					"Failed to update the document from the database.");
+		}
 		dialog = new Shell(parent, SWT.APPLICATION_MODAL | SWT.BORDER
 				| SWT.CLOSE | SWT.TITLE);
 		dialog.setText("Add new tag");
@@ -62,7 +69,9 @@ public class AddTagDialog {
 		existingCombo = new Combo(composite, SWT.SINGLE | SWT.READ_ONLY
 				| SWT.DROP_DOWN);
 		for (Tag tag : Application.getBll().getTags()) {
-			existingCombo.add(tag.getName() + " (" + tag.getColorName() + ")");
+			if (tag.getName() != null) {
+				existingCombo.add(tag.getName());
+			}
 		}
 		data = new FormData();
 		data.top = new FormAttachment(existingRadio, 0, SWT.CENTER);
