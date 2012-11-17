@@ -8,6 +8,7 @@ import hu.documaison.data.entities.*;
 import hu.documaison.data.exceptions.InvalidParameterException;
 import hu.documaison.data.exceptions.UnknownDocumentException;
 import hu.documaison.data.exceptions.UnknownDocumentTypeException;
+import hu.documaison.data.exceptions.UnknownTagException;
 import hu.documaison.data.helper.DataHelper;
 import hu.documaison.data.search.BoolOperator;
 import hu.documaison.data.search.Expression;
@@ -329,7 +330,7 @@ class DalImplementation implements DalInterface {
 	}
 
 	@Override
-	public Document getDocument(int id) {
+	public Document getDocument(int id) throws UnknownDocumentException {
 		// create a connection source to our database
 		ConnectionSource connectionSource = null;
 
@@ -343,7 +344,10 @@ class DalImplementation implements DalInterface {
 
 			// query
 			Document ret = dao.queryForId(id);
-
+			if (ret == null){
+				throw new UnknownDocumentException(id);
+			}
+			
 			// return
 			return ret;
 		} catch (SQLException e) {
@@ -600,7 +604,7 @@ class DalImplementation implements DalInterface {
 	}
 
 	@Override
-	public Tag getTag(int id) {
+	public Tag getTag(int id) throws UnknownTagException {
 		// create a connection source to our database
 		ConnectionSource connectionSource = null;
 
@@ -614,7 +618,10 @@ class DalImplementation implements DalInterface {
 
 			// query
 			Tag ret = dao.queryForId(id);
-
+			if (ret == null){
+				throw new UnknownTagException(id);
+			}
+			
 			// return
 			return ret;
 		} catch (SQLException e) {

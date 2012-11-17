@@ -2,7 +2,9 @@ package hu.documaison.bll.interfaces;
 
 import hu.documaison.data.entities.*;
 import hu.documaison.data.exceptions.InvalidParameterException;
+import hu.documaison.data.exceptions.UnknownDocumentException;
 import hu.documaison.data.exceptions.UnknownDocumentTypeException;
+import hu.documaison.data.exceptions.UnknownTagException;
 import hu.documaison.data.search.SearchExpression;
 
 import java.util.Collection;
@@ -24,7 +26,7 @@ public interface BllInterface {
 
 	public Collection<DocumentType> getAllDocumentTypes();
 
-	public Document getDocument(int id);
+	public Document getDocument(int id) throws UnknownDocumentException;
 
 	public Collection<Document> getDocuments();
 
@@ -36,7 +38,7 @@ public interface BllInterface {
 
 	public Collection<DocumentType> getDocumentTypes();
 
-	public Tag getTag(int id);
+	public Tag getTag(int id) throws UnknownTagException;
 
 	public Tag getTag(String name);
 

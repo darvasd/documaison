@@ -9,7 +9,9 @@ import hu.documaison.data.entities.DocumentType;
 import hu.documaison.data.entities.Metadata;
 import hu.documaison.data.entities.Tag;
 import hu.documaison.data.exceptions.InvalidParameterException;
+import hu.documaison.data.exceptions.UnknownDocumentException;
 import hu.documaison.data.exceptions.UnknownDocumentTypeException;
+import hu.documaison.data.exceptions.UnknownTagException;
 import hu.documaison.data.search.SearchExpression;
 
 import java.util.Collection;
@@ -61,7 +63,14 @@ public class BllImplementation implements BllInterface {
 		}
 
 		dal.updateDocument(document);
-		Document savedDoc = dal.getDocument(document.getId());
+		Document savedDoc;
+		try {
+			savedDoc = dal.getDocument(document.getId());
+		} catch (UnknownDocumentException e) {
+			// nothing to do here
+			// this must not happen
+			savedDoc = null;
+		}
 		return savedDoc;
 	}
 
@@ -92,7 +101,7 @@ public class BllImplementation implements BllInterface {
 	}
 
 	@Override
-	public Document getDocument(int id) {
+	public Document getDocument(int id) throws UnknownDocumentException {
 		DalInterface dal = DalSingletonProvider.getDalImplementation();
 		return dal.getDocument(id);
 	}
@@ -122,7 +131,7 @@ public class BllImplementation implements BllInterface {
 	}
 
 	@Override
-	public Tag getTag(int id) {
+	public Tag getTag(int id) throws UnknownTagException {
 		DalInterface dal = DalSingletonProvider.getDalImplementation();
 		return dal.getTag(id);
 	}

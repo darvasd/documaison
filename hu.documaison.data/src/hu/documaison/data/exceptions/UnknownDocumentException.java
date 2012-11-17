@@ -1,14 +1,12 @@
 package hu.documaison.data.exceptions;
 
-public class UnknownDocumentException extends Exception {
-	private int documentId;
-	
+public class UnknownDocumentException extends UnknownEntityException {
 	public UnknownDocumentException(int documentId)
 	{
-		this.documentId = documentId;
+		super("Document", documentId);
 	}
 	
 	public int getDocumentId(){
-		return this.documentId;
+		return this.getEntityId();
 	}
 }

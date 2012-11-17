@@ -2,7 +2,9 @@ package hu.documaison.dal.interfaces;
 
 import hu.documaison.data.entities.*;
 import hu.documaison.data.exceptions.InvalidParameterException;
+import hu.documaison.data.exceptions.UnknownDocumentException;
 import hu.documaison.data.exceptions.UnknownDocumentTypeException;
+import hu.documaison.data.exceptions.UnknownTagException;
 import hu.documaison.data.search.SearchExpression;
 
 import java.util.Collection;
@@ -12,7 +14,7 @@ public interface DalInterface {
 	public Collection<Document> getDocuments();
 	public Collection<Document> getDocumentsByTag(Tag tag);
 	public Collection<Document> getDocumentsByTags(java.util.List<Tag> tags);
-	public Document getDocument(int id);
+	public Document getDocument(int id) throws UnknownDocumentException;
 	public Document createDocument(int typeId) throws UnknownDocumentTypeException;
 	public void removeDocument(int id);
 	public void updateDocument(Document document);
@@ -21,7 +23,7 @@ public interface DalInterface {
 	public Tag createTag(String name);
 	public void updateTag(Tag tag);
 	public Collection<Tag> getTags();
-	public Tag getTag(int id);
+	public Tag getTag(int id) throws UnknownTagException;
 	public Tag getTag(String name);
 	public void removeTag(int id);
 	

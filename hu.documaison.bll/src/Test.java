@@ -4,6 +4,7 @@ import java.util.List;
 import hu.documaison.bll.interfaces.BllImplementation;
 import hu.documaison.bll.interfaces.BllInterface;
 import hu.documaison.data.entities.*;
+import hu.documaison.data.exceptions.InvalidParameterException;
 import hu.documaison.data.exceptions.UnknownDocumentTypeException;
 
 
@@ -42,6 +43,8 @@ public class Test {
 			}
 			
 		} catch (UnknownDocumentTypeException e) {
+			e.printStackTrace();
+		} catch (InvalidParameterException e) {
 			e.printStackTrace();
 		}
 	}
