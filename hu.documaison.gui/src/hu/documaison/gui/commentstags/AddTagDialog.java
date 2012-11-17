@@ -3,6 +3,10 @@ package hu.documaison.gui.commentstags;
 import hu.documaison.Application;
 import hu.documaison.data.entities.Document;
 import hu.documaison.data.entities.Tag;
+import hu.documaison.data.exceptions.InvalidParameterException;
+import hu.documaison.data.exceptions.UnableToCreateException;
+import hu.documaison.data.exceptions.UnknownTagException;
+import hu.documaison.gui.NotifactionWindow;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
@@ -156,19 +160,34 @@ public class AddTagDialog {
 		saveBtn.addListener(SWT.Selection, new Listener() {
 			@Override
 			public void handleEvent(Event e) {
-				if (existingRadio.getSelection()) {
-					Tag tag = Application.getBll().getTag(
-							existingCombo.getItem(existingCombo
-									.getSelectionIndex()));
-					Application.getBll().addTagToDocument(tag, doc);
-				} else {
-					Tag tag = Application.getBll().createTag(
-							newTagName.getText());
-					tag.setColorName(colorCombo.getItem(colorCombo
-							.getSelectionIndex()));
-					tag.setName(newTagName.getText());
-					Application.getBll().updateTag(tag);
-					Application.getBll().addTagToDocument(tag, doc);
+				try {
+					if (existingRadio.getSelection()) {
+						Tag tag = Application.getBll().getTag(
+								existingCombo.getItem(existingCombo
+										.getSelectionIndex()));
+						Application.getBll().addTagToDocument(tag, doc);
+					} else {
+						Tag tag = Application.getBll().createTag(
+								newTagName.getText());
+						tag.setColorName(colorCombo.getItem(colorCombo
+								.getSelectionIndex()));
+						tag.setName(newTagName.getText());
+						Application.getBll().updateTag(tag);
+						Application.getBll().addTagToDocument(tag, doc);
+					}
+				} catch (UnableToCreateException e1) {
+					NotifactionWindow.showError("Database error",
+							"Failed to save the tag due to an error in the database. ("
+									+ e1.getMessage() + ")");
+				} catch (InvalidParameterException e1) {
+					NotifactionWindow.showError("Parameter error",
+							"Can't add the selected tag to the document. ("
+									+ e1.getMessage() + ")");
+					e1.printStackTrace();
+				} catch (UnknownTagException e1) {
+					NotifactionWindow
+							.showError("Database error",
+									"Unable to locate the selected tag in the database.");
 				}
 
 				dialog.dispose();

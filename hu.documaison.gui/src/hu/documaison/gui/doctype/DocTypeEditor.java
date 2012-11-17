@@ -3,6 +3,7 @@ package hu.documaison.gui.doctype;
 import hu.documaison.Application;
 import hu.documaison.data.entities.DefaultMetadata;
 import hu.documaison.data.entities.DocumentType;
+import hu.documaison.data.exceptions.UnknownDocumentTypeException;
 import hu.documaison.gui.InnerPanel;
 import hu.documaison.gui.NotifactionWindow;
 import hu.documaison.gui.ViewManager;
@@ -174,14 +175,23 @@ public class DocTypeEditor extends InnerPanel {
 				DocumentType dt = (DocumentType) item.getData("docType");
 				MetadataDialog dialog = new MetadataDialog();
 				dialog.showAndHandle(getShell(), dt, null);
-				DocumentType type = Application.getBll().getDocumentType(
-						dt.getId());
-				item.setItemCount(type.getDefaultMetadataCollection().size());
-				item.setData("metadata", type.getDefaultMetadataCollection()
-						.toArray(new DefaultMetadata[0]));
-				item.setData("docType", type);
-				tree.redraw();
-				item.setExpanded(true);
+				DocumentType type;
+				try {
+					type = Application.getBll().getDocumentType(dt.getId());
+					item.setItemCount(type.getDefaultMetadataCollection()
+							.size());
+					item.setData(
+							"metadata",
+							type.getDefaultMetadataCollection().toArray(
+									new DefaultMetadata[0]));
+					item.setData("docType", type);
+					tree.redraw();
+					item.setExpanded(true);
+				} catch (UnknownDocumentTypeException e1) {
+					NotifactionWindow
+							.showError("Unknwon document type",
+									"Failed to load the document type from the database.");
+				}
 			}
 		});
 
@@ -201,17 +211,23 @@ public class DocTypeEditor extends InnerPanel {
 							currentMeta);
 					selectedItem.setText(getMetadataItemLabel(currentMeta));
 					selectedItem.setData("metadataObject", currentMeta);
-					DocumentType type = Application.getBll().getDocumentType(
-							dt.getId());
-					item.setItemCount(type.getDefaultMetadataCollection()
-							.size());
-					item.setData(
-							"metadata",
-							type.getDefaultMetadataCollection().toArray(
-									new DefaultMetadata[0]));
-					item.setData("docType", type);
-					tree.redraw();
-					item.setExpanded(true);
+					DocumentType type;
+					try {
+						type = Application.getBll().getDocumentType(dt.getId());
+						item.setItemCount(type.getDefaultMetadataCollection()
+								.size());
+						item.setData(
+								"metadata",
+								type.getDefaultMetadataCollection().toArray(
+										new DefaultMetadata[0]));
+						item.setData("docType", type);
+						tree.redraw();
+						item.setExpanded(true);
+					} catch (UnknownDocumentTypeException e1) {
+						NotifactionWindow
+								.showError("Unknwon document type",
+										"Failed to load the document type from the database.");
+					}
 				} else {
 					NotifactionWindow
 							.showError("Error",

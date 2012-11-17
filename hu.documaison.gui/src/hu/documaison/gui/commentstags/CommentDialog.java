@@ -3,6 +3,9 @@ package hu.documaison.gui.commentstags;
 import hu.documaison.Application;
 import hu.documaison.data.entities.Comment;
 import hu.documaison.data.entities.Document;
+import hu.documaison.data.exceptions.UnableToCreateException;
+import hu.documaison.data.exceptions.UnknownDocumentException;
+import hu.documaison.gui.NotifactionWindow;
 
 import java.text.DateFormat;
 import java.util.Date;
@@ -81,22 +84,34 @@ public class CommentDialog {
 
 	private void loadComments(Text viewer, Document doc) {
 		viewer.setText("");
-		doc = Application.getBll().getDocument(doc.getId()); // get new document
-																// data from DB
-		for (Comment c : doc.getCommentCollection()) {
-			String commentDate = DateFormat
-					.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT,
-							new Locale("hu", "HU")).format(c.getCreatedDate());
+		try {
+			doc = Application.getBll().getDocument(doc.getId());
+			for (Comment c : doc.getCommentCollection()) {
+				String commentDate = DateFormat.getDateTimeInstance(
+						DateFormat.MEDIUM, DateFormat.SHORT,
+						new Locale("hu", "HU")).format(c.getCreatedDate());
 
-			viewer.setText(viewer.getText() + c.getMessage() + " ("
-					+ commentDate + ")\n\n");
+				viewer.setText(viewer.getText() + c.getMessage() + " ("
+						+ commentDate + ")\n\n");
+			}
+		} catch (UnknownDocumentException e) {
+			viewer.setText("Failed to load comments from the database.\n\n"
+					+ e.getMessage());
 		}
 	}
 
 	private void storeComment(String comment, Document doc) {
-		Comment com = Application.getBll().createComment(doc);
-		com.setCreatedDate(new Date());
-		com.setMessage(comment);
-		Application.getBll().updateComment(com);
+		Comment com;
+		try {
+			com = Application.getBll().createComment(doc);
+			com.setCreatedDate(new Date());
+			com.setMessage(comment);
+			Application.getBll().updateComment(com);
+		} catch (UnableToCreateException e) {
+			NotifactionWindow.showError(
+					"Database error",
+					"Failed to store the comment in the database ("
+							+ e.getMessage() + ")");
+		}
 	}
 }

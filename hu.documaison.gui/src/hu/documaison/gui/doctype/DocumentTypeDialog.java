@@ -2,6 +2,7 @@ package hu.documaison.gui.doctype;
 
 import hu.documaison.Application;
 import hu.documaison.data.entities.DocumentType;
+import hu.documaison.data.exceptions.UnableToCreateException;
 import hu.documaison.gui.NotifactionWindow;
 
 import java.io.BufferedInputStream;
@@ -133,14 +134,21 @@ public class DocumentTypeDialog {
 				if (previousType != null) {
 					dt = previousType;
 				} else {
-					dt = Application.getBll().createDocumentType();
+					try {
+						dt = Application.getBll().createDocumentType();
+						dt.setDefaultExt(extText.getText());
+						dt.setTypeName(nameText.getText());
+						dt.setDefaultThumbnailBytes(thumbBytes);
+						Application.getBll().updateDocumentType(dt);
+						dialog.dispose();
+					} catch (UnableToCreateException e1) {
+						NotifactionWindow.showError(
+								"Database error",
+								"Unable to create new document type. ("
+										+ e1.getMessage() + ")");
+					}
 					previousType = dt;
 				}
-				dt.setDefaultExt(extText.getText());
-				dt.setTypeName(nameText.getText());
-				dt.setDefaultThumbnailBytes(thumbBytes);
-				Application.getBll().updateDocumentType(dt);
-				dialog.dispose();
 			}
 		});
 

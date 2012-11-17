@@ -4,6 +4,7 @@ import hu.documaison.Application;
 import hu.documaison.data.entities.DefaultMetadata;
 import hu.documaison.data.entities.DocumentType;
 import hu.documaison.data.entities.MetadataType;
+import hu.documaison.data.exceptions.UnableToCreateException;
 import hu.documaison.gui.NotifactionWindow;
 
 import java.util.Calendar;
@@ -192,8 +193,15 @@ public class MetadataDialog {
 			@Override
 			public void handleEvent(Event e) {
 				if (metadata == null) {
-					metadata = Application.getBll().createDefaultMetadata(
-							parentType);
+					try {
+						metadata = Application.getBll().createDefaultMetadata(
+								parentType);
+					} catch (UnableToCreateException e1) {
+						NotifactionWindow
+								.showError("Database error",
+										"Unable to create metadata entry, the changes are not saved!");
+						return;
+					}
 				}
 
 				metadata.setName(nameText.getText());
