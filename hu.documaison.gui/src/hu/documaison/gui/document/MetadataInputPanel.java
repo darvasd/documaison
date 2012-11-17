@@ -51,6 +51,7 @@ public class MetadataInputPanel extends InnerPanel {
 	public void setDocument(Document doc) {
 		mtdtPanel.setDocument(doc);
 		documentToEdit = doc;
+		layout();
 	}
 
 }

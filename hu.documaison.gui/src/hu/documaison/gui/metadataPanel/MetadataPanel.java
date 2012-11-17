@@ -48,17 +48,9 @@ public class MetadataPanel extends Composite {
 		// combo.add(dt.getTypeName());
 		// }
 
-		pTable = new PropertyTable(this, SWT.None);
-		pTable.viewAsFlatList();
-		pTable.hideButtons();
-		pTable.hideDescription();
-
-		pTable.addProperty(new PTProperty("Location", "", "")
-				.setEditor(new PTFileEditor()));
 	}
 
 	public void setDocument(Document doc) {
-		Application.getBll().updateDocument(doc);
 		if (pTable != null) {
 			pTable.dispose();
 		}
@@ -69,15 +61,16 @@ public class MetadataPanel extends Composite {
 
 		PTComboEditor combo = new PTComboEditor(true, Application.getBll()
 				.getDocumentTypes().toArray());
-		pTable.addProperty(new PTProperty("doctype", "Document Type", "", doc
+
+		pTable.addProperty(new PTProperty("Document Type", "doctype", "", doc
 				.getType().getTypeName()).setEditor(combo));
 
 		String loc = doc.getLocation();
 		if (loc.startsWith("http://")) {
-			pTable.addProperty(new PTProperty("loc", "Location (URL)", "", loc)
+			pTable.addProperty(new PTProperty("Location (URL)", "loc", "", loc)
 					.setEditor(new PTURLEditor()));
 		} else {
-			pTable.addProperty(new PTProperty("loc", "Location (file)", "", loc)
+			pTable.addProperty(new PTProperty("Location (file)", "loc", "", loc)
 					.setEditor(new PTFileEditor()));
 		}
 
@@ -91,8 +84,8 @@ public class MetadataPanel extends Composite {
 							.setEditor(new PTDateEditor()));
 					break;
 				case Integer:
-					pTable.addProperty(new PTProperty("mtdt_" + mtdt.getId(),
-							mtdt.getName(), null, mtdt.getIntValue())
+					pTable.addProperty(new PTProperty(mtdt.getName(), "mtdt_"
+							+ mtdt.getId(), null, mtdt.getIntValue())
 							.setEditor(new PTIntegerEditor()));
 					break;
 				case Text:
@@ -105,6 +98,7 @@ public class MetadataPanel extends Composite {
 				}
 			}
 		}
+		layout();
 
 	}
 }
