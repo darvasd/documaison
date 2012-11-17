@@ -110,7 +110,7 @@ public class MainDetailsPanel extends Composite {
 				CommentDialog dialog = new CommentDialog();
 				dialog.showAndHandle(getShell(), document);
 				Application.getBll().updateDocument(document);
-				showTags(document);
+
 			}
 		});
 	}
@@ -126,5 +126,6 @@ public class MainDetailsPanel extends Composite {
 		data.right = new FormAttachment(100, -10);
 		tags.setLayoutData(data);
 		layout();
+
 	}
 }
