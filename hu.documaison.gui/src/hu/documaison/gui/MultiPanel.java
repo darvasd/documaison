@@ -1,6 +1,5 @@
 package hu.documaison.gui;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.eclipse.swt.layout.FormAttachment;
@@ -10,16 +9,16 @@ import org.eclipse.swt.widgets.Composite;
 
 public class MultiPanel extends Composite {
 
-	private HashMap<String, Composite> sheetMap = new HashMap<String, Composite>();
+	private final HashMap<String, InnerPanel> sheetMap = new HashMap<String, InnerPanel>();
 	private Composite currentSheet = null;
-	private FormLayout layout = new FormLayout();
-	
+	private final FormLayout layout = new FormLayout();
+
 	public MultiPanel(Composite parent, int style) {
 		super(parent, style);
 		setLayout(layout);
 	}
-	
-	public void addSheet(Composite sheet, String id) {
+
+	public void addSheet(InnerPanel sheet, String id) {
 		sheetMap.put(id, sheet);
 		FormData data = new FormData();
 		data.top = new FormAttachment(0, 0);
@@ -34,17 +33,27 @@ public class MultiPanel extends Composite {
 		sheet.setVisible(true);
 		layout();
 	}
-	
-	public void selectSheet(String id) {
-		Composite sheet = sheetMap.get(id);
+
+	public InnerPanel selectSheet(String id) {
+		InnerPanel sheet = sheetMap.get(id);
+		return selectSheet(sheet);
+	}
+
+	public InnerPanel selectSheet(InnerPanel sheet) {
 		if (currentSheet != null) {
 			currentSheet.setVisible(false);
 		}
 		currentSheet = sheet;
+		sheet.setPreviousPanel(null);
 		sheet.setVisible(true);
+		sheet.showed();
 		layout();
+		return sheet;
 	}
-	
-	
 
+	public void selectSheet(String id, InnerPanel previous) {
+		InnerPanel sheet = selectSheet(id);
+		sheet.setPreviousPanel(previous);
+		sheet.showed();
+	}
 }

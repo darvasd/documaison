@@ -5,6 +5,7 @@ import hu.documaison.data.entities.DefaultMetadata;
 import hu.documaison.data.entities.DocumentType;
 import hu.documaison.gui.InnerPanel;
 import hu.documaison.gui.NotifactionWindow;
+import hu.documaison.gui.ViewManager;
 
 import java.util.Collection;
 
@@ -29,6 +30,7 @@ public class DocTypeEditor extends InnerPanel {
 	private Button removeMetadataBtn;
 	private Button addNewDocTypeBtn;
 	private Button editDocTypeBtn;
+	private Button doneBtn;
 
 	public DocTypeEditor(Composite parent, int style) {
 		super(parent, style, "Document type manager");
@@ -106,6 +108,14 @@ public class DocTypeEditor extends InnerPanel {
 		data.top = new FormAttachment(editMetadataBtn, 0);
 		data.left = new FormAttachment(tree, 10);
 		removeMetadataBtn.setLayoutData(data);
+
+		doneBtn = new Button(this, SWT.PUSH);
+		doneBtn.setText("Done");
+		data = new FormData();
+		data.right = new FormAttachment(100, -10);
+		data.bottom = new FormAttachment(tree, 0, SWT.BOTTOM);
+		data.left = new FormAttachment(tree, 10);
+		doneBtn.setLayoutData(data);
 
 		addEventListeners();
 	}
@@ -254,6 +264,15 @@ public class DocTypeEditor extends InnerPanel {
 			}
 		});
 
+		doneBtn.addListener(SWT.Selection, new Listener() {
+			@Override
+			public void handleEvent(Event arg0) {
+				if (previous != null) {
+					ViewManager.getDefault().showView(previous);
+				}
+			}
+		});
+
 	}
 
 	private void loadDocTypes() {
@@ -291,4 +310,15 @@ public class DocTypeEditor extends InnerPanel {
 		return currentMeta.getName() + " : " + currentMeta.getMetadataType()
 				+ dv;
 	}
+
+	@Override
+	public void showed() {
+		if (previous != null) {
+			doneBtn.setVisible(true);
+		} else {
+			doneBtn.setVisible(false);
+		}
+		super.showed();
+	}
+
 }

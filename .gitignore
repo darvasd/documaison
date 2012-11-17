@@ -25,3 +25,5 @@ hu.documaison.dal/documaison.db:documaison
 hu.documaison.dal/settings.xml
 
 hu.documaison.gui/documaison.db:documaison
+
+.DS_Store

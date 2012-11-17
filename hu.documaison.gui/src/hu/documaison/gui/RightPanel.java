@@ -11,7 +11,6 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
-import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.widgets.Composite;
 
 public class RightPanel extends Composite {
@@ -21,24 +20,24 @@ public class RightPanel extends Composite {
 		setLayout(new FillLayout());
 		final MultiPanel multiPanel = new MultiPanel(this, SWT.NONE);
 		ViewManager.getDefault().setViewer(multiPanel);
-		Composite tab1Composite = new Composite(multiPanel, SWT.NONE);
-		multiPanel.addSheet(tab1Composite, "documents");
-		tab1Composite.setLayout(new FormLayout());
-		DocumentItem doc = new DocumentItem(tab1Composite, SWT.BORDER);
+		// Composite tab1Composite = new Composite(multiPanel, SWT.NONE);
+		// multiPanel.addSheet(tab1Composite, "documents");
+		// tab1Composite.setLayout(new FormLayout());
+		// DocumentItem doc = new DocumentItem(tab1Composite, SWT.BORDER);
 		FormData data = new FormData();
 		data.top = new FormAttachment(0, 0);
 		data.left = new FormAttachment(0, 0);
 		data.right = new FormAttachment(100, 0);
 		data.bottom = new FormAttachment(0, 123);
-		doc.setLayoutData(data);
+		// doc.setLayoutData(data);
 
-		DocumentItem doc2 = new DocumentItem(tab1Composite, SWT.BORDER);
-		data = new FormData();
-		data.top = new FormAttachment(doc, 0);
-		data.left = new FormAttachment(0, 0);
-		data.right = new FormAttachment(100, 0);
-		data.height = 123;
-		doc2.setLayoutData(data);
+		// DocumentItem doc2 = new DocumentItem(tab1Composite, SWT.BORDER);
+		// data = new FormData();
+		// data.top = new FormAttachment(doc, 0);
+		// data.left = new FormAttachment(0, 0);
+		// data.right = new FormAttachment(100, 0);
+		// data.height = 123;
+		// doc2.setLayoutData(data);
 
 		AdvancedSearchPanel asp = new AdvancedSearchPanel(multiPanel, SWT.NONE);
 		multiPanel.addSheet(asp, "advancedSearch");

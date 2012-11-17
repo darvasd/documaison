@@ -13,7 +13,7 @@ import com.j256.ormlite.table.DatabaseTable;
 @DatabaseTable(tableName = "DocumentTypes")
 public class DocumentType extends DatabaseObject {
 	public static final String METADATA = "metadata";
-	
+
 	@DatabaseField
 	private String typeName;
 
@@ -24,16 +24,15 @@ public class DocumentType extends DatabaseObject {
 	private byte[] defaultThumbnailBytes;
 
 	@ForeignCollectionField(eager = true, foreignFieldName = DefaultMetadata.PARENT, columnName = METADATA)
-	private ForeignCollection<DefaultMetadata> defaultMetadataCollection; 
+	private ForeignCollection<DefaultMetadata> defaultMetadataCollection;
 
-	public DocumentType()
-	{
-		// ORMLite needs a no-arg constructor 
+	public DocumentType() {
+		// ORMLite needs a no-arg constructor
 	}
-	
-	public DocumentType(Dao<DocumentType, Integer> dao) throws SQLException
-	{
-		this.defaultMetadataCollection = dao.getEmptyForeignCollection(METADATA);
+
+	public DocumentType(Dao<DocumentType, Integer> dao) throws SQLException {
+		this.defaultMetadataCollection = dao
+				.getEmptyForeignCollection(METADATA);
 	}
 
 	/**
@@ -44,7 +43,8 @@ public class DocumentType extends DatabaseObject {
 	}
 
 	/**
-	 * @param typeName the typeName to set
+	 * @param typeName
+	 *            the typeName to set
 	 */
 	public void setTypeName(String typeName) {
 		this.typeName = typeName;
@@ -58,7 +58,8 @@ public class DocumentType extends DatabaseObject {
 	}
 
 	/**
-	 * @param defaultExt the defaultExt to set
+	 * @param defaultExt
+	 *            the defaultExt to set
 	 */
 	public void setDefaultExt(String defaultExt) {
 		this.defaultExt = defaultExt;
@@ -72,7 +73,8 @@ public class DocumentType extends DatabaseObject {
 	}
 
 	/**
-	 * @param defaultThumbnailBytes the defaultThumbnailBytes to set
+	 * @param defaultThumbnailBytes
+	 *            the defaultThumbnailBytes to set
 	 */
 	public void setDefaultThumbnailBytes(byte[] defaultThumbnailBytes) {
 		this.defaultThumbnailBytes = defaultThumbnailBytes;
@@ -86,17 +88,25 @@ public class DocumentType extends DatabaseObject {
 	}
 
 	/**
-	 * @param metadata the metadata to add to defaults
+	 * @param metadata
+	 *            the metadata to add to defaults
 	 */
 	public void addMetadata(DefaultMetadata metadata) {
 		this.defaultMetadataCollection.add(metadata);
-		//metadata.setParent(this);
+		// metadata.setParent(this);
 	}
 
 	/**
-	 * @param metadata the metadata to remove from defaults
+	 * @param metadata
+	 *            the metadata to remove from defaults
 	 */
 	public void removeMetadata(DefaultMetadata metadata) {
 		this.defaultMetadataCollection.remove(metadata);
 	}
+
+	@Override
+	public String toString() {
+		return typeName;
+	}
+
 }
