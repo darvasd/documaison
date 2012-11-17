@@ -15,7 +15,7 @@ public class ColorMap {
 		map.put("Dark green", new int[] { 0, 128, 0 });
 		map.put("Dark yellow", new int[] { 128, 128, 0 });
 		map.put("Dark blue", new int[] { 0, 0, 128 });
-		map.put("Darke magenta", new int[] { 128, 0, 128 });
+		map.put("Dark magenta", new int[] { 128, 0, 128 });
 		map.put("Dark cyan", new int[] { 0, 128, 128 });
 		map.put("Dark gray", new int[] { 128, 128, 128 });
 		map.put("Gray", new int[] { 192, 192, 192 });

@@ -9,6 +9,10 @@ import hu.documaison.data.exceptions.UnknownDocumentException;
 import hu.documaison.data.exceptions.UnknownTagException;
 import hu.documaison.gui.NotifactionWindow;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.FormAttachment;
@@ -89,7 +93,9 @@ public class AddTagDialog {
 		colorCombo = new Combo(composite, SWT.SINGLE | SWT.READ_ONLY
 				| SWT.DROP_DOWN);
 		colorCombo.setEnabled(false);
-		for (String color : ColorMap.get().getColors()) {
+		List<String> colors = new ArrayList<String>(ColorMap.get().getColors());
+		Collections.sort(colors);
+		for (String color : colors) {
 			colorCombo.add(color);
 		}
 		data = new FormData();
@@ -182,6 +188,7 @@ public class AddTagDialog {
 								.getSelectionIndex()));
 						tag.setName(newTagName.getText());
 						Application.getBll().updateTag(tag);
+						tag = Application.getBll().getTag(tag.getId());
 						Application.getBll().addTagToDocument(tag, doc);
 					}
 				} catch (UnableToCreateException e1) {
@@ -192,7 +199,6 @@ public class AddTagDialog {
 					NotifactionWindow.showError("Parameter error",
 							"Can't add the selected tag to the document. ("
 									+ e1.getMessage() + ")");
-					e1.printStackTrace();
 				} catch (UnknownTagException e1) {
 					NotifactionWindow
 							.showError("Database error",

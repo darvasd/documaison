@@ -4,6 +4,7 @@ import hu.documaison.Application;
 import hu.documaison.data.entities.Document;
 import hu.documaison.data.entities.Tag;
 import hu.documaison.data.exceptions.UnknownDocumentException;
+import hu.documaison.data.exceptions.UnknownTagException;
 import hu.documaison.gui.NotifactionWindow;
 
 import java.util.ArrayList;
@@ -27,7 +28,9 @@ public class TagViewer extends Composite implements SelectionListener {
 
 	public TagViewer(Composite parent, int style, final Document doc) {
 		super(parent, style);
-		setLayout(new RowLayout(SWT.WRAP | SWT.HORIZONTAL));
+		RowLayout layout = new RowLayout();
+		layout.wrap = true;
+		setLayout(layout);
 		this.doc = doc;
 
 		createControls();
@@ -66,11 +69,17 @@ public class TagViewer extends Composite implements SelectionListener {
 			controls.add(emptyLabel);
 		} else {
 			for (Tag tag : updatedDoc.getTags()) {
+				try {
+					tag = Application.getBll().getTag(tag.getId());
+				} catch (UnknownTagException e1) {
+					NotifactionWindow.showError("Database error",
+							"Failed to update tag from database.");
+				}
 				Link link = new Link(this, SWT.None);
 				controls.add(link);
-				link.setText(tag.getName() + "(<a>X</a>)");
+				link.setText(tag.getName() + " (<a>X</a>)");
 				int[] rgb = ColorMap.get().getRGB(tag.getColorName());
-				link.setBackground(new Color(getDisplay(), rgb[0], rgb[1],
+				link.setForeground(new Color(getDisplay(), rgb[0], rgb[1],
 						rgb[2]));
 				link.setData(tag);
 				link.addSelectionListener(this);
