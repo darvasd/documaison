@@ -13,7 +13,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.mihalis.opal.propertyTable.PTProperty;
 import org.mihalis.opal.propertyTable.PTPropertyChangeListener;
 import org.mihalis.opal.propertyTable.PropertyTable;
-import org.mihalis.opal.propertyTable.editor.PTComboEditor;
 import org.mihalis.opal.propertyTable.editor.PTDateEditor;
 import org.mihalis.opal.propertyTable.editor.PTFileEditor;
 import org.mihalis.opal.propertyTable.editor.PTIntegerEditor;
@@ -34,12 +33,6 @@ public class MetadataPanel extends Composite {
 	public void setDocument(Document doc) {
 		this.doc = doc;
 		createNewPropTable();
-
-		PTComboEditor combo = new PTComboEditor(true, Application.getBll()
-				.getDocumentTypes().toArray());
-
-		pTable.addProperty(new PTProperty("Document Type", "doctype", "", doc
-				.getType().getTypeName()).setEditor(combo));
 
 		String loc = doc.getLocation();
 		if (loc.startsWith("http://")) {
@@ -93,20 +86,25 @@ public class MetadataPanel extends Composite {
 
 			@Override
 			public void propertyHasChanged(PTProperty prop) {
-				Metadata mtdt = metadataMap.get(prop.getDisplayName());
-				switch (mtdt.getMetadataType()) {
-				case Date:
-					mtdt.setValue((Date) prop.getValue());
-					break;
-				case Integer:
-					mtdt.setValue((Integer) prop.getValue());
-					break;
-				case Text:
-				default:
-					mtdt.setValue((String) prop.getValue());
-					break;
+				if (prop.getDisplayName().equalsIgnoreCase("loc")) {
 
+				} else {
+					Metadata mtdt = metadataMap.get(prop.getDisplayName());
+					switch (mtdt.getMetadataType()) {
+					case Date:
+						mtdt.setValue((Date) prop.getValue());
+						break;
+					case Integer:
+						mtdt.setValue((Integer) prop.getValue());
+						break;
+					case Text:
+					default:
+						mtdt.setValue((String) prop.getValue());
+						break;
+
+					}
 				}
+
 				Application.getBll().updateDocument(doc);
 			}
 		});
