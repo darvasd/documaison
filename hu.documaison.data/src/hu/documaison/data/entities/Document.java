@@ -43,15 +43,15 @@ public class Document extends DatabaseObject {
 		// ORMLite needs a no-arg constructor
 	}
 
-//	public Document(DocumentType type, Dao<Document, Integer> dao)
-//			throws SQLException {
-//		this.type = type;
-//		dao.getEmptyForeignCollection(TAGS);
-//		dao.getEmptyForeignCollection(METADATA);
-//		dao.getEmptyForeignCollection(COMMENTS);
-//
-//		// TODO copy default metadata
-//	}
+	// public Document(DocumentType type, Dao<Document, Integer> dao)
+	// throws SQLException {
+	// this.type = type;
+	// dao.getEmptyForeignCollection(TAGS);
+	// dao.getEmptyForeignCollection(METADATA);
+	// dao.getEmptyForeignCollection(COMMENTS);
+	//
+	// // TODO copy default metadata
+	// }
 
 	/**
 	 * @return the location
@@ -131,6 +131,19 @@ public class Document extends DatabaseObject {
 	 */
 	public Collection<Metadata> getMetadataCollection() {
 		return metadataCollection;
+	}
+
+	public Metadata getMetadata(String metadataName) {
+		if (this.metadataCollection == null) {
+			return null;
+		} else {
+			for (Metadata md : this.metadataCollection) {
+				if (md.getName().equals(metadataName)) {
+					return md;
+				}
+			}
+		}
+		return null;
 	}
 
 	/**
