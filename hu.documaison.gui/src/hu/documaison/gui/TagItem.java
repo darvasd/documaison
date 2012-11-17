@@ -1,5 +1,8 @@
 package hu.documaison.gui;
 
+import hu.documaison.data.entities.Tag;
+import hu.documaison.gui.commentstags.ColorMap;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
@@ -12,19 +15,20 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 
 public class TagItem extends Composite implements MouseListener {
-	
-	private boolean selected = false;
-	private Color white = new Color(null, 255, 255, 255);
-	private Color black = new Color(null, 0, 0, 0);
-	private Color selectionBackground = new Color(null, 43, 89, 190);
-	private Image image = new Image(getDisplay(), "images/tagIcon.png");
-	private Label textLabel;
-	private TagPanel parentTagPanel;
-	private int index;
-	
 
-	public TagItem(Composite parent, int style, int index, String tagName, TagPanel parentTagPanel) {
+	private boolean selected = false;
+	private final Color white = new Color(null, 255, 255, 255);
+	private final Color selectionBackground = new Color(null, 43, 89, 190);
+	private final Image image = new Image(getDisplay(), "images/tagIcon.png");
+	private final Label textLabel;
+	private final TagPanel parentTagPanel;
+	private final int index;
+	private final Tag tag;
+
+	public TagItem(Composite parent, int style, int index, Tag tag,
+			TagPanel parentTagPanel) {
 		super(parent, style);
+		this.tag = tag;
 		this.index = index;
 		this.parentTagPanel = parentTagPanel;
 		FormLayout layout = new FormLayout();
@@ -34,8 +38,14 @@ public class TagItem extends Composite implements MouseListener {
 		FormData data = new FormData();
 		data.left = new FormAttachment(0, 15);
 		imageLabel.setLayoutData(data);
-		textLabel = new Label(this, SWT.None);;
-		textLabel.setText(tagName);
+		textLabel = new Label(this, SWT.None);
+		textLabel.setText(tag.getName());
+		int rgb[] = ColorMap.get().getRGB(tag.getColorName());
+		if (rgb == null) {
+			rgb = ColorMap.get().getRGB("Black");
+		}
+		textLabel
+				.setForeground(new Color(getDisplay(), rgb[0], rgb[1], rgb[2]));
 		data = new FormData();
 		data.left = new FormAttachment(imageLabel, 5);
 		data.top = new FormAttachment(imageLabel, 0, SWT.CENTER);
@@ -45,10 +55,9 @@ public class TagItem extends Composite implements MouseListener {
 		imageLabel.addMouseListener(this);
 		textLabel.addMouseListener(this);
 		addMouseListener(this);
-		
+
 	}
 
-	
 	public void setSelected(boolean value) {
 		selected = value;
 		if (selected) {
@@ -57,7 +66,12 @@ public class TagItem extends Composite implements MouseListener {
 			parentTagPanel.addToSelection(this);
 		} else {
 			setBackground(null);
-			textLabel.setForeground(black);
+			int rgb[] = ColorMap.get().getRGB(tag.getColorName());
+			if (rgb == null) {
+				rgb = ColorMap.get().getRGB("Black");
+			}
+			textLabel.setForeground(new Color(getDisplay(), rgb[0], rgb[1],
+					rgb[2]));
 			parentTagPanel.removeFromSelection(this);
 		}
 	}
@@ -68,7 +82,8 @@ public class TagItem extends Composite implements MouseListener {
 
 	@Override
 	public void mouseDown(MouseEvent e) {
-		if (((e.stateMask & SWT.CTRL) == SWT.CTRL) || ((e.stateMask & SWT.COMMAND) == SWT.COMMAND)) {
+		if (((e.stateMask & SWT.CTRL) == SWT.CTRL)
+				|| ((e.stateMask & SWT.COMMAND) == SWT.COMMAND)) {
 			setSelected(!selected);
 		} else if ((e.stateMask & SWT.SHIFT) == SWT.SHIFT) {
 			parentTagPanel.multipleSelection(this);
@@ -85,11 +100,9 @@ public class TagItem extends Composite implements MouseListener {
 	@Override
 	public void mouseUp(MouseEvent arg0) {
 	}
-	
+
 	public int getIndex() {
 		return index;
 	}
-	
-	
 
 }

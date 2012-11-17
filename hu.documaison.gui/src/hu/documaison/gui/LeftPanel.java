@@ -13,7 +13,7 @@ public class LeftPanel extends Composite {
 	public LeftPanel(Composite parent, int style) {
 		super(parent, style);
 		setLayout(new FormLayout());
-		TagPanel tagPanel = new TagPanel(this, SWT.BORDER, null);
+		TagPanel tagPanel = new TagPanel(this, SWT.BORDER);
 		SearchPanel searchPanel = new SearchPanel(this, SWT.BORDER);
 		FormData data = new FormData();
 		data.bottom = new FormAttachment(100, 0);
@@ -27,8 +27,7 @@ public class LeftPanel extends Composite {
 		data.right = new FormAttachment(100, 0);
 		data.bottom = new FormAttachment(searchPanel, 0);
 		tagPanel.setLayoutData(data);
-		
-	}
 
+	}
 
 }

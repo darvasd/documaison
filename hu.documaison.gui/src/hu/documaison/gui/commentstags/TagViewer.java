@@ -65,7 +65,7 @@ public class TagViewer extends Composite implements SelectionListener {
 
 		if (updatedDoc.getTags() == null || updatedDoc.getTags().size() == 0) {
 			Label emptyLabel = new Label(this, SWT.WRAP);
-			emptyLabel.setText("No tag...");
+			emptyLabel.setText("No tags...");
 			controls.add(emptyLabel);
 		} else {
 			for (Tag tag : updatedDoc.getTags()) {

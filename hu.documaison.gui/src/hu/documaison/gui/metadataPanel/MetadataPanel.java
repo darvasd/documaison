@@ -3,13 +3,20 @@ package hu.documaison.gui.metadataPanel;
 import hu.documaison.Application;
 import hu.documaison.data.entities.Document;
 import hu.documaison.data.entities.Metadata;
+import hu.documaison.data.exceptions.UnknownDocumentException;
+import hu.documaison.gui.NotifactionWindow;
 
 import java.util.Date;
 import java.util.HashMap;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.FormAttachment;
+import org.eclipse.swt.layout.FormData;
+import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Link;
+import org.eclipse.swt.widgets.Listener;
 import org.mihalis.opal.propertyTable.PTProperty;
 import org.mihalis.opal.propertyTable.PTPropertyChangeListener;
 import org.mihalis.opal.propertyTable.PropertyTable;
@@ -22,12 +29,35 @@ import org.mihalis.opal.propertyTable.editor.PTURLEditor;
 public class MetadataPanel extends Composite {
 
 	private PropertyTable pTable;
+	private final Link addProp;
 	private Document doc;
 	private HashMap<String, Metadata> metadataMap;
 
 	public MetadataPanel(Composite parent, int style) {
 		super(parent, style);
-		setLayout(new FillLayout());
+		setLayout(new FormLayout());
+
+		addProp = new Link(this, SWT.NONE);
+		addProp.setText("<a>Add more metadata...</a>");
+		FormData data = new FormData();
+		data.bottom = new FormAttachment(100, -5);
+		data.right = new FormAttachment(100, -10);
+		addProp.setLayoutData(data);
+		addProp.addListener(SWT.Selection, new Listener() {
+			@Override
+			public void handleEvent(Event e) {
+				MoreMetadataDialog dialog = new MoreMetadataDialog();
+				Metadata metadata = dialog.showAndHandle(getShell(), doc);
+				try {
+					doc = Application.getBll().getDocument(doc.getId());
+				} catch (UnknownDocumentException e1) {
+					NotifactionWindow.showError("Database error",
+							"Failed to update document from database.");
+				}
+				addProp(metadata);
+				pTable.layout();
+			}
+		});
 	}
 
 	public void setDocument(Document doc) {
@@ -47,26 +77,7 @@ public class MetadataPanel extends Composite {
 		metadataMap = new HashMap<String, Metadata>();
 		if (doc.getMetadataCollection() != null) {
 			for (Metadata mtdt : doc.getMetadataCollection()) {
-				metadataMap.put("" + mtdt.getId(), mtdt);
-				switch (mtdt.getMetadataType()) {
-				case Date:
-					pTable.addProperty(new PTProperty(mtdt.getName(), ""
-							+ mtdt.getId(), null, mtdt.getDateValue())
-							.setEditor(new PTDateEditor()));
-					break;
-				case Integer:
-					pTable.addProperty(new PTProperty(mtdt.getName(), ""
-							+ mtdt.getId(), null, mtdt.getIntValue())
-							.setEditor(new PTIntegerEditor()));
-					break;
-				case Text:
-				default:
-					pTable.addProperty(new PTProperty(mtdt.getName(), ""
-							+ mtdt.getId(), null, mtdt.getValue())
-							.setEditor(new PTStringEditor()));
-					break;
-
-				}
+				addProp(mtdt);
 			}
 		}
 		layout();
@@ -78,6 +89,12 @@ public class MetadataPanel extends Composite {
 			pTable.dispose();
 		}
 		pTable = new PropertyTable(this, SWT.BORDER);
+		FormData data = new FormData();
+		data.bottom = new FormAttachment(addProp, -5);
+		data.right = new FormAttachment(100, 0);
+		data.left = new FormAttachment(0, 0);
+		data.top = new FormAttachment(0, 0);
+		pTable.setLayoutData(data);
 		pTable.viewAsFlatList();
 		pTable.hideButtons();
 		pTable.hideDescription();
@@ -86,9 +103,7 @@ public class MetadataPanel extends Composite {
 
 			@Override
 			public void propertyHasChanged(PTProperty prop) {
-				if (prop.getDisplayName().equalsIgnoreCase("loc")) {
-
-				} else {
+				if (prop.getDisplayName().equalsIgnoreCase("loc") == false) {
 					Metadata mtdt = metadataMap.get(prop.getDisplayName());
 					switch (mtdt.getMetadataType()) {
 					case Date:
@@ -108,6 +123,30 @@ public class MetadataPanel extends Composite {
 				Application.getBll().updateDocument(doc);
 			}
 		});
+
+	}
+
+	private void addProp(Metadata mtdt) {
+		metadataMap.put("" + mtdt.getId(), mtdt);
+		switch (mtdt.getMetadataType()) {
+		case Date:
+			pTable.addProperty(new PTProperty(mtdt.getName(),
+					"" + mtdt.getId(), null, mtdt.getDateValue())
+					.setEditor(new PTDateEditor()));
+			break;
+		case Integer:
+			pTable.addProperty(new PTProperty(mtdt.getName(),
+					"" + mtdt.getId(), null, mtdt.getIntValue())
+					.setEditor(new PTIntegerEditor()));
+			break;
+		case Text:
+		default:
+			pTable.addProperty(new PTProperty(mtdt.getName(),
+					"" + mtdt.getId(), null, mtdt.getValue())
+					.setEditor(new PTStringEditor()));
+			break;
+
+		}
 	}
 
 }
