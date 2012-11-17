@@ -7,9 +7,10 @@ import org.eclipse.swt.widgets.MessageBox;
 public class NotifactionWindow {
 
 	public static void showError(String title, String errorMessage) {
-		MessageBox dialog = new MessageBox(Display.getCurrent().getActiveShell(), SWT.ICON_ERROR | SWT.OK);
+		MessageBox dialog = new MessageBox(Display.getCurrent()
+				.getActiveShell(), SWT.ICON_ERROR | SWT.OK);
 		dialog.setText(title);
 		dialog.setMessage(errorMessage);
-		dialog.open(); 
+		dialog.open();
 	}
 }

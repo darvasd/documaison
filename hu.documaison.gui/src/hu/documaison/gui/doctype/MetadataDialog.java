@@ -209,10 +209,13 @@ public class MetadataDialog {
 				if (c instanceof Text) {
 					Text text = (Text) c;
 					try {
-						if (metadata.getMetadataType() == MetadataType.Integer) {
-							metadata.setValue(Integer.parseInt(text.getText()));
-						} else {
-							metadata.setValue(text.getText());
+						if (text.getText().isEmpty() == false) {
+							if (metadata.getMetadataType() == MetadataType.Integer) {
+								metadata.setValue(Integer.parseInt(text
+										.getText()));
+							} else {
+								metadata.setValue(text.getText());
+							}
 						}
 					} catch (Exception ex) {
 						NotifactionWindow.showError("Conversion error",
