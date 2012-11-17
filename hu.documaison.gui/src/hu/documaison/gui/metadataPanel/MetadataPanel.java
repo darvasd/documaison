@@ -68,38 +68,40 @@ public class MetadataPanel extends Composite {
 
 		PTComboEditor combo = new PTComboEditor(true, Application.getBll()
 				.getDocumentTypes().toArray());
-		pTable.addProperty(new PTProperty("Document type", "", "")
-				.setEditor(combo));
+		pTable.addProperty(new PTProperty("doctype", "Document Type", "", doc
+				.getType().getTypeName()).setEditor(combo));
 
 		String loc = doc.getLocation();
 		if (loc.startsWith("http://")) {
-			pTable.addProperty(new PTProperty("loc", "Location (URL)", null,
-					loc).setEditor(new PTURLEditor()));
+			pTable.addProperty(new PTProperty("loc", "Location (URL)", "", loc)
+					.setEditor(new PTURLEditor()));
 		} else {
-			pTable.addProperty(new PTProperty("loc", "Location (file)", null,
-					loc).setEditor(new PTFileEditor()));
+			pTable.addProperty(new PTProperty("loc", "Location (file)", "", loc)
+					.setEditor(new PTFileEditor()));
 		}
 
 		// tüptürüpp
-		for (Metadata mtdt : doc.getMetadataCollection()) {
-			switch (mtdt.getMetadataType()) {
-			case Date:
-				pTable.addProperty(new PTProperty("mtdt_" + mtdt.getId(), mtdt
-						.getName(), null, mtdt.getDateValue())
-						.setEditor(new PTDateEditor()));
-				break;
-			case Integer:
-				pTable.addProperty(new PTProperty("mtdt_" + mtdt.getId(), mtdt
-						.getName(), null, mtdt.getIntValue())
-						.setEditor(new PTIntegerEditor()));
-				break;
-			case Text:
-			default:
-				pTable.addProperty(new PTProperty("mtdt_" + mtdt.getId(), mtdt
-						.getName(), null, mtdt.getValue())
-						.setEditor(new PTStringEditor()));
-				break;
+		if (doc.getMetadataCollection() != null) {
+			for (Metadata mtdt : doc.getMetadataCollection()) {
+				switch (mtdt.getMetadataType()) {
+				case Date:
+					pTable.addProperty(new PTProperty("mtdt_" + mtdt.getId(),
+							mtdt.getName(), null, mtdt.getDateValue())
+							.setEditor(new PTDateEditor()));
+					break;
+				case Integer:
+					pTable.addProperty(new PTProperty("mtdt_" + mtdt.getId(),
+							mtdt.getName(), null, mtdt.getIntValue())
+							.setEditor(new PTIntegerEditor()));
+					break;
+				case Text:
+				default:
+					pTable.addProperty(new PTProperty("mtdt_" + mtdt.getId(),
+							mtdt.getName(), null, mtdt.getValue())
+							.setEditor(new PTStringEditor()));
+					break;
 
+				}
 			}
 		}
 
