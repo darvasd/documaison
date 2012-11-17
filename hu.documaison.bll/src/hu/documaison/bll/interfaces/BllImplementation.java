@@ -9,6 +9,7 @@ import hu.documaison.data.entities.DocumentType;
 import hu.documaison.data.entities.Metadata;
 import hu.documaison.data.entities.Tag;
 import hu.documaison.data.exceptions.InvalidParameterException;
+import hu.documaison.data.exceptions.UnableToCreateException;
 import hu.documaison.data.exceptions.UnknownDocumentException;
 import hu.documaison.data.exceptions.UnknownDocumentTypeException;
 import hu.documaison.data.exceptions.UnknownTagException;
@@ -25,7 +26,7 @@ public class BllImplementation implements BllInterface {
 	}
 
 	@Override
-	public Comment createComment(Document parent) {
+	public Comment createComment(Document parent) throws UnableToCreateException {
 		DalInterface dal = DalSingletonProvider.getDalImplementation();
 		Comment ret = dal.createComment();
 		ret.setParent(parent);
@@ -34,7 +35,7 @@ public class BllImplementation implements BllInterface {
 	}
 
 	@Override
-	public DefaultMetadata createDefaultMetadata(DocumentType parent) {
+	public DefaultMetadata createDefaultMetadata(DocumentType parent) throws UnableToCreateException {
 		DalInterface dal = DalSingletonProvider.getDalImplementation();
 		DefaultMetadata ret = dal.createDefaultMetadata();
 		ret.setParent(parent);
@@ -43,7 +44,7 @@ public class BllImplementation implements BllInterface {
 
 	@Override
 	public Document createDocument(int documentTypeId)
-			throws UnknownDocumentTypeException {
+			throws UnknownDocumentTypeException, UnableToCreateException {
 		DalInterface dal = DalSingletonProvider.getDalImplementation();
 		DocumentType dtype = dal.getDocumentType(documentTypeId);
 		Document document = dal.createDocument(documentTypeId);
@@ -75,13 +76,13 @@ public class BllImplementation implements BllInterface {
 	}
 
 	@Override
-	public DocumentType createDocumentType() {
+	public DocumentType createDocumentType() throws UnableToCreateException {
 		DalInterface dal = DalSingletonProvider.getDalImplementation();
 		return dal.createDocumentType();
 	}
 
 	@Override
-	public Metadata createMetadata(Document parent) {
+	public Metadata createMetadata(Document parent) throws UnableToCreateException {
 		DalInterface dal = DalSingletonProvider.getDalImplementation();
 		Metadata ret = dal.createMetadata();
 		ret.setParent(parent);
@@ -89,7 +90,7 @@ public class BllImplementation implements BllInterface {
 	}
 
 	@Override
-	public Tag createTag(String name) {
+	public Tag createTag(String name) throws UnableToCreateException {
 		DalInterface dal = DalSingletonProvider.getDalImplementation();
 		return dal.createTag(name);
 	}

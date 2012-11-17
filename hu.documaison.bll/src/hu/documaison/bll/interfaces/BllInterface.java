@@ -2,6 +2,7 @@ package hu.documaison.bll.interfaces;
 
 import hu.documaison.data.entities.*;
 import hu.documaison.data.exceptions.InvalidParameterException;
+import hu.documaison.data.exceptions.UnableToCreateException;
 import hu.documaison.data.exceptions.UnknownDocumentException;
 import hu.documaison.data.exceptions.UnknownDocumentTypeException;
 import hu.documaison.data.exceptions.UnknownTagException;
@@ -12,17 +13,17 @@ import java.util.Collection;
 public interface BllInterface {
 	public void addTagToDocument(Tag tag, Document document) throws InvalidParameterException;
 
-	public Comment createComment(Document parent);
+	public Comment createComment(Document parent) throws UnableToCreateException;
 
-	public DefaultMetadata createDefaultMetadata(DocumentType parent);
+	public DefaultMetadata createDefaultMetadata(DocumentType parent) throws UnableToCreateException;
 
-	public Document createDocument(int documentTypeId) throws UnknownDocumentTypeException;
+	public Document createDocument(int documentTypeId) throws UnknownDocumentTypeException, UnableToCreateException;
 
-	public DocumentType createDocumentType();
+	public DocumentType createDocumentType() throws UnableToCreateException;
 
-	public Metadata createMetadata(Document parent);
+	public Metadata createMetadata(Document parent) throws UnableToCreateException;
 
-	public Tag createTag(String name);
+	public Tag createTag(String name) throws UnableToCreateException;
 
 	public Collection<DocumentType> getAllDocumentTypes();
 
