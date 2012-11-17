@@ -232,6 +232,7 @@ class DalImplementation implements DalInterface {
 //				newDocument.setThumbnailBytes(documentType
 //						.getDefaultThumbnailBytes().clone());
 //			}
+			
 			newDocument.setDateAdded(new Date());
 			dao.update(newDocument);
 			
