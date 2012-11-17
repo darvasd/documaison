@@ -62,7 +62,7 @@ public class BllImplementation implements BllInterface {
 		}
 		
 		dal.updateDocument(document);
-		return document;
+		return dal.getDocument(document.getId());
 	}
 
 	@Override
