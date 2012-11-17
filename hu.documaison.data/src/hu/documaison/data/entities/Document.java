@@ -1,12 +1,10 @@
 package hu.documaison.data.entities;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
-import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
@@ -45,15 +43,15 @@ public class Document extends DatabaseObject {
 		// ORMLite needs a no-arg constructor
 	}
 
-	public Document(DocumentType type, Dao<Document, Integer> dao)
-			throws SQLException {
-		this.type = type;
-		dao.getEmptyForeignCollection(TAGS);
-		dao.getEmptyForeignCollection(METADATA);
-		dao.getEmptyForeignCollection(COMMENTS);
-
-		// TODO copy default metadata
-	}
+//	public Document(DocumentType type, Dao<Document, Integer> dao)
+//			throws SQLException {
+//		this.type = type;
+//		dao.getEmptyForeignCollection(TAGS);
+//		dao.getEmptyForeignCollection(METADATA);
+//		dao.getEmptyForeignCollection(COMMENTS);
+//
+//		// TODO copy default metadata
+//	}
 
 	/**
 	 * @return the location

@@ -216,7 +216,8 @@ class DalImplementation implements DalInterface {
 					Document.class);
 
 			// add
-			Document newDocument = new Document(documentType, dao);
+			Document newDocument = new Document();
+			newDocument.setType(documentType);
 			dao.create(newDocument);
 			
 			// set properties
