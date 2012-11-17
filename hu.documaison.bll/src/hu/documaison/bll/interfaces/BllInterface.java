@@ -1,13 +1,14 @@
 package hu.documaison.bll.interfaces;
 
 import hu.documaison.data.entities.*;
+import hu.documaison.data.exceptions.InvalidParameterException;
 import hu.documaison.data.exceptions.UnknownDocumentTypeException;
 import hu.documaison.data.search.SearchExpression;
 
 import java.util.Collection;
 
 public interface BllInterface {
-	public void addTagToDocument(Tag tag, Document document);
+	public void addTagToDocument(Tag tag, Document document) throws InvalidParameterException;
 
 	public Comment createComment(Document parent);
 
@@ -53,7 +54,7 @@ public interface BllInterface {
 
 	public void removeTag(int id);
 
-	public void removeTagFromDocument(Tag tag, Document document);
+	public void removeTagFromDocument(Tag tag, Document document) throws InvalidParameterException;
 
 	public Collection<Document> searchDocuments(SearchExpression expr);
 

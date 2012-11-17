@@ -5,8 +5,10 @@ package hu.documaison.dal.interfaces;
 
 import hu.documaison.dal.database.DatabaseUtils;
 import hu.documaison.data.entities.*;
+import hu.documaison.data.exceptions.InvalidParameterException;
 import hu.documaison.data.exceptions.UnknownDocumentException;
 import hu.documaison.data.exceptions.UnknownDocumentTypeException;
+import hu.documaison.data.helper.DataHelper;
 import hu.documaison.data.search.BoolOperator;
 import hu.documaison.data.search.Expression;
 import hu.documaison.data.search.SearchExpression;
@@ -41,8 +43,9 @@ class DalImplementation implements DalInterface {
 		}
 		return genericCreate(c, instance, info);
 	}
-	
-	private <T extends DatabaseObject> T genericCreate(Class<T> c, T instance, String info) {
+
+	private <T extends DatabaseObject> T genericCreate(Class<T> c, T instance,
+			String info) {
 		// create a connection source to our database
 		ConnectionSource connectionSource = null;
 
@@ -219,24 +222,24 @@ class DalImplementation implements DalInterface {
 			Document newDocument = new Document();
 			newDocument.setType(documentType);
 			dao.create(newDocument);
-			
+
 			// set properties
-			
+
 			// following lines moved to BLL
-//			if (documentType.getDefaultMetadataCollection() != null) {
-//				for (DefaultMetadata md : documentType
-//						.getDefaultMetadataCollection()) {
-//					newDocument.addMetadata(md.createMetadata());
-//				}
-//			}
-//			if (documentType.getDefaultThumbnailBytes() != null) {
-//				newDocument.setThumbnailBytes(documentType
-//						.getDefaultThumbnailBytes().clone());
-//			}
-			
+			// if (documentType.getDefaultMetadataCollection() != null) {
+			// for (DefaultMetadata md : documentType
+			// .getDefaultMetadataCollection()) {
+			// newDocument.addMetadata(md.createMetadata());
+			// }
+			// }
+			// if (documentType.getDefaultThumbnailBytes() != null) {
+			// newDocument.setThumbnailBytes(documentType
+			// .getDefaultThumbnailBytes().clone());
+			// }
+
 			newDocument.setDateAdded(new Date());
 			dao.update(newDocument);
-			
+
 			return newDocument;
 
 		} catch (SQLException e) {
@@ -425,22 +428,22 @@ class DalImplementation implements DalInterface {
 
 	@Override
 	public Collection<Document> getDocumentsByTags(List<Tag> tags) {
-		if (tags == null){
+		if (tags == null) {
 			return new ArrayList<Document>();
 		}
-		
+
 		ArrayList<Integer> tagIds = new ArrayList<Integer>();
-		for (Tag t : tags){
+		for (Tag t : tags) {
 			tagIds.add(t.getId());
 		}
 		return getDocumentsByTagIds(tagIds);
 	}
-	
+
 	@Override
 	public Collection<Document> getDocumentsByTag(Tag tag) {
 		return getDocumentsByTagId(tag.getId());
 	}
-	
+
 	private Collection<Document> getDocumentsByTagId(int tagId) {
 		// create a connection source to our database
 		ConnectionSource connectionSource = null;
@@ -453,14 +456,14 @@ class DalImplementation implements DalInterface {
 			Dao<Document, Integer> dao = DaoManager.createDao(connectionSource,
 					Document.class);
 
-			Dao<DocumentTagConnection, Integer> daoTags = DaoManager.createDao(connectionSource,
-					DocumentTagConnection.class);
+			Dao<DocumentTagConnection, Integer> daoTags = DaoManager.createDao(
+					connectionSource, DocumentTagConnection.class);
 
 			// query
 			QueryBuilder<Document, Integer> qb = dao.queryBuilder();
-			QueryBuilder<DocumentTagConnection, Integer> qbTags = 
-					daoTags.queryBuilder();
-			
+			QueryBuilder<DocumentTagConnection, Integer> qbTags = daoTags
+					.queryBuilder();
+
 			qbTags.where().eq(DocumentTagConnection.TAGID, tagId);
 			qb.join(qbTags);
 			System.out.println("Query: " + qb.prepareStatementString());
@@ -483,7 +486,7 @@ class DalImplementation implements DalInterface {
 
 		return null;
 	}
-	
+
 	private Collection<Document> getDocumentsByTagIds(List<Integer> tagIds) {
 		// create a connection source to our database
 		ConnectionSource connectionSource = null;
@@ -496,14 +499,14 @@ class DalImplementation implements DalInterface {
 			Dao<Document, Integer> dao = DaoManager.createDao(connectionSource,
 					Document.class);
 
-			Dao<DocumentTagConnection, Integer> daoTags = DaoManager.createDao(connectionSource,
-					DocumentTagConnection.class);
+			Dao<DocumentTagConnection, Integer> daoTags = DaoManager.createDao(
+					connectionSource, DocumentTagConnection.class);
 
 			// query
 			QueryBuilder<Document, Integer> qb = dao.queryBuilder();
-			QueryBuilder<DocumentTagConnection, Integer> qbTags = 
-					daoTags.queryBuilder();
-			
+			QueryBuilder<DocumentTagConnection, Integer> qbTags = daoTags
+					.queryBuilder();
+
 			qbTags.where().in(DocumentTagConnection.TAGID, tagIds);
 			qb.join(qbTags);
 			qb.distinct();
@@ -1039,19 +1042,37 @@ class DalImplementation implements DalInterface {
 	}
 
 	@Override
-	public void addTagToDocument(Tag tag, Document document) {
+	public void addTagToDocument(Tag tag, Document document)
+			throws InvalidParameterException {
+		// parameter check
+		if (tag == null || !DataHelper.isValidId(tag.getId())) {
+			throw new InvalidParameterException("tag");
+		}
+		if (document == null) {
+			throw new InvalidParameterException("document");
+		}
+
 		DocumentTagConnection dtc = new DocumentTagConnection();
 		dtc.setDocument(document);
 		dtc.setTag(tag);
-		
+
 		dtc = genericCreate(DocumentTagConnection.class, dtc,
 				"addTagToDocument");
-		
+
 		genericUpdate(dtc, DocumentTagConnection.class, "addTagToDocument");
 	}
 
 	@Override
-	public void removeTagFromDocument(Tag tag, Document document) {
+	public void removeTagFromDocument(Tag tag, Document document)
+			throws InvalidParameterException {
+		// parameter check
+		if (tag == null || !DataHelper.isValidId(tag.getId())) {
+			throw new InvalidParameterException("tag");
+		}
+		if (document == null) {
+			throw new InvalidParameterException("document");
+		}
+
 		// create a connection source to our database
 		ConnectionSource connectionSource = null;
 
@@ -1083,5 +1104,4 @@ class DalImplementation implements DalInterface {
 		}
 	}
 
-	
 }

@@ -8,6 +8,7 @@ import hu.documaison.data.entities.Document;
 import hu.documaison.data.entities.DocumentType;
 import hu.documaison.data.entities.Metadata;
 import hu.documaison.data.entities.Tag;
+import hu.documaison.data.exceptions.InvalidParameterException;
 import hu.documaison.data.exceptions.UnknownDocumentTypeException;
 import hu.documaison.data.search.SearchExpression;
 
@@ -16,7 +17,7 @@ import java.util.Collection;
 public class BllImplementation implements BllInterface {
 
 	@Override
-	public void addTagToDocument(Tag tag, Document document) {
+	public void addTagToDocument(Tag tag, Document document) throws InvalidParameterException {
 		DalInterface dal = DalSingletonProvider.getDalImplementation();
 		dal.addTagToDocument(tag, document);
 	}
@@ -175,7 +176,7 @@ public class BllImplementation implements BllInterface {
 	}
 
 	@Override
-	public void removeTagFromDocument(Tag tag, Document document) {
+	public void removeTagFromDocument(Tag tag, Document document) throws InvalidParameterException {
 		DalInterface dal = DalSingletonProvider.getDalImplementation();
 		dal.removeTagFromDocument(tag, document);
 	}

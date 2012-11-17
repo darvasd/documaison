@@ -1,6 +1,7 @@
 package hu.documaison.dal.interfaces;
 
 import hu.documaison.data.entities.*;
+import hu.documaison.data.exceptions.InvalidParameterException;
 import hu.documaison.data.exceptions.UnknownDocumentTypeException;
 import hu.documaison.data.search.SearchExpression;
 
@@ -24,8 +25,8 @@ public interface DalInterface {
 	public Tag getTag(String name);
 	public void removeTag(int id);
 	
-	public void addTagToDocument(Tag tag, Document document);
-	public void removeTagFromDocument(Tag tag, Document document);
+	public void addTagToDocument(Tag tag, Document document) throws InvalidParameterException;
+	public void removeTagFromDocument(Tag tag, Document document) throws InvalidParameterException;
 	
 	// documentType
 	public DocumentType createDocumentType();
