@@ -8,6 +8,7 @@ import hu.documaison.data.exceptions.UnableToCreateException;
 import hu.documaison.data.exceptions.UnknownDocumentException;
 import hu.documaison.data.exceptions.UnknownTagException;
 import hu.documaison.gui.NotifactionWindow;
+import hu.documaison.gui.TagPanel;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -190,6 +191,7 @@ public class AddTagDialog {
 						Application.getBll().updateTag(tag);
 						tag = Application.getBll().getTag(tag.getId());
 						Application.getBll().addTagToDocument(tag, doc);
+						TagPanel.refresh();
 					}
 				} catch (UnableToCreateException e1) {
 					NotifactionWindow.showError("Database error",

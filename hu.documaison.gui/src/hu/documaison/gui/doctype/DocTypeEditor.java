@@ -152,6 +152,9 @@ public class DocTypeEditor extends InnerPanel {
 			@Override
 			public void handleEvent(Event e) {
 				TreeItem item = (TreeItem) e.item;
+				if (item == null) {
+					return;
+				}
 				if (item.getParentItem() == null) {
 					removeDocTypeBtn.setEnabled(true);
 					editDocTypeBtn.setEnabled(true);

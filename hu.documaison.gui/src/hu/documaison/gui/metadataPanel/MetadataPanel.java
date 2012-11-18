@@ -36,7 +36,6 @@ public class MetadataPanel extends Composite {
 	public MetadataPanel(Composite parent, int style) {
 		super(parent, style);
 		setLayout(new FormLayout());
-
 		addProp = new Link(this, SWT.NONE);
 		addProp.setText("<a>Add more metadata...</a>");
 		FormData data = new FormData();
@@ -65,15 +64,16 @@ public class MetadataPanel extends Composite {
 		createNewPropTable();
 
 		String loc = doc.getLocation();
-		if (loc.startsWith("http://")) {
-			pTable.addProperty(new PTProperty("Location (URL)", "loc", "", loc)
-					.setEditor(new PTURLEditor()));
-		} else {
-			pTable.addProperty(new PTProperty("Location (file)", "loc", "", loc)
-					.setEditor(new PTFileEditor()));
+		if (loc != null) {
+			if (loc.startsWith("http://")) {
+				pTable.addProperty(new PTProperty("Location (URL)", "loc", "",
+						loc).setEditor(new PTURLEditor()));
+			} else {
+				pTable.addProperty(new PTProperty("Location (file)", "loc", "",
+						loc).setEditor(new PTFileEditor()));
+			}
 		}
 
-		// tüptürüpp
 		metadataMap = new HashMap<String, Metadata>();
 		if (doc.getMetadataCollection() != null) {
 			for (Metadata mtdt : doc.getMetadataCollection()) {

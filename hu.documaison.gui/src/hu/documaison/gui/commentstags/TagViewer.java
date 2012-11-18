@@ -24,16 +24,12 @@ import org.eclipse.swt.widgets.Listener;
 public class TagViewer extends Composite implements SelectionListener {
 
 	private final ArrayList<Control> controls = new ArrayList<Control>();
-	private final Document doc;
 
-	public TagViewer(Composite parent, int style, final Document doc) {
+	public TagViewer(Composite parent, int style) {
 		super(parent, style);
 		RowLayout layout = new RowLayout();
 		layout.wrap = true;
 		setLayout(layout);
-		this.doc = doc;
-
-		createControls();
 	}
 
 	@Override
@@ -47,7 +43,7 @@ public class TagViewer extends Composite implements SelectionListener {
 
 	}
 
-	private void createControls() {
+	public void createControls(final Document doc) {
 
 		Document updatedDoc = doc;
 		try {
@@ -79,6 +75,9 @@ public class TagViewer extends Composite implements SelectionListener {
 				controls.add(link);
 				link.setText(tag.getName() + " (<a>X</a>)");
 				int[] rgb = ColorMap.get().getRGB(tag.getColorName());
+				if (rgb == null) {
+					rgb = ColorMap.get().getRGB("Black");
+				}
 				link.setForeground(new Color(getDisplay(), rgb[0], rgb[1],
 						rgb[2]));
 				link.setData(tag);
@@ -95,7 +94,7 @@ public class TagViewer extends Composite implements SelectionListener {
 			public void handleEvent(Event e) {
 				AddTagDialog ATD = new AddTagDialog();
 				ATD.showAndHandle(getShell(), doc);
-				createControls();
+				createControls(doc);
 			}
 		});
 

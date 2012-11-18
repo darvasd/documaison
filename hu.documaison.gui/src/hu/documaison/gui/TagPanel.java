@@ -20,16 +20,19 @@ import org.eclipse.swt.widgets.Label;
 
 public class TagPanel extends Composite implements ITagSelectionChangeListener {
 
-	private final ArrayList<TagItem> selectedItems = new ArrayList<TagItem>();
-	private final ArrayList<TagItem> items = new ArrayList<TagItem>();
-	private final Label tagsLabel;
-	private final ScrolledComposite scrollComposite;
-	private final Composite tagListComposite;
-	private final ArrayList<ITagSelectionChangeListener> changeListeners = new ArrayList<ITagSelectionChangeListener>();
-	private final Button clearSelectionButton;
+	private final static ArrayList<TagItem> selectedItems = new ArrayList<TagItem>();
+	private final static ArrayList<TagItem> items = new ArrayList<TagItem>();
+	private static Label tagsLabel;
+	private static ScrolledComposite scrollComposite;
+	private static Composite tagListComposite;
+	private final static ArrayList<ITagSelectionChangeListener> changeListeners = new ArrayList<ITagSelectionChangeListener>();
+	private static Button clearSelectionButton;
+
+	private static TagPanel lastInstance;
 
 	public TagPanel(Composite parent, int style) {
 		super(parent, style);
+		lastInstance = this;
 		FormLayout layout = new FormLayout();
 		setLayout(layout);
 		tagsLabel = new Label(this, SWT.SHADOW_OUT);
@@ -39,50 +42,8 @@ public class TagPanel extends Composite implements ITagSelectionChangeListener {
 		tagsLabel.setLayoutData(data);
 		Color tagColor = new Color(null, 112, 126, 139);
 		tagsLabel.setForeground(tagColor);
-		scrollComposite = new ScrolledComposite(this, SWT.V_SCROLL);
-		data = new FormData();
-		data.top = new FormAttachment(tagsLabel, 5);
-		data.bottom = new FormAttachment(100, 0);
-		data.left = new FormAttachment(0, 0);
-		data.right = new FormAttachment(100, 0);
-		scrollComposite.setLayoutData(data);
-		tagListComposite = new Composite(scrollComposite, SWT.NONE);
-		TagItem preItem = null;
-		tagListComposite.setLayout(new FormLayout());
-		Collection<Tag> tags = Application.getBll().getTags();
-		int i = 0;
-		for (Tag tag : tags) {
-			if (tag.getName() != null && tag.getColorName() != null) {
-				TagItem item = new TagItem(tagListComposite, SWT.NONE, i++,
-						tag, this);
-				items.add(item);
-				data = new FormData();
-				data.left = new FormAttachment(0, 0);
-				data.right = new FormAttachment(100, 0);
-				if (preItem != null) {
-					data.top = new FormAttachment(preItem, 0);
-				} else {
-					data.top = new FormAttachment(0, 0);
-				}
-				item.setLayoutData(data);
-				preItem = item;
-			}
-		}
-		tagListComposite.pack();
-		scrollComposite.setContent(tagListComposite);
-		scrollComposite.setExpandHorizontal(true);
-		clearSelectionButton = new Button(this, SWT.NONE);
-		clearSelectionButton.setVisible(false);
-		clearSelectionButton.setText("Clear selection");
-		clearSelectionButton.addSelectionListener(new SelectionAdapter() {
 
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				clearSelection();
-			}
-
-		});
-		addChangeListener(this);
+		refresh();
 	}
 
 	public void addToSelection(TagItem item) {
@@ -95,7 +56,7 @@ public class TagPanel extends Composite implements ITagSelectionChangeListener {
 		notifyListeners();
 	}
 
-	public void clearSelection() {
+	public static void clearSelection() {
 		ArrayList<TagItem> selectedItems_temp = new ArrayList<TagItem>(
 				selectedItems);
 		for (TagItem i : selectedItems_temp) {
@@ -129,13 +90,13 @@ public class TagPanel extends Composite implements ITagSelectionChangeListener {
 		return (selectedItems.size() == 0);
 	}
 
-	private void notifyListeners() {
+	private static void notifyListeners() {
 		for (ITagSelectionChangeListener listener : changeListeners) {
 			listener.selectionChanged();
 		}
 	}
 
-	public void addChangeListener(ITagSelectionChangeListener listener) {
+	public static void addChangeListener(ITagSelectionChangeListener listener) {
 		changeListeners.add(listener);
 	}
 
@@ -173,4 +134,54 @@ public class TagPanel extends Composite implements ITagSelectionChangeListener {
 		}
 	}
 
+	public static void refresh() {
+		if (scrollComposite != null) {
+			scrollComposite.dispose();
+		}
+		scrollComposite = new ScrolledComposite(lastInstance, SWT.V_SCROLL);
+		FormData data = new FormData();
+		data.top = new FormAttachment(tagsLabel, 5);
+		data.bottom = new FormAttachment(100, 0);
+		data.left = new FormAttachment(0, 0);
+		data.right = new FormAttachment(100, 0);
+		scrollComposite.setLayoutData(data);
+		tagListComposite = new Composite(scrollComposite, SWT.NONE);
+		TagItem preItem = null;
+		tagListComposite.setLayout(new FormLayout());
+		Collection<Tag> tags = Application.getBll().getTags();
+		int i = 0;
+		for (Tag tag : tags) {
+			if (tag.getName() != null && tag.getColorName() != null) {
+				TagItem item = new TagItem(tagListComposite, SWT.NONE, i++,
+						tag, lastInstance);
+				items.add(item);
+				data = new FormData();
+				data.left = new FormAttachment(0, 0);
+				data.right = new FormAttachment(100, 0);
+				if (preItem != null) {
+					data.top = new FormAttachment(preItem, 0);
+				} else {
+					data.top = new FormAttachment(0, 0);
+				}
+				item.setLayoutData(data);
+				preItem = item;
+			}
+		}
+		tagListComposite.pack();
+		scrollComposite.setContent(tagListComposite);
+		scrollComposite.setExpandHorizontal(true);
+		clearSelectionButton = new Button(lastInstance, SWT.NONE);
+		clearSelectionButton.setVisible(false);
+		clearSelectionButton.setText("Clear selection");
+		clearSelectionButton.addSelectionListener(new SelectionAdapter() {
+
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				clearSelection();
+			}
+
+		});
+		addChangeListener(lastInstance);
+		lastInstance.layout();
+	}
 }

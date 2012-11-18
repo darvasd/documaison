@@ -1,6 +1,7 @@
 package hu.documaison.gui;
 
 import hu.documaison.gui.doctype.DocTypeEditor;
+import hu.documaison.gui.document.DocumentLister;
 import hu.documaison.gui.document.MetadataInputPanel;
 import hu.documaison.gui.document.NewDocumentPanel;
 import hu.documaison.gui.search.AdvancedSearchPanel;
@@ -72,5 +73,8 @@ public class RightPanel extends Composite {
 
 		NewDocumentPanel newPanel = new NewDocumentPanel(multiPanel, SWT.NONE);
 		multiPanel.addSheet(newPanel, "newDocument");
+
+		DocumentLister lister = new DocumentLister(multiPanel, SWT.NONE);
+		multiPanel.addSheet(lister, "documents");
 	}
 }

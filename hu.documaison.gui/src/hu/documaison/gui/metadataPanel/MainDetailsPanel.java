@@ -29,10 +29,10 @@ public class MainDetailsPanel extends Composite {
 	private final Document document;
 	private final Label tagLabel;
 	private TagViewer tags;
+	private final Label thumbnailImage;
 
 	public MainDetailsPanel(Composite parent, int style, Document doc) {
 		super(parent, style);
-
 		document = doc;
 		setLayout(new FormLayout());
 
@@ -43,7 +43,8 @@ public class MainDetailsPanel extends Composite {
 		data.left = new FormAttachment(0, 0);
 		typeLabel.setLayoutData(data);
 
-		Combo typeCombo = new Combo(this, SWT.None);
+		Combo typeCombo = new Combo(this, SWT.READ_ONLY | SWT.DROP_DOWN
+				| SWT.SINGLE);
 		int id = 0, i = 0;
 		for (DocumentType dt : Application.getBll().getDocumentTypes()) {
 			typeCombo.add(dt.getTypeName());
@@ -65,8 +66,7 @@ public class MainDetailsPanel extends Composite {
 		data.left = new FormAttachment(typeCombo, 10);
 		commentLink.setLayoutData(data);
 
-		Label thumbnailImage = new Label(this, SWT.BORDER);
-		byte[] thumbBytes = doc.getThumbnailBytes();
+		thumbnailImage = new Label(this, SWT.BORDER);
 		BufferedInputStream inputStreamReader = new BufferedInputStream(
 				new ByteArrayInputStream(doc.getThumbnailBytes()));
 		ImageData imageData = new ImageData(inputStreamReader);
@@ -95,7 +95,7 @@ public class MainDetailsPanel extends Composite {
 		tagLabel.setText("Tags:");
 		data = new FormData();
 		data.left = new FormAttachment(0, 0);
-		data.top = new FormAttachment(thumbnailImage, 5);
+		data.top = new FormAttachment(thumbnailImage, -15);
 		tagLabel.setLayoutData(data);
 
 		showTags(doc);
@@ -119,7 +119,8 @@ public class MainDetailsPanel extends Composite {
 		if (tags != null) {
 			tags.dispose();
 		}
-		tags = new TagViewer(this, SWT.NONE, doc);
+		tags = new TagViewer(this, SWT.NONE);
+		tags.createControls(doc);
 		FormData data = new FormData();
 		data.left = new FormAttachment(0, 0);
 		data.top = new FormAttachment(tagLabel, 0);

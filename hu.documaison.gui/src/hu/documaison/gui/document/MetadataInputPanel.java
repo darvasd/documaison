@@ -1,8 +1,8 @@
 package hu.documaison.gui.document;
 
-import hu.documaison.Application;
 import hu.documaison.data.entities.Document;
 import hu.documaison.gui.InnerPanel;
+import hu.documaison.gui.ViewManager;
 import hu.documaison.gui.metadataPanel.MainDetailsPanel;
 import hu.documaison.gui.metadataPanel.MetadataPanel;
 
@@ -21,6 +21,7 @@ public class MetadataInputPanel extends InnerPanel {
 	private MetadataPanel mtdtPanel;
 	private Label infoLabel;
 	private MainDetailsPanel mainDetails;
+	private MetadataEditors editors;
 
 	public MetadataInputPanel(Composite parent, int style) {
 		super(parent, style, "Edit document metadata");
@@ -44,10 +45,18 @@ public class MetadataInputPanel extends InnerPanel {
 		data.right = new FormAttachment(100, -10);
 		saveBtn.setLayoutData(data);
 
+		editors = new MetadataEditors(this, SWT.NONE);
+		data = new FormData();
+		data.top = new FormAttachment(infoLabel, 5);
+		data.left = new FormAttachment(0, 20);
+		data.right = new FormAttachment(100, -20);
+		data.bottom = new FormAttachment(100, -50);
+		editors.setLayoutData(data);
+
 		saveBtn.addListener(SWT.Selection, new Listener() {
 			@Override
 			public void handleEvent(Event e) {
-				Application.getBll().updateDocument(documentToEdit);
+				ViewManager.getDefault().showView("documents");
 			}
 		});
 
@@ -63,23 +72,7 @@ public class MetadataInputPanel extends InnerPanel {
 
 	public void setDocument(Document doc) {
 		documentToEdit = doc;
-		mainDetails = new MainDetailsPanel(this, SWT.None, doc);
-		FormData data = new FormData();
-		data.top = new FormAttachment(infoLabel, 10);
-		data.left = new FormAttachment(0, 20);
-		data.right = new FormAttachment(100, -20);
-		mainDetails.setLayoutData(data);
-		mainDetails.pack();
-		mainDetails.layout();
-		mtdtPanel = new MetadataPanel(this, SWT.None);
-		data = new FormData();
-		data.top = new FormAttachment(mainDetails, 10);
-		data.left = new FormAttachment(0, 20);
-		data.right = new FormAttachment(100, -20);
-		data.bottom = new FormAttachment(100, -50);
-		mtdtPanel.setLayoutData(data);
-		mtdtPanel.setDocument(doc);
-
+		editors.showDoc(doc);
 		layout();
 	}
 
