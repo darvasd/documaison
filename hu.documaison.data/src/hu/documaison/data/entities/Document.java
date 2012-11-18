@@ -16,8 +16,9 @@ public class Document extends DatabaseObject {
 	public static final String TAGS = "tags";
 	public static final String METADATA = "metadata";
 	public static final String COMMENTS = "comments";
+	public static final String LOCATION = "location";
 
-	@DatabaseField
+	@DatabaseField(columnName = "location")
 	private String location;
 
 	@DatabaseField(foreign = true, foreignAutoRefresh = true)

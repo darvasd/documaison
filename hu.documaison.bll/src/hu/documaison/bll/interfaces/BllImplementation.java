@@ -13,6 +13,7 @@ import hu.documaison.data.exceptions.UnableToCreateException;
 import hu.documaison.data.exceptions.UnknownDocumentException;
 import hu.documaison.data.exceptions.UnknownDocumentTypeException;
 import hu.documaison.data.exceptions.UnknownTagException;
+import hu.documaison.data.helper.DocumentFilePointer;
 import hu.documaison.data.search.SearchExpression;
 
 import java.util.Collection;
@@ -237,6 +238,13 @@ public class BllImplementation implements BllInterface {
 	public Collection<Document> getDocumentsByTags(java.util.List<Tag> tags) {
 		DalInterface dal = DalSingletonProvider.getDalImplementation();
 		return dal.getDocumentsByTags(tags);
+	}
+
+	@Override
+	public Collection<DocumentFilePointer> getDocumentPointers(
+			String locationFilter) {
+		DalInterface dal = DalSingletonProvider.getDalImplementation();
+		return dal.getDocumentPointers(locationFilter);
 	}
 
 }

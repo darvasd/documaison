@@ -4,6 +4,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/hu.documaison.dal"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/hu.documaison.data"/>
-	<classpathentry kind="lib" path="/hu.documaison.dal/ormlite-core-4.42.jar"/>
+	<classpathentry kind="lib" path="/hu.documaison.dal/ormlite-core-4.42.jar" sourcepath="C:/Users/Dani/.m2/repository/com/j256/ormlite/ormlite-core/4.42/ormlite-core-4.42-sources.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

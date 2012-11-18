@@ -11,6 +11,7 @@ import hu.documaison.data.exceptions.UnknownDocumentException;
 import hu.documaison.data.exceptions.UnknownDocumentTypeException;
 import hu.documaison.data.exceptions.UnknownTagException;
 import hu.documaison.data.helper.DataHelper;
+import hu.documaison.data.helper.DocumentFilePointer;
 import hu.documaison.data.search.BoolOperator;
 import hu.documaison.data.search.Expression;
 import hu.documaison.data.search.SearchExpression;
@@ -165,12 +166,13 @@ class DalImplementation implements DalInterface {
 				}
 			}
 		}
-		
+
 		throw new UnableToCreateException("Comment");
 	}
 
 	@Override
-	public DefaultMetadata createDefaultMetadata() throws UnableToCreateException {
+	public DefaultMetadata createDefaultMetadata()
+			throws UnableToCreateException {
 		// create a connection source to our database
 		ConnectionSource connectionSource = null;
 
@@ -350,10 +352,10 @@ class DalImplementation implements DalInterface {
 
 			// query
 			Document ret = dao.queryForId(id);
-			if (ret == null){
+			if (ret == null) {
 				throw new UnknownDocumentException(id);
 			}
-			
+
 			// return
 			return ret;
 		} catch (SQLException e) {
@@ -542,7 +544,8 @@ class DalImplementation implements DalInterface {
 	}
 
 	@Override
-	public DocumentType getDocumentType(int id) throws UnknownDocumentTypeException {
+	public DocumentType getDocumentType(int id)
+			throws UnknownDocumentTypeException {
 		// create a connection source to our database
 		ConnectionSource connectionSource = null;
 
@@ -556,10 +559,10 @@ class DalImplementation implements DalInterface {
 
 			// query
 			DocumentType ret = dao.queryForId(id);
-			if (ret == null){
+			if (ret == null) {
 				throw new UnknownDocumentTypeException(id);
 			}
-			
+
 			// return
 			return ret;
 		} catch (SQLException e) {
@@ -627,10 +630,10 @@ class DalImplementation implements DalInterface {
 
 			// query
 			Tag ret = dao.queryForId(id);
-			if (ret == null){
+			if (ret == null) {
 				throw new UnknownTagException(id);
 			}
-			
+
 			// return
 			return ret;
 		} catch (SQLException e) {
@@ -695,10 +698,10 @@ class DalImplementation implements DalInterface {
 			// query
 			Tag ret = dao.queryForFirst(dao.queryBuilder().where()
 					.eq(Tag.NAME, name).prepare());
-			if (ret == null){
+			if (ret == null) {
 				throw new UnknownTagException(0);
 			}
-			
+
 			// return
 			return ret;
 		} catch (SQLException e) {
@@ -1121,6 +1124,59 @@ class DalImplementation implements DalInterface {
 				}
 			}
 		}
+	}
+
+	/**
+	 * 
+	 * @param locationFilter
+	 *            Used in SQL where clause. Use % as joker character. If the
+	 *            value is null, all items will be returned.
+	 */
+	@Override
+	public Collection<DocumentFilePointer> getDocumentPointers(
+			String locationFilter) {
+		// create a connection source to our database
+		ConnectionSource connectionSource = null;
+
+		try {
+			// create connection
+			connectionSource = DatabaseUtils.getConnectionSource();
+
+			// instantiate the dao
+			Dao<Document, Integer> dao = DaoManager.createDao(connectionSource,
+					Document.class);
+
+			// query
+			QueryBuilder<Document, Integer> qb = dao.queryBuilder();
+			if (locationFilter != null) {
+				qb.where().like(Document.LOCATION, locationFilter);
+			}
+
+			List<Document> documents = dao.query(qb.prepare());
+
+			List<DocumentFilePointer> ret = new ArrayList<DocumentFilePointer>();
+			for (Document doc : documents) {
+				if (doc.getLocation() != null) {
+					ret.add(DocumentFilePointer.createInstance(doc));
+				}
+			}
+
+			// return
+			return ret;
+		} catch (SQLException e) {
+			HandleSQLException(e, "getDocumentPointers(String)");
+		} finally {
+			// close connection
+			if (connectionSource != null) {
+				try {
+					connectionSource.close();
+				} catch (SQLException e) {
+					HandleSQLException(e, "getDocumentPointers(String)");
+				}
+			}
+		}
+
+		return null;
 	}
 
 }
