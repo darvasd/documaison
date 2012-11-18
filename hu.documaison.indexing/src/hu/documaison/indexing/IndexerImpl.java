@@ -7,6 +7,7 @@ import hu.documaison.data.entities.Metadata;
 import hu.documaison.data.exceptions.InvalidFolderException;
 import hu.documaison.data.exceptions.InvalidParameterException;
 import hu.documaison.data.exceptions.UnknownDocumentException;
+import hu.documaison.data.helper.DataHelper;
 import hu.documaison.data.helper.DocumentFilePointer;
 
 import java.io.File;
@@ -72,79 +73,7 @@ class IndexerImpl implements IndexerInterface {
 		// check for modifications
 		// not necessary at the moment
 	}
-
-	private void onDeleted(int documentId) {
-		// best effort (fail silent)
-		System.err.println("REMOVE: id = " + documentId);
-
-		Document document;
-		try {
-			document = bll.getDocument(documentId);
-		} catch (UnknownDocumentException e) {
-			return;
-		}
-		if (document == null) {
-			return;
-		}
-
-		if (!document.getCreatorComputerId()
-				.equalsIgnoreCase(currentComputerId)) {
-			// This document was created on another computer.
-			// This instance doesn't have the right to delete it.
-			return;
-		} else {
-			bll.removeDocument(documentId);
-			// TODO cascade delete check!
-		}
-
-	}
-
-	private String fileExtension(Path path) {
-		int lastDot = path.toString().lastIndexOf('.');
-		return path.toString().substring(lastDot + 1);
-	}
-
-	private void onAdded(Path path) {
-		System.err.println("ADD: path = " + path);
-		String extension = fileExtension(path);
-
-		// find corresponding document type
-		DocumentType dt = bll.getDocumentTypeForExtension(extension);
-		if (dt == null) {
-			onAddingError(path, "DocumentType not found for extension: "
-					+ extension);
-			return;
-		}
-		System.err.println("Found type for " + extension + " ext: "
-				+ dt.getTypeName());
-
-		// create new document
-		Document newDoc;
-		try {
-			newDoc = bll.createDocument(dt.getId());
-			newDoc.setLocation(path.toString());
-			newDoc.setCreatorComputerId(this.currentComputerId);
-			newDoc.setDateAdded(new Date());
-			bll.updateDocument(newDoc);
-
-			Metadata md1 = bll.createMetadata(newDoc);
-			md1.setName("autocreated");
-			md1.setValue("true");
-			bll.updateMetadata(md1);
-		} catch (Exception e) {
-			onAddingError(path, null);
-			return;
-		}
-	}
-
-	private void onAddingError(Path path, String message) {
-		if (message == null) {
-			message = "N/A";
-		}
-		System.err
-				.println("Adding error: " + message + " @ " + path.toString());
-	}
-
+	
 	private void recursiveRefresh(String rootDirPath) {
 		System.out.println("Indexing directory: " + rootDirPath);
 
@@ -185,6 +114,73 @@ class IndexerImpl implements IndexerInterface {
 		// // TODO Auto-generated catch block
 		// e.printStackTrace();
 		// }
+	}
+
+	private void onDeleted(int documentId) {
+		// best effort (fail silent)
+		System.err.println("REMOVE: id = " + documentId);
+
+		Document document;
+		try {
+			document = bll.getDocument(documentId);
+		} catch (UnknownDocumentException e) {
+			return;
+		}
+		if (document == null) {
+			return;
+		}
+
+		if (!document.getCreatorComputerId()
+				.equalsIgnoreCase(currentComputerId)) {
+			// This document was created on another computer.
+			// This instance doesn't have the right to delete it.
+			return;
+		} else {
+			bll.removeDocument(documentId);
+			// TODO cascade delete check!
+		}
+
+	}
+
+	private void onAdded(Path path) {
+		System.err.println("ADD: path = " + path);
+		String extension = DataHelper.fileExtension(path);
+
+		// find corresponding document type
+		DocumentType dt = bll.getDocumentTypeForExtension(extension);
+		if (dt == null) {
+			onAddingError(path, "DocumentType not found for extension: "
+					+ extension);
+			return;
+		}
+		System.err.println("Found type for " + extension + " ext: "
+				+ dt.getTypeName());
+
+		// create new document
+		Document newDoc;
+		try {
+			newDoc = bll.createDocument(dt.getId());
+			newDoc.setLocation(path.toString());
+			newDoc.setCreatorComputerId(this.currentComputerId);
+			newDoc.setDateAdded(new Date());
+			bll.updateDocument(newDoc);
+
+			Metadata md1 = bll.createMetadata(newDoc);
+			md1.setName("autocreated");
+			md1.setValue("true");
+			bll.updateMetadata(md1);
+		} catch (Exception e) {
+			onAddingError(path, null);
+			return;
+		}
+	}
+
+	private void onAddingError(Path path, String message) {
+		if (message == null) {
+			message = "N/A";
+		}
+		System.err
+				.println("Adding error: " + message + " @ " + path.toString());
 	}
 
 	private boolean inPointerList(String absolutePath) {
