@@ -13,11 +13,12 @@ import com.j256.ormlite.table.DatabaseTable;
 @DatabaseTable(tableName = "DocumentTypes")
 public class DocumentType extends DatabaseObject {
 	public static final String METADATA = "metadata";
+	public static final String DEFAULTEXTS = "defaultExt";
 
 	@DatabaseField
 	private String typeName;
 
-	@DatabaseField
+	@DatabaseField(columnName = DEFAULTEXTS)
 	private String defaultExt;
 
 	@DatabaseField(dataType = DataType.BYTE_ARRAY)

@@ -38,7 +38,7 @@ public interface DalInterface {
 	public void updateDocumentType(DocumentType documentType);
 	public Collection<DocumentType> getDocumentTypes();
 	public DocumentType getDocumentType(int id) throws UnknownDocumentTypeException;
-	
+	public DocumentType getDocumentTypeForExtension(String extension);
 	
 	// metadata
 	public Metadata createMetadata() throws UnableToCreateException;
@@ -60,4 +60,5 @@ public interface DalInterface {
 	
 	// for indexing
 	public Collection<DocumentFilePointer> getDocumentPointers(String locationFilter);
+	
 }

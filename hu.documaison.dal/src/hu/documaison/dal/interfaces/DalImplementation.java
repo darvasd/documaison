@@ -1179,4 +1179,46 @@ class DalImplementation implements DalInterface {
 		return null;
 	}
 
+	@Override
+	public DocumentType getDocumentTypeForExtension(String extension) {
+		// create a connection source to our database
+				ConnectionSource connectionSource = null;
+
+				try {
+					// create connection
+					connectionSource = DatabaseUtils.getConnectionSource();
+
+					// instantiate the dao
+					Dao<DocumentType, Integer> dao = DaoManager.createDao(
+							connectionSource, DocumentType.class);
+
+					// query
+					QueryBuilder<DocumentType, Integer> qb = dao.queryBuilder();
+					qb.where().like(DocumentType.DEFAULTEXTS, "%" + extension + "%");
+					// TODO: kezelni azt, hogy ez pl. a doc-ra visszaadja a docx-et is!!!
+					
+					List<DocumentType> ret = dao.query(qb.prepare());
+
+					//return
+					if (ret.size() == 0){
+						return null;
+					} else {
+						return ret.get(0);
+					}
+				} catch (SQLException e) {
+					HandleSQLException(e, "getDocumentTypes");
+				} finally {
+					// close connection
+					if (connectionSource != null) {
+						try {
+							connectionSource.close();
+						} catch (SQLException e) {
+							HandleSQLException(e, "getDocumentTypes");
+						}
+					}
+				}
+
+				return null;
+	}
+
 }

@@ -302,4 +302,10 @@ public class BllImplementation implements BllInterface {
 		}
 	}
 
+	@Override
+	public DocumentType getDocumentTypeForExtension(String extension) {
+		DalInterface dal = DalSingletonProvider.getDalImplementation();
+		return dal.getDocumentTypeForExtension(extension);
+	}
+
 }

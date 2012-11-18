@@ -79,4 +79,6 @@ public interface BllInterface {
 	public void moveDocument(Document document, String newLocation) throws InvalidParameterException, UnknownDocumentException;
 	
 	public boolean deleteAndRemoveDocument(Document document) throws InvalidParameterException, UnknownDocumentException;
+	
+	public DocumentType getDocumentTypeForExtension(String extension);
 }
