@@ -19,11 +19,12 @@ hu.documaison.gui/settings.xml
 !*/sqlite*.jar
 
 !hu.documaison.gui/opal-0.9.5.jar
+!hu.documaison.gui/org.eclipse.nebula.*.jar
 
-hu.documaison.dal/documaison.db:documaison
+hu.documaison.dal/documaison.db
 
 hu.documaison.dal/settings.xml
 
-hu.documaison.gui/documaison.db:documaison
+hu.documaison.gui/documaison.db
 
 .DS_Store
