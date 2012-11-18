@@ -54,9 +54,10 @@ class IndexerImpl implements IndexerInterface {
 
 	@Override
 	public void refresh() {
-		lastPointers = bll.getDocumentPointers("/Users%");
+		// check for deletions
+		lastPointers = bll.getDocumentPointers(this.folder + "%");
 		for (DocumentFilePointer dfp : lastPointers) {
-			System.out.println(dfp.getDocumentId() + " = " + dfp.getLocation());
+			//System.out.println(dfp.getDocumentId() + " = " + dfp.getLocation());
 
 			File f = new File(dfp.getLocation());
 			if (f.exists() == false) {
@@ -64,8 +65,12 @@ class IndexerImpl implements IndexerInterface {
 			}
 		}
 
-		// file visitor
+		// check for new files
+		// (file "visitor")
 		this.recursiveRefresh(this.folder);
+		
+		// check for modifications
+		// not necessary at the moment
 	}
 
 	private void onDeleted(int documentId) {
@@ -162,6 +167,8 @@ class IndexerImpl implements IndexerInterface {
 		System.out.println("File found: " + f.getAbsolutePath());
 		if (!inPointerList(f.getAbsolutePath())) {
 			onAdded(f.toPath());
+		} else {
+			System.out.println(f.getAbsolutePath() + " is already in database.");
 		}
 
 		// try {
@@ -186,6 +193,7 @@ class IndexerImpl implements IndexerInterface {
 					&& dfp.getFile().getAbsolutePath().equals(absolutePath)) {
 				return true;
 			}
+			//System.out.println(dfp.getFile().getAbsolutePath()+ "!=" + absolutePath);
 		}
 		return false;
 	}
