@@ -1,6 +1,7 @@
 package hu.documaison.bll.interfaces;
 
 import hu.documaison.dal.interfaces.DalInterface;
+import java.nio.file.*;
 import hu.documaison.dal.interfaces.DalSingletonProvider;
 import hu.documaison.data.entities.Comment;
 import hu.documaison.data.entities.DefaultMetadata;
@@ -18,6 +19,7 @@ import hu.documaison.data.helper.DocumentFilePointer;
 import hu.documaison.data.search.SearchExpression;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Collection;
 
 public class BllImplementation implements BllInterface {
@@ -257,7 +259,8 @@ public class BllImplementation implements BllInterface {
 
 	@Override
 	public void moveDocument(Document document, String newLocation)
-			throws InvalidParameterException, UnknownDocumentException {
+			throws InvalidParameterException, UnknownDocumentException,
+			IOException {
 		File target = new File(newLocation);
 		if (target == null || target.exists()) {
 			throw new InvalidParameterException("newLocation");
@@ -273,12 +276,12 @@ public class BllImplementation implements BllInterface {
 			throw new InvalidParameterException("document");
 		}
 
-		// TODO MOVE HERE
-		throw new UnsupportedOperationException("Not implemented yet.");
-		// document.setLocation(target.getAbsolutePath());
-		//
-		// DalInterface dal = DalSingletonProvider.getDalImplementation();
-		// dal.updateDocument(document);
+		Files.move(oldFile.toPath(), target.toPath()); // can throw IOException
+		document.setLocation(target.getAbsolutePath());
+
+		DalInterface dal = DalSingletonProvider.getDalImplementation();
+		dal.updateDocument(document);
+
 	}
 
 	@Override

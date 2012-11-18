@@ -9,6 +9,7 @@ import hu.documaison.data.exceptions.UnknownTagException;
 import hu.documaison.data.helper.DocumentFilePointer;
 import hu.documaison.data.search.SearchExpression;
 
+import java.io.IOException;
 import java.util.Collection;
 
 public interface BllInterface {
@@ -76,7 +77,7 @@ public interface BllInterface {
 	
 	public Collection<DocumentFilePointer> getDocumentPointers(String locationFilter);
 
-	public void moveDocument(Document document, String newLocation) throws InvalidParameterException, UnknownDocumentException;
+	public void moveDocument(Document document, String newLocation) throws InvalidParameterException, UnknownDocumentException, IOException;
 	
 	public boolean deleteAndRemoveDocument(Document document) throws InvalidParameterException, UnknownDocumentException;
 	
