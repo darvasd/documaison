@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <settingsData>
+    <computerId>Dani@krtek</computerId>
     <databaseFileLocation>W:\GitRepos\documaison\hu.documaison.indexing\documaison.db</databaseFileLocation>
     <evernoteIndexingEnabled>false</evernoteIndexingEnabled>
     <indexingEnabled>false</indexingEnabled>

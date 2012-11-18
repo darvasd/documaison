@@ -20,12 +20,22 @@ import hu.documaison.data.helper.DocumentFilePointer;
 public class IndexingImpl implements IndexingInterface {
 	private BllInterface bll = null;
 	private String folder;
+	private String currentComputerId;
 	private Collection<DocumentFilePointer> lastPointers = null;
 
-	public IndexingImpl(String folder, BllInterface bll)
-			throws InvalidParameterException {
+	public IndexingImpl(String folder, String currentComputerId,
+			BllInterface bll) throws InvalidParameterException {
 		setFolder(folder);
+		setCurrentComputerId(currentComputerId);
 		setBll(bll);
+	}
+
+	private void setCurrentComputerId(String currentComputerId) throws InvalidParameterException {
+		if (currentComputerId != null) {
+			this.currentComputerId = currentComputerId;
+		} else {
+			throw new InvalidParameterException("currentComputerId");
+		}
 	}
 
 	private void setFolder(String folder) throws InvalidFolderException {
@@ -76,7 +86,8 @@ public class IndexingImpl implements IndexingInterface {
 		// find corresponding document type
 		DocumentType dt = bll.getDocumentTypeForExtension(extension);
 		if (dt == null) {
-			onAddingError(path, "DocumentType not found for extension: " + extension);
+			onAddingError(path, "DocumentType not found for extension: "
+					+ extension);
 			return;
 		}
 		System.err.println("Found type for " + extension + " ext: "
@@ -132,20 +143,20 @@ public class IndexingImpl implements IndexingInterface {
 			onAdded(f.toPath());
 		}
 
-//		try {
-//			System.out.println("   last modified: " + f.lastModified());
-//			Map<String, Object> map = Files.readAttributes(f.toPath(), "*",
-//					LinkOption.NOFOLLOW_LINKS);
-//
-//			for (Map.Entry<String, Object> entry : map.entrySet()) {
-//				System.out.println("   " + entry.getKey() + " = "
-//						+ entry.getValue());
-//			}
-//
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
+		// try {
+		// System.out.println("   last modified: " + f.lastModified());
+		// Map<String, Object> map = Files.readAttributes(f.toPath(), "*",
+		// LinkOption.NOFOLLOW_LINKS);
+		//
+		// for (Map.Entry<String, Object> entry : map.entrySet()) {
+		// System.out.println("   " + entry.getKey() + " = "
+		// + entry.getValue());
+		// }
+		//
+		// } catch (IOException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// }
 	}
 
 	private boolean inPointerList(String absolutePath) {

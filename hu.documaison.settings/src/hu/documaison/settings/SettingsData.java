@@ -12,7 +12,7 @@ public class SettingsData {
 	private ArrayList<String> indexedFolders = new ArrayList<String>();
 	private boolean indexingEnabled;
 	private boolean evernoteIndexingEnabled;
-	
+	private String computerId;
 	
 	public String getDatabaseFileLocation() {
 		return databaseFileLocation;
@@ -48,6 +48,15 @@ public class SettingsData {
 	@XmlElement
 	public void setEvernoteIndexingEnabled(boolean evernoteIndexingEnabled) {
 		this.evernoteIndexingEnabled = evernoteIndexingEnabled;
+	}
+	
+	public String getComputerId() {
+		return computerId;
+	}
+	
+	@XmlElement
+	public void setComputerId(String computerId) {
+		this.computerId = computerId;
 	}
 
 	@Override

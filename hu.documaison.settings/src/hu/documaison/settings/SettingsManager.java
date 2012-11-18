@@ -5,6 +5,8 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
@@ -25,12 +27,21 @@ public class SettingsManager {
 		}
 	}
 
+	private static String getComputerName(){
+		try {
+			return InetAddress.getLocalHost().getHostName();
+		} catch (UnknownHostException e) {
+			return "unknown_computer";
+		} 
+	}
+	
 	private static SettingsData createDefaultSettingsData() throws Exception {
 		SettingsData data = new SettingsData();
 		data.setEvernoteIndexingEnabled(false);
 		data.setIndexingEnabled(false);
 		String currentDir = new File(".").getCanonicalPath();
 		data.setDatabaseFileLocation(currentDir + System.getProperty("file.separator") + "documaison.db");
+		data.setComputerId(System.getProperty("user.name", "user") + "@" + getComputerName());
 		storeSettings(data);
 		return data;
 		
