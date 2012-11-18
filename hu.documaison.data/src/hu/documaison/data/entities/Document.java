@@ -17,9 +17,13 @@ public class Document extends DatabaseObject {
 	public static final String METADATA = "metadata";
 	public static final String COMMENTS = "comments";
 	public static final String LOCATION = "location";
+	protected static final String CREATOR_COMPUTERID = "creator_computerid";
 
-	@DatabaseField(columnName = "location")
+	@DatabaseField(columnName = LOCATION)
 	private String location;
+
+	@DatabaseField(columnName = CREATOR_COMPUTERID)
+	private String creatorComputerId;
 
 	@DatabaseField(foreign = true, foreignAutoRefresh = true)
 	private DocumentType type;
@@ -69,6 +73,15 @@ public class Document extends DatabaseObject {
 		this.location = location;
 	}
 
+	public String getCreatorComputerId() {
+		return creatorComputerId;
+	}
+
+	public void setCreatorComputerId(String creatorComputerId) {
+		this.creatorComputerId = creatorComputerId;
+	}
+
+	
 	/**
 	 * @return the type
 	 */

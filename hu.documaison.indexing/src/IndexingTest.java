@@ -1,7 +1,7 @@
 import hu.documaison.bll.interfaces.BllImplementation;
 import hu.documaison.data.exceptions.InvalidParameterException;
-import hu.documaison.indexing.IndexingFactory;
-import hu.documaison.indexing.IndexingInterface;
+import hu.documaison.indexing.IndexerFactory;
+import hu.documaison.indexing.IndexerInterface;
 import hu.documaison.settings.SettingsData;
 import hu.documaison.settings.SettingsManager;
 
@@ -22,9 +22,9 @@ public class IndexingTest {
 
 		System.out.println("Computer ID: " + computerId);
 
-		IndexingInterface indexer;
+		IndexerInterface indexer;
 		try {
-			indexer = IndexingFactory.getIndexing("W:\\dmtemp", computerId, 
+			indexer = IndexerFactory.getIndexing("W:\\dmtemp", computerId, 
 					new BllImplementation());
 		} catch (InvalidParameterException e) {
 			e.printStackTrace();

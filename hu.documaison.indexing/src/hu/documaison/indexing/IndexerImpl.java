@@ -14,23 +14,25 @@ import hu.documaison.data.entities.Metadata;
 import hu.documaison.data.exceptions.InvalidFolderException;
 import hu.documaison.data.exceptions.InvalidParameterException;
 import hu.documaison.data.exceptions.UnableToCreateException;
+import hu.documaison.data.exceptions.UnknownDocumentException;
 import hu.documaison.data.exceptions.UnknownDocumentTypeException;
 import hu.documaison.data.helper.DocumentFilePointer;
 
-public class IndexingImpl implements IndexingInterface {
+class IndexerImpl implements IndexerInterface {
 	private BllInterface bll = null;
 	private String folder;
 	private String currentComputerId;
 	private Collection<DocumentFilePointer> lastPointers = null;
 
-	public IndexingImpl(String folder, String currentComputerId,
+	public IndexerImpl(String folder, String currentComputerId,
 			BllInterface bll) throws InvalidParameterException {
 		setFolder(folder);
 		setCurrentComputerId(currentComputerId);
 		setBll(bll);
 	}
 
-	private void setCurrentComputerId(String currentComputerId) throws InvalidParameterException {
+	private void setCurrentComputerId(String currentComputerId)
+			throws InvalidParameterException {
 		if (currentComputerId != null) {
 			this.currentComputerId = currentComputerId;
 		} else {
@@ -71,7 +73,29 @@ public class IndexingImpl implements IndexingInterface {
 	}
 
 	private void onDeleted(int documentId) {
-		System.err.println("DELETED: id = " + documentId);
+		// best effort (fail silent)
+		System.err.println("REMOVE: id = " + documentId);
+
+		Document document;
+		try {
+			document = bll.getDocument(documentId);
+		} catch (UnknownDocumentException e) {
+			return;
+		}
+		if (document == null) {
+			return;
+		}
+
+		if (!document.getCreatorComputerId()
+				.equalsIgnoreCase(currentComputerId)) {
+			// This document was created on another computer.
+			// This instance doesn't have the right to delete it.
+			return;
+		} else {
+			bll.removeDocument(documentId);
+			// TODO cascade delete check!
+		}
+
 	}
 
 	private String fileExtension(Path path) {
@@ -98,6 +122,7 @@ public class IndexingImpl implements IndexingInterface {
 		try {
 			newDoc = bll.createDocument(dt.getId());
 			newDoc.setLocation(path.toString());
+			newDoc.setCreatorComputerId(this.currentComputerId);
 			newDoc.setDateAdded(new Date());
 			bll.updateDocument(newDoc);
 
