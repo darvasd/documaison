@@ -76,4 +76,7 @@ public interface BllInterface {
 	
 	public Collection<DocumentFilePointer> getDocumentPointers(String locationFilter);
 
+	public void moveDocument(Document document, String newLocation) throws InvalidParameterException, UnknownDocumentException;
+	
+	public boolean deleteAndRemoveDocument(Document document) throws InvalidParameterException, UnknownDocumentException;
 }

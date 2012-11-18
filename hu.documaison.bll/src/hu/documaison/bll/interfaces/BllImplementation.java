@@ -13,21 +13,25 @@ import hu.documaison.data.exceptions.UnableToCreateException;
 import hu.documaison.data.exceptions.UnknownDocumentException;
 import hu.documaison.data.exceptions.UnknownDocumentTypeException;
 import hu.documaison.data.exceptions.UnknownTagException;
+import hu.documaison.data.helper.DataHelper;
 import hu.documaison.data.helper.DocumentFilePointer;
 import hu.documaison.data.search.SearchExpression;
 
+import java.io.File;
 import java.util.Collection;
 
 public class BllImplementation implements BllInterface {
 
 	@Override
-	public void addTagToDocument(Tag tag, Document document) throws InvalidParameterException {
+	public void addTagToDocument(Tag tag, Document document)
+			throws InvalidParameterException {
 		DalInterface dal = DalSingletonProvider.getDalImplementation();
 		dal.addTagToDocument(tag, document);
 	}
 
 	@Override
-	public Comment createComment(Document parent) throws UnableToCreateException {
+	public Comment createComment(Document parent)
+			throws UnableToCreateException {
 		DalInterface dal = DalSingletonProvider.getDalImplementation();
 		Comment ret = dal.createComment();
 		ret.setParent(parent);
@@ -36,7 +40,8 @@ public class BllImplementation implements BllInterface {
 	}
 
 	@Override
-	public DefaultMetadata createDefaultMetadata(DocumentType parent) throws UnableToCreateException {
+	public DefaultMetadata createDefaultMetadata(DocumentType parent)
+			throws UnableToCreateException {
 		DalInterface dal = DalSingletonProvider.getDalImplementation();
 		DefaultMetadata ret = dal.createDefaultMetadata();
 		ret.setParent(parent);
@@ -83,7 +88,8 @@ public class BllImplementation implements BllInterface {
 	}
 
 	@Override
-	public Metadata createMetadata(Document parent) throws UnableToCreateException {
+	public Metadata createMetadata(Document parent)
+			throws UnableToCreateException {
 		DalInterface dal = DalSingletonProvider.getDalImplementation();
 		Metadata ret = dal.createMetadata();
 		ret.setParent(parent);
@@ -121,7 +127,8 @@ public class BllImplementation implements BllInterface {
 	}
 
 	@Override
-	public DocumentType getDocumentType(int id) throws UnknownDocumentTypeException {
+	public DocumentType getDocumentType(int id)
+			throws UnknownDocumentTypeException {
 		DalInterface dal = DalSingletonProvider.getDalImplementation();
 		return dal.getDocumentType(id);
 	}
@@ -187,7 +194,8 @@ public class BllImplementation implements BllInterface {
 	}
 
 	@Override
-	public void removeTagFromDocument(Tag tag, Document document) throws InvalidParameterException {
+	public void removeTagFromDocument(Tag tag, Document document)
+			throws InvalidParameterException {
 		DalInterface dal = DalSingletonProvider.getDalImplementation();
 		dal.removeTagFromDocument(tag, document);
 	}
@@ -245,6 +253,53 @@ public class BllImplementation implements BllInterface {
 			String locationFilter) {
 		DalInterface dal = DalSingletonProvider.getDalImplementation();
 		return dal.getDocumentPointers(locationFilter);
+	}
+
+	@Override
+	public void moveDocument(Document document, String newLocation)
+			throws InvalidParameterException, UnknownDocumentException {
+		File target = new File(newLocation);
+		if (target == null || target.exists()) {
+			throw new InvalidParameterException("newLocation");
+		}
+		if (document == null) {
+			throw new UnknownDocumentException(0);
+		}
+
+		File oldFile;
+		try {
+			oldFile = new File(document.getLocation());
+		} catch (NullPointerException npe) {
+			throw new InvalidParameterException("document");
+		}
+
+		// TODO MOVE HERE
+		throw new UnsupportedOperationException("Not implemented yet.");
+		// document.setLocation(target.getAbsolutePath());
+		//
+		// DalInterface dal = DalSingletonProvider.getDalImplementation();
+		// dal.updateDocument(document);
+	}
+
+	@Override
+	public boolean deleteAndRemoveDocument(Document document)
+			throws InvalidParameterException, UnknownDocumentException {
+		if (document == null) {
+			throw new UnknownDocumentException(0);
+		}
+
+		File docFile = DataHelper.createFileObject(document.getLocation());
+		if (docFile == null || !docFile.exists()) {
+			throw new InvalidParameterException("document.location");
+		}
+
+		if (docFile.delete()) {
+			DalInterface dal = DalSingletonProvider.getDalImplementation();
+			dal.removeDocument(document.getId());
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 }
