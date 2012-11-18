@@ -87,7 +87,7 @@ public class IndexingImpl implements IndexingInterface {
 
 	private boolean inPointerList(String absolutePath) {
 		for (DocumentFilePointer dfp : this.lastPointers){
-			if (dfp.getLocation() != null && dfp.getLocation().equals(absolutePath)){
+			if (dfp.getLocation() != null && dfp.getFile().getAbsolutePath().equals(absolutePath)){
 				return true;
 			}
 		}
