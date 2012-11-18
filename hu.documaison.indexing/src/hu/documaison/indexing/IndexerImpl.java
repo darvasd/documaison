@@ -1,22 +1,18 @@
 package hu.documaison.indexing;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.*;
-import java.util.Collection;
-import java.util.Date;
-import java.util.Map;
-
 import hu.documaison.bll.interfaces.BllInterface;
 import hu.documaison.data.entities.Document;
 import hu.documaison.data.entities.DocumentType;
 import hu.documaison.data.entities.Metadata;
 import hu.documaison.data.exceptions.InvalidFolderException;
 import hu.documaison.data.exceptions.InvalidParameterException;
-import hu.documaison.data.exceptions.UnableToCreateException;
 import hu.documaison.data.exceptions.UnknownDocumentException;
-import hu.documaison.data.exceptions.UnknownDocumentTypeException;
 import hu.documaison.data.helper.DocumentFilePointer;
+
+import java.io.File;
+import java.nio.file.Path;
+import java.util.Collection;
+import java.util.Date;
 
 class IndexerImpl implements IndexerInterface {
 	private BllInterface bll = null;
@@ -24,8 +20,8 @@ class IndexerImpl implements IndexerInterface {
 	private String currentComputerId;
 	private Collection<DocumentFilePointer> lastPointers = null;
 
-	public IndexerImpl(String folder, String currentComputerId,
-			BllInterface bll) throws InvalidParameterException {
+	public IndexerImpl(String folder, String currentComputerId, BllInterface bll)
+			throws InvalidParameterException {
 		setFolder(folder);
 		setCurrentComputerId(currentComputerId);
 		setBll(bll);
