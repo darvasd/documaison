@@ -19,7 +19,7 @@
   </class>  
   <class id="3" corner="BOTTOM_RIGHT" language="java" name="hu.documaison.data.entities.Metadata" 
     project="hu.documaison.data" file="/hu.documaison.data/src/hu/documaison/data/entities/Metadata.java" binary="false">    
-    <position height="-1" width="-1" x="554" y="221"/>    
+    <position height="-1" width="-1" x="297" y="481"/>    
     <display autosize="true" stereotype="false" package="true" initial-value="true" signature="true" visibility="true">      
       <attributes public="false" package="false" protected="false" private="false"/>      
       <operations public="false" package="false" protected="false" private="false"/>    
@@ -27,7 +27,7 @@
   </class>  
   <class id="4" corner="BOTTOM_RIGHT" language="java" name="hu.documaison.data.entities.Tag" 
     project="hu.documaison.data" file="/hu.documaison.data/src/hu/documaison/data/entities/Tag.java" binary="false">    
-    <position height="-1" width="-1" x="1046" y="356"/>    
+    <position height="-1" width="-1" x="806" y="481"/>    
     <display autosize="true" stereotype="false" package="true" initial-value="true" signature="true" visibility="true">      
       <attributes public="false" package="false" protected="false" private="false"/>      
       <operations public="false" package="false" protected="false" private="false"/>    
@@ -44,61 +44,76 @@
   </class>  
   <class id="6" corner="BOTTOM_RIGHT" language="java" name="hu.documaison.data.entities.Comment" 
     project="hu.documaison.data" file="/hu.documaison.data/src/hu/documaison/data/entities/Comment.java" binary="false">    
-    <position height="-1" width="-1" x="554" y="484"/>    
+    <position height="-1" width="-1" x="554" y="481"/>    
     <display autosize="true" stereotype="false" package="true" initial-value="true" signature="true" visibility="true">      
       <attributes public="false" package="false" protected="false" private="false"/>      
       <operations public="false" package="false" protected="false" private="false"/>    
     </display>  
   </class>  
-  <association id="7">    
-    <end type="SOURCE" refId="2" navigable="true">      
-      <attribute id="8" name="tag"/>      
-      <multiplicity id="9" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="4" navigable="true">      
-      <attribute id="10" name="dtcs"/>      
-      <multiplicity id="11" minimum="0" maximum="2147483647"/>    
-    </end>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="12">    
+  <class id="7" corner="BOTTOM_RIGHT" language="java" name="hu.documaison.data.entities.DatabaseObject" 
+    project="hu.documaison.data" file="/hu.documaison.data/src/hu/documaison/data/entities/DatabaseObject.java" 
+    binary="false">    
+    <position height="-1" width="-1" x="553" y="223"/>    
+    <display autosize="true" stereotype="false" package="true" initial-value="true" signature="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="true"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <association id="8">    
     <end type="SOURCE" refId="1" navigable="false">      
-      <attribute id="13" name="type"/>      
-      <multiplicity id="14" minimum="0" maximum="1"/>    
+      <attribute id="9" name="type"/>      
+      <multiplicity id="10" minimum="0" maximum="1"/>    
     </end>    
     <end type="TARGET" refId="5" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="15">    
+  <association id="11">    
     <end type="SOURCE" refId="2" navigable="true">      
-      <attribute id="16" name="document"/>      
-      <multiplicity id="17" minimum="0" maximum="1"/>    
+      <attribute id="12" name="tag"/>      
+      <multiplicity id="13" minimum="0" maximum="1"/>    
     </end>    
-    <end type="TARGET" refId="1" navigable="true">      
-      <attribute id="18" name="tags"/>      
-      <multiplicity id="19" minimum="0" maximum="2147483647"/>    
+    <end type="TARGET" refId="4" navigable="true">      
+      <attribute id="14" name="dtcs"/>      
+      <multiplicity id="15" minimum="0" maximum="2147483647"/>    
     </end>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="20">    
+  <association id="16">    
+    <end type="SOURCE" refId="2" navigable="true">      
+      <attribute id="17" name="document"/>      
+      <multiplicity id="18" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="1" navigable="true">      
+      <attribute id="19" name="tags"/>      
+      <multiplicity id="20" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="21">    
     <end type="SOURCE" refId="3" navigable="true">      
-      <attribute id="21" name="parent"/>      
-      <multiplicity id="22" minimum="0" maximum="1"/>    
+      <attribute id="22" name="parent"/>      
+      <multiplicity id="23" minimum="0" maximum="1"/>    
     </end>    
     <end type="TARGET" refId="1" navigable="true">      
-      <attribute id="23" name="metadataCollection"/>      
-      <multiplicity id="24" minimum="0" maximum="2147483647"/>    
+      <attribute id="24" name="metadataCollection">        
+        <position height="15" width="97" x="362" y="449"/>      
+      </attribute>      
+      <multiplicity id="25" minimum="0" maximum="2147483647"/>    
     </end>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="25">    
+  <generalization id="26">    
+    <end type="SOURCE" refId="1"/>    
+    <end type="TARGET" refId="7"/>  
+  </generalization>  
+  <association id="27">    
     <end type="SOURCE" refId="6" navigable="true">      
-      <attribute id="26" name="parent"/>      
-      <multiplicity id="27" minimum="0" maximum="1"/>    
+      <attribute id="28" name="parent"/>      
+      <multiplicity id="29" minimum="0" maximum="1"/>    
     </end>    
     <end type="TARGET" refId="1" navigable="true">      
-      <attribute id="28" name="commentCollection"/>      
-      <multiplicity id="29" minimum="0" maximum="2147483647"/>    
+      <attribute id="30" name="commentCollection"/>      
+      <multiplicity id="31" minimum="0" maximum="2147483647"/>    
     </end>    
     <display labels="true" multiplicity="true"/>  
   </association>  
