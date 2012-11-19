@@ -311,4 +311,10 @@ public class BllImplementation implements BllInterface {
 		return dal.getDocumentTypeForExtension(extension);
 	}
 
+	@Override
+	public Collection<Document> searchDocumentsFreeText(String textFragment) {
+		DalInterface dal = DalSingletonProvider.getDalImplementation();
+		return dal.searchDocumentsFreeText(textFragment);
+	}
+
 }

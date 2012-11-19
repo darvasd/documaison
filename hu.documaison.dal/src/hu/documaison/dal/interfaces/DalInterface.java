@@ -57,6 +57,7 @@ public interface DalInterface {
 	
 	// search
 	public Collection<Document> searchDocuments(SearchExpression expr);
+	public Collection<Document> searchDocumentsFreeText(String textFragment);
 	
 	// for indexing
 	public Collection<DocumentFilePointer> getDocumentPointers(String locationFilter);

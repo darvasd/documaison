@@ -1215,4 +1215,58 @@ class DalImplementation implements DalInterface {
 		return null;
 	}
 
+	@Override
+	public Collection<Document> searchDocumentsFreeText(String textFragment) {
+		if (textFragment == null) {
+			return new ArrayList<Document>();
+		}
+
+		String expr = "%" + textFragment.replace('%', '_') + "%";
+
+		// create a connection source to our database
+		ConnectionSource connectionSource = null;
+
+		try {
+			// create connection
+			connectionSource = DatabaseUtils.getConnectionSource();
+
+			// instantiate the dao
+			Dao<Document, Integer> dao = DaoManager.createDao(connectionSource,
+					Document.class);
+			// instantiate the metadata dao
+			Dao<Metadata, Integer> daoMD = DaoManager.createDao(
+					connectionSource, Metadata.class);
+
+			// query
+			QueryBuilder<Document, Integer> qb = dao.queryBuilder();
+			QueryBuilder<Metadata, Integer> qbMD = daoMD.queryBuilder();
+			qb.join(qbMD);
+
+			Where<Metadata, Integer> where = qbMD.where();
+			where.like(AbstractMetadata.VALUE, expr);
+			where.or().like(Document.LOCATION, expr);
+
+			System.out.println("Search for: " + where.getStatement());
+			// TODO: delete
+
+			List<Document> ret = dao.query(qb.prepare());
+
+			// return
+			return ret;
+		} catch (SQLException e) {
+			HandleSQLException(e, "searchDocumentsFreeText(String)");
+		} finally {
+			// close connection
+			if (connectionSource != null) {
+				try {
+					connectionSource.close();
+				} catch (SQLException e) {
+					HandleSQLException(e, "searchDocumentsFreeText(String)");
+				}
+			}
+		}
+
+		return null;
+	}
+
 }

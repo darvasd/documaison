@@ -13,31 +13,45 @@ import java.io.IOException;
 import java.util.Collection;
 
 public interface BllInterface {
-	public void addTagToDocument(Tag tag, Document document) throws InvalidParameterException;
+	public void addTagToDocument(Tag tag, Document document)
+			throws InvalidParameterException;
 
-	public Comment createComment(Document parent) throws UnableToCreateException;
+	public Comment createComment(Document parent)
+			throws UnableToCreateException;
 
-	public DefaultMetadata createDefaultMetadata(DocumentType parent) throws UnableToCreateException;
+	public DefaultMetadata createDefaultMetadata(DocumentType parent)
+			throws UnableToCreateException;
 
-	public Document createDocument(int documentTypeId) throws UnknownDocumentTypeException, UnableToCreateException;
+	public Document createDocument(int documentTypeId)
+			throws UnknownDocumentTypeException, UnableToCreateException;
 
 	public DocumentType createDocumentType() throws UnableToCreateException;
 
-	public Metadata createMetadata(Document parent) throws UnableToCreateException;
+	public Metadata createMetadata(Document parent)
+			throws UnableToCreateException;
 
 	public Tag createTag(String name) throws UnableToCreateException;
+
+	public boolean deleteAndRemoveDocument(Document document)
+			throws InvalidParameterException, UnknownDocumentException;
 
 	public Collection<DocumentType> getAllDocumentTypes();
 
 	public Document getDocument(int id) throws UnknownDocumentException;
 
+	public Collection<DocumentFilePointer> getDocumentPointers(
+			String locationFilter);
+
 	public Collection<Document> getDocuments();
 
 	public Collection<Document> getDocumentsByTag(Tag tag);
-	
+
 	public Collection<Document> getDocumentsByTags(java.util.List<Tag> tags);
 
-	public DocumentType getDocumentType(int id) throws UnknownDocumentTypeException;
+	public DocumentType getDocumentType(int id)
+			throws UnknownDocumentTypeException;
+
+	public DocumentType getDocumentTypeForExtension(String extension);
 
 	public Collection<DocumentType> getDocumentTypes();
 
@@ -46,6 +60,10 @@ public interface BllInterface {
 	public Tag getTag(String name) throws UnknownTagException;
 
 	public Collection<Tag> getTags();
+
+	public void moveDocument(Document document, String newLocation)
+			throws InvalidParameterException, UnknownDocumentException,
+			IOException;
 
 	public void removeComment(int id);
 
@@ -59,9 +77,12 @@ public interface BllInterface {
 
 	public void removeTag(int id);
 
-	public void removeTagFromDocument(Tag tag, Document document) throws InvalidParameterException;
+	public void removeTagFromDocument(Tag tag, Document document)
+			throws InvalidParameterException;
 
 	public Collection<Document> searchDocuments(SearchExpression expr);
+
+	public Collection<Document> searchDocumentsFreeText(String textFragment);
 
 	public void updateComment(Comment comment);
 
@@ -74,12 +95,4 @@ public interface BllInterface {
 	public void updateMetadata(Metadata metadata);
 
 	public void updateTag(Tag tag);
-	
-	public Collection<DocumentFilePointer> getDocumentPointers(String locationFilter);
-
-	public void moveDocument(Document document, String newLocation) throws InvalidParameterException, UnknownDocumentException, IOException;
-	
-	public boolean deleteAndRemoveDocument(Document document) throws InvalidParameterException, UnknownDocumentException;
-	
-	public DocumentType getDocumentTypeForExtension(String extension);
 }
