@@ -7,8 +7,8 @@ import hu.documaison.data.entities.Metadata;
 import hu.documaison.data.exceptions.InvalidFolderException;
 import hu.documaison.data.exceptions.InvalidParameterException;
 import hu.documaison.data.exceptions.UnknownDocumentException;
-import hu.documaison.data.helper.DataHelper;
 import hu.documaison.data.helper.DocumentFilePointer;
+import hu.documaison.data.helper.FileHelper;
 
 import java.io.File;
 import java.util.Collection;
@@ -143,7 +143,7 @@ class IndexerImpl implements IndexerInterface {
 
 	private void onAdded(File file) {
 		System.err.println("ADD: path = " + file);
-		String extension = DataHelper.fileExtension(file.getAbsolutePath());
+		String extension = FileHelper.fileExtension(file.getAbsolutePath());
 
 		// find corresponding document type
 		DocumentType dt = bll.getDocumentTypeForExtension(extension);

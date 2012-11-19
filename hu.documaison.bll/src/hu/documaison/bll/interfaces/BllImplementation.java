@@ -2,19 +2,14 @@ package hu.documaison.bll.interfaces;
 
 import hu.documaison.dal.interfaces.DalInterface;
 import hu.documaison.dal.interfaces.DalSingletonProvider;
-import hu.documaison.data.entities.Comment;
-import hu.documaison.data.entities.DefaultMetadata;
-import hu.documaison.data.entities.Document;
-import hu.documaison.data.entities.DocumentType;
-import hu.documaison.data.entities.Metadata;
-import hu.documaison.data.entities.Tag;
+import hu.documaison.data.entities.*;
 import hu.documaison.data.exceptions.InvalidParameterException;
 import hu.documaison.data.exceptions.UnableToCreateException;
 import hu.documaison.data.exceptions.UnknownDocumentException;
 import hu.documaison.data.exceptions.UnknownDocumentTypeException;
 import hu.documaison.data.exceptions.UnknownTagException;
-import hu.documaison.data.helper.DataHelper;
 import hu.documaison.data.helper.DocumentFilePointer;
+import hu.documaison.data.helper.FileHelper;
 import hu.documaison.data.search.SearchExpression;
 
 import java.io.File;
@@ -275,8 +270,13 @@ public class BllImplementation implements BllInterface {
 			throw new InvalidParameterException("document");
 		}
 
-		oldFile.renameTo(target);
-
+		// the simplest solution:
+		if (!oldFile.renameTo(target)){
+			// if the renameTo was unsuccessful due to platform limitations ...
+			FileHelper.copy(oldFile, target);
+			oldFile.delete();
+		}
+		
 		document.setLocation(target.getAbsolutePath());
 
 		DalInterface dal = DalSingletonProvider.getDalImplementation();
@@ -291,7 +291,7 @@ public class BllImplementation implements BllInterface {
 			throw new UnknownDocumentException(0);
 		}
 
-		File docFile = DataHelper.createFileObject(document.getLocation());
+		File docFile = FileHelper.createFileObject(document.getLocation());
 		if (docFile == null || !docFile.exists()) {
 			throw new InvalidParameterException("document.location");
 		}
