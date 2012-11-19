@@ -23,6 +23,6 @@ public class DataHelper {
 
 	public static String fileExtension(String path) {
 		int lastDot = path.lastIndexOf('.');
-		return path.toString().substring(lastDot + 1);
+		return path.substring(lastDot + 1);
 	}
 }

@@ -11,7 +11,6 @@ import hu.documaison.data.helper.DataHelper;
 import hu.documaison.data.helper.DocumentFilePointer;
 
 import java.io.File;
-import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Date;
 
@@ -91,13 +90,13 @@ class IndexerImpl implements IndexerInterface {
 		}
 	}
 
-	// Necessary operations on f file.
-	private void fileRefresh(File f) {
-		System.out.println("File found: " + f.getAbsolutePath());
-		if (!inPointerList(f.getAbsolutePath())) {
-			onAdded(f.toPath());
+	// Necessary operations on file file.
+	private void fileRefresh(File file) {
+		System.out.println("File found: " + file.getAbsolutePath());
+		if (!inPointerList(file.getAbsolutePath())) {
+			onAdded(file);
 		} else {
-			System.out.println(f.getAbsolutePath() + " is already in database.");
+			System.out.println(file.getAbsolutePath() + " is already in database.");
 		}
 
 		// try {
@@ -142,14 +141,14 @@ class IndexerImpl implements IndexerInterface {
 
 	}
 
-	private void onAdded(Path path) {
-		System.err.println("ADD: path = " + path);
-		String extension = DataHelper.fileExtension(path);
+	private void onAdded(File file) {
+		System.err.println("ADD: path = " + file);
+		String extension = DataHelper.fileExtension(file.getAbsolutePath());
 
 		// find corresponding document type
 		DocumentType dt = bll.getDocumentTypeForExtension(extension);
 		if (dt == null) {
-			onAddingError(path, "DocumentType not found for extension: "
+			onAddingError(file, "DocumentType not found for extension: "
 					+ extension);
 			return;
 		}
@@ -160,7 +159,7 @@ class IndexerImpl implements IndexerInterface {
 		Document newDoc;
 		try {
 			newDoc = bll.createDocument(dt.getId());
-			newDoc.setLocation(path.toString());
+			newDoc.setLocation(file.toString());
 			newDoc.setCreatorComputerId(this.currentComputerId);
 			newDoc.setDateAdded(new Date());
 			bll.updateDocument(newDoc);
@@ -170,17 +169,17 @@ class IndexerImpl implements IndexerInterface {
 			md1.setValue("true");
 			bll.updateMetadata(md1);
 		} catch (Exception e) {
-			onAddingError(path, null);
+			onAddingError(file, null);
 			return;
 		}
 	}
 
-	private void onAddingError(Path path, String message) {
+	private void onAddingError(File file, String message) {
 		if (message == null) {
 			message = "N/A";
 		}
 		System.err
-				.println("Adding error: " + message + " @ " + path.toString());
+				.println("Adding error: " + message + " @ " + file.toString());
 	}
 
 	private boolean inPointerList(String absolutePath) {

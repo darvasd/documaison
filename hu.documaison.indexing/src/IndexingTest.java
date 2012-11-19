@@ -2,7 +2,6 @@ import hu.documaison.bll.interfaces.BllImplementation;
 import hu.documaison.data.entities.Document;
 import hu.documaison.data.entities.DocumentType;
 import hu.documaison.data.exceptions.InvalidParameterException;
-import hu.documaison.data.exceptions.UnableToCreateException;
 import hu.documaison.indexing.IndexerFactory;
 import hu.documaison.indexing.IndexerInterface;
 import hu.documaison.settings.SettingsData;
