@@ -92,6 +92,7 @@ public class NewDocumentPanel extends InnerPanel {
 		data = new FormData();
 		data.top = new FormAttachment(typeLabel, 0);
 		data.left = new FormAttachment(0, 20);
+		data.width = 150;
 		typeCombo.setLayoutData(data);
 
 		typeLink = new Link(this, SWT.None);
@@ -167,6 +168,7 @@ public class NewDocumentPanel extends InnerPanel {
 			@Override
 			public void handleEvent(Event e) {
 				FileDialog dialog = new FileDialog(getShell());
+				dialog.setFilterExtensions(new String[] { "*.*" });
 				String path = dialog.open();
 				if (path != null) {
 					locText.setText(path);
@@ -178,6 +180,7 @@ public class NewDocumentPanel extends InnerPanel {
 	@Override
 	public void showed() {
 		loadDocTypes();
+		layout();
 		validate();
 		super.showed();
 	}

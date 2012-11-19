@@ -6,7 +6,7 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/hu.documaison.settings"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/hu.documaison.bll"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/hu.documaison.data"/>
-	<classpathentry kind="var" path="SWT_JAR"/>
 	<classpathentry kind="lib" path="org.eclipse.nebula.widgets.compositetable_1.0.0.201211141419.jar"/>
+	<classpathentry kind="lib" path="swt_mac_x64.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

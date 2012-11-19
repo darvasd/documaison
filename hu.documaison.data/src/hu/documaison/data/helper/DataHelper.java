@@ -1,7 +1,6 @@
 package hu.documaison.data.helper;
 
 import java.io.File;
-import java.nio.file.Path;
 
 public class DataHelper {
 	public static boolean isValidId(int id) {
@@ -11,7 +10,7 @@ public class DataHelper {
 			return false;
 		}
 	}
-	
+
 	public static File createFileObject(String location) {
 		File ret;
 		try {
@@ -21,9 +20,9 @@ public class DataHelper {
 			return null;
 		}
 	}
-	
-	public static String fileExtension(Path path) {
-		int lastDot = path.toString().lastIndexOf('.');
+
+	public static String fileExtension(String path) {
+		int lastDot = path.lastIndexOf('.');
 		return path.toString().substring(lastDot + 1);
 	}
 }

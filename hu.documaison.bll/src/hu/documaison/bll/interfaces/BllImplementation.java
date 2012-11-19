@@ -1,7 +1,6 @@
 package hu.documaison.bll.interfaces;
 
 import hu.documaison.dal.interfaces.DalInterface;
-import java.nio.file.*;
 import hu.documaison.dal.interfaces.DalSingletonProvider;
 import hu.documaison.data.entities.Comment;
 import hu.documaison.data.entities.DefaultMetadata;
@@ -276,7 +275,8 @@ public class BllImplementation implements BllInterface {
 			throw new InvalidParameterException("document");
 		}
 
-		Files.move(oldFile.toPath(), target.toPath()); // can throw IOException
+		oldFile.renameTo(target);
+
 		document.setLocation(target.getAbsolutePath());
 
 		DalInterface dal = DalSingletonProvider.getDalImplementation();

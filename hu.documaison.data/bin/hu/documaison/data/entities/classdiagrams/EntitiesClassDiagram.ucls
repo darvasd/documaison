@@ -1,0 +1,148 @@
+<class-diagram version="1.0.11" icons="true" automaticImage="PNG" always-add-relationships="false" 
+  generalizations="true" realizations="true" associations="true" dependencies="false" nesting-relationships="true">  
+  <class id="1" corner="BOTTOM_RIGHT" language="java" name="hu.documaison.data.entities.Document" 
+    project="hu.documaison.data" file="/hu.documaison.data/src/hu/documaison/data/entities/Document.java" binary="false">    
+    <position height="-1" width="-1" x="554" y="356"/>    
+    <display autosize="true" stereotype="false" package="true" initial-value="true" signature="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="2" corner="BOTTOM_RIGHT" language="java" name="hu.documaison.data.entities.DefaultMetadata" 
+    project="hu.documaison.data" file="/hu.documaison.data/src/hu/documaison/data/entities/DefaultMetadata.java" 
+    binary="false">    
+    <position height="-1" width="-1" x="297" y="221"/>    
+    <display autosize="true" stereotype="false" package="true" initial-value="true" signature="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="3" corner="BOTTOM_RIGHT" language="java" name="hu.documaison.data.entities.AbstractMetadata" 
+    project="hu.documaison.data" file="/hu.documaison.data/src/hu/documaison/data/entities/AbstractMetadata.java" 
+    binary="false">    
+    <position height="-1" width="-1" x="436" y="123"/>    
+    <display autosize="true" stereotype="false" package="true" initial-value="true" signature="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="4" corner="BOTTOM_RIGHT" language="java" name="hu.documaison.data.entities.DocumentTagConnection" 
+    project="hu.documaison.data" file="/hu.documaison.data/src/hu/documaison/data/entities/DocumentTagConnection.java" 
+    binary="false">    
+    <position height="-1" width="-1" x="807" y="356"/>    
+    <display autosize="true" stereotype="false" package="true" initial-value="true" signature="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="5" corner="BOTTOM_RIGHT" language="java" name="hu.documaison.data.entities.Metadata" 
+    project="hu.documaison.data" file="/hu.documaison.data/src/hu/documaison/data/entities/Metadata.java" binary="false">    
+    <position height="-1" width="-1" x="554" y="221"/>    
+    <display autosize="true" stereotype="false" package="true" initial-value="true" signature="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="6" corner="BOTTOM_RIGHT" language="java" name="hu.documaison.data.entities.Tag" 
+    project="hu.documaison.data" file="/hu.documaison.data/src/hu/documaison/data/entities/Tag.java" binary="false">    
+    <position height="-1" width="-1" x="807" y="481"/>    
+    <display autosize="true" stereotype="false" package="true" initial-value="true" signature="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="7" corner="BOTTOM_RIGHT" language="java" name="hu.documaison.data.entities.DocumentType" 
+    project="hu.documaison.data" file="/hu.documaison.data/src/hu/documaison/data/entities/DocumentType.java" 
+    binary="false">    
+    <position height="-1" width="-1" x="297" y="356"/>    
+    <display autosize="true" stereotype="false" package="true" initial-value="true" signature="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="8" corner="BOTTOM_RIGHT" language="java" name="hu.documaison.data.entities.Comment" 
+    project="hu.documaison.data" file="/hu.documaison.data/src/hu/documaison/data/entities/Comment.java" binary="false">    
+    <position height="-1" width="-1" x="554" y="481"/>    
+    <display autosize="true" stereotype="false" package="true" initial-value="true" signature="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <generalization id="9">    
+    <end type="SOURCE" refId="5"/>    
+    <end type="TARGET" refId="3"/>  
+  </generalization>  
+  <association id="10">    
+    <end type="SOURCE" refId="2" navigable="true">      
+      <attribute id="11" name="parent"/>      
+      <multiplicity id="12" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="7" navigable="true">      
+      <attribute id="13" name="defaultMetadataCollection"/>      
+      <multiplicity id="14" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="15">    
+    <end type="SOURCE" refId="1" navigable="false">      
+      <attribute id="16" name="type"/>      
+      <multiplicity id="17" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="7" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="18">    
+    <end type="SOURCE" refId="4" navigable="true">      
+      <attribute id="19" name="tag"/>      
+      <multiplicity id="20" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="6" navigable="true">      
+      <attribute id="21" name="dtcs"/>      
+      <multiplicity id="22" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="23">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="3"/>  
+  </generalization>  
+  <association id="24">    
+    <end type="SOURCE" refId="8" navigable="true">      
+      <attribute id="25" name="parent"/>      
+      <multiplicity id="26" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="1" navigable="true">      
+      <attribute id="27" name="commentCollection"/>      
+      <multiplicity id="28" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="29">    
+    <end type="SOURCE" refId="5" navigable="true">      
+      <attribute id="30" name="parent"/>      
+      <multiplicity id="31" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="1" navigable="true">      
+      <attribute id="32" name="metadataCollection"/>      
+      <multiplicity id="33" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="34">    
+    <end type="SOURCE" refId="4" navigable="true">      
+      <attribute id="35" name="document"/>      
+      <multiplicity id="36" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="1" navigable="true">      
+      <attribute id="37" name="tags"/>      
+      <multiplicity id="38" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <classifier-display autosize="true" stereotype="false" package="true" initial-value="true" signature="true" 
+    visibility="true">    
+    <attributes public="false" package="false" protected="false" private="false"/>    
+    <operations public="false" package="false" protected="false" private="false"/>  
+  </classifier-display>  
+  <association-display labels="true" multiplicity="true"/>
+</class-diagram>
