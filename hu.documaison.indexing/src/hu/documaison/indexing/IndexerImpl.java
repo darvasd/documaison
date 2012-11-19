@@ -9,6 +9,8 @@ import hu.documaison.data.exceptions.InvalidParameterException;
 import hu.documaison.data.exceptions.UnknownDocumentException;
 import hu.documaison.data.helper.DocumentFilePointer;
 import hu.documaison.data.helper.FileHelper;
+import hu.documaison.indexing.interceptor.IndexerInterceptor;
+import hu.documaison.indexing.interceptor.IndexerInterceptorDispatcher;
 
 import java.io.File;
 import java.util.Collection;
@@ -19,6 +21,7 @@ class IndexerImpl implements IndexerInterface {
 	private String folder;
 	private String currentComputerId;
 	private Collection<DocumentFilePointer> lastPointers = null;
+	private IndexerInterceptorDispatcher dispatcher = null;
 
 	public IndexerImpl(String folder, String currentComputerId, BllInterface bll)
 			throws InvalidParameterException {
@@ -26,7 +29,7 @@ class IndexerImpl implements IndexerInterface {
 		setCurrentComputerId(currentComputerId);
 		setBll(bll);
 	}
-
+	
 	private void setCurrentComputerId(String currentComputerId)
 			throws InvalidParameterException {
 		if (currentComputerId != null) {
@@ -135,13 +138,31 @@ class IndexerImpl implements IndexerInterface {
 			// This instance doesn't have the right to delete it.
 			return;
 		} else {
+			if (dispatcher != null && dispatcher.getInterceptors() != null){
+				for (IndexerInterceptor interceptor : dispatcher.getInterceptors()){
+					interceptor.beforeDocumentDeleted(document);
+				}
+			}
+			
 			bll.removeDocument(documentId);
 			// TODO cascade delete check!
+			
+			if (dispatcher != null && dispatcher.getInterceptors() != null){
+				for (IndexerInterceptor interceptor : dispatcher.getInterceptors()){
+					interceptor.onDocumentDeleted(documentId);
+				}
+			}
 		}
 
 	}
 
 	private void onAdded(File file) {
+		if (dispatcher != null && dispatcher.getInterceptors() != null){
+			for (IndexerInterceptor interceptor : dispatcher.getInterceptors()){
+				interceptor.beforeDocumentAdded(file.toString());
+			}
+		}
+		
 		System.err.println("ADD: path = " + file);
 		String extension = FileHelper.fileExtension(file.getAbsolutePath());
 
@@ -172,6 +193,12 @@ class IndexerImpl implements IndexerInterface {
 			onAddingError(file, null);
 			return;
 		}
+		
+		if (dispatcher != null && dispatcher.getInterceptors() != null){
+			for (IndexerInterceptor interceptor : dispatcher.getInterceptors()){
+				interceptor.onDocumentAdded(newDoc);
+			}
+		}
 	}
 
 	private void onAddingError(File file, String message) {
@@ -180,6 +207,12 @@ class IndexerImpl implements IndexerInterface {
 		}
 		System.err
 				.println("Adding error: " + message + " @ " + file.toString());
+		
+		if (dispatcher != null && dispatcher.getInterceptors() != null){
+			for (IndexerInterceptor interceptor : dispatcher.getInterceptors()){
+				interceptor.onDocumentAddingError(file.toString());
+			}
+		}
 	}
 
 	private boolean inPointerList(String absolutePath) {
@@ -191,6 +224,11 @@ class IndexerImpl implements IndexerInterface {
 			//System.out.println(dfp.getFile().getAbsolutePath()+ "!=" + absolutePath);
 		}
 		return false;
+	}
+
+	@Override
+	public void setDispatcher(IndexerInterceptorDispatcher dispatcher) {
+		this.dispatcher = dispatcher;
 	}
 
 }

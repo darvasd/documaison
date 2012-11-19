@@ -1,6 +1,9 @@
 package hu.documaison.indexing;
 
+import hu.documaison.indexing.interceptor.IndexerInterceptorDispatcher;
+
 public interface IndexerInterface {
-	// public void addRefreshEventHandler(IndexingEventHandler e);
 	public void refresh();
+
+	public void setDispatcher(IndexerInterceptorDispatcher dispatcher);
 }
