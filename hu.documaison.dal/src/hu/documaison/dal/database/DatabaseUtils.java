@@ -1,5 +1,6 @@
 package hu.documaison.dal.database;
 
+import hu.documaison.dal.interfaces.DalSingletonProvider;
 import hu.documaison.data.entities.*;
 import hu.documaison.settings.SettingsData;
 import hu.documaison.settings.SettingsManager;
@@ -17,7 +18,10 @@ public class DatabaseUtils {
 	private static final String ORMLITE_LOG_LEVEL = com.j256.ormlite.logger.Log.Level.WARNING.name();
 		// possible log_level values: TRACE, DEBUG, INFO, WARNING, ERROR, FATAL
 	
-
+public static void main(String[] args){
+	createTablesBestEffort();
+	DalSingletonProvider.getDalImplementation().searchDocumentsFreeText("alm");
+}
 	static
 	{
 		loadDatabasePath();

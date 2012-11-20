@@ -1240,16 +1240,15 @@ class DalImplementation implements DalInterface {
 			// query
 			QueryBuilder<Document, Integer> qb = dao.queryBuilder();
 			QueryBuilder<Metadata, Integer> qbMD = daoMD.queryBuilder();
-			qb.join(qbMD);
+			QueryBuilder<Document, Integer> joinedQb = qb.join(qbMD);
 
 			Where<Metadata, Integer> where = qbMD.where();
 			where.like(AbstractMetadata.VALUE, expr);
-			where.or().like(Document.LOCATION, expr);
+			//qb.where().like(Document.LOCATION, expr);
 
-			System.out.println("Search for: " + where.getStatement());
-			// TODO: delete
+			//System.out.println("Search for: " + where.getStatement());
 
-			List<Document> ret = dao.query(qb.prepare());
+			List<Document> ret = dao.query(joinedQb.prepare());
 
 			// return
 			return ret;
