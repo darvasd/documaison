@@ -1,6 +1,5 @@
 package hu.documaison.dal.database;
 
-import hu.documaison.dal.interfaces.DalSingletonProvider;
 import hu.documaison.data.entities.*;
 import hu.documaison.settings.SettingsData;
 import hu.documaison.settings.SettingsManager;
@@ -15,33 +14,30 @@ import com.j256.ormlite.table.TableUtils;
 public class DatabaseUtils {
 	private static String databaseUrl = "jdbc:sqlite:d:/temp/documaison.sqlite";
 	private static final String databaseUrlTemplate = "jdbc:sqlite:%path%";
-	private static final String ORMLITE_LOG_LEVEL = com.j256.ormlite.logger.Log.Level.WARNING.name();
-		// possible log_level values: TRACE, DEBUG, INFO, WARNING, ERROR, FATAL
-	
-public static void main(String[] args){
-	createTablesBestEffort();
-	DalSingletonProvider.getDalImplementation().searchDocumentsFreeText("alm");
-}
-	static
-	{
+	private static final String ORMLITE_LOG_LEVEL = com.j256.ormlite.logger.Log.Level.WARNING
+			.name();
+
+	// possible log_level values: TRACE, DEBUG, INFO, WARNING, ERROR, FATAL
+
+	static {
 		loadDatabasePath();
 		System.setProperty(LocalLog.LOCAL_LOG_LEVEL_PROPERTY, ORMLITE_LOG_LEVEL);
 		// set log output to file:
-		//System.setProperty(LocalLog.LOCAL_LOG_FILE_PROPERTY, "ormlite.log");
+		// System.setProperty(LocalLog.LOCAL_LOG_FILE_PROPERTY, "ormlite.log");
 	}
-	
-	private static void loadDatabasePath()
-	{
+
+	private static void loadDatabasePath() {
 		SettingsData settingsData;
 		try {
 			settingsData = SettingsManager.getCurrentSettings();
-			String path = settingsData.getDatabaseFileLocation().replace('\\', '/');
+			String path = settingsData.getDatabaseFileLocation().replace('\\',
+					'/');
 			databaseUrl = databaseUrlTemplate.replaceFirst("%path%", path);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public static ConnectionSource getConnectionSource() throws SQLException {
 		ConnectionSource connectionSource = new JdbcConnectionSource(
 				databaseUrl);
@@ -67,7 +63,8 @@ public static void main(String[] args){
 			TableUtils.createTable(connectionSource, DefaultMetadata.class);
 			TableUtils.createTable(connectionSource, DocumentType.class);
 			TableUtils.createTable(connectionSource, Document.class);
-			TableUtils.createTable(connectionSource, DocumentTagConnection.class);
+			TableUtils.createTable(connectionSource,
+					DocumentTagConnection.class);
 		} finally {
 			connectionSource.close();
 		}
