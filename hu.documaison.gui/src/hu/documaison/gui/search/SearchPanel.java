@@ -1,6 +1,8 @@
 package hu.documaison.gui.search;
 
+import hu.documaison.gui.InnerPanel;
 import hu.documaison.gui.ViewManager;
+import hu.documaison.gui.document.DocumentLister;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -20,8 +22,19 @@ public class SearchPanel extends Composite {
 		super(parent, style);
 		setLayout(new FormLayout());
 
-		Text searchField = new Text(this, SWT.SEARCH | SWT.ICON_CANCEL
+		final Text searchField = new Text(this, SWT.SEARCH | SWT.ICON_CANCEL
 				| SWT.ICON_SEARCH);
+		searchField.addListener(SWT.DefaultSelection, new Listener() {
+			@Override
+			public void handleEvent(Event arg0) {
+				InnerPanel sheet = ViewManager.getDefault()
+						.getView("documents");
+				if (sheet != null) {
+					((DocumentLister) sheet).freetextSearch(searchField
+							.getText());
+				}
+			}
+		});
 		FormData data = new FormData();
 		data.top = new FormAttachment(0, 20);
 		data.left = new FormAttachment(0, 20);

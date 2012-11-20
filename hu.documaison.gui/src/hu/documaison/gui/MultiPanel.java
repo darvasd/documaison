@@ -57,4 +57,8 @@ public class MultiPanel extends Composite {
 		sheet.showed();
 		return sheet;
 	}
+
+	public InnerPanel getSheet(String id) {
+		return sheetMap.get(id);
+	}
 }

@@ -116,7 +116,10 @@ public class DocumentLister extends InnerPanel {
 
 	@Override
 	public void showed() {
-		documents = new ArrayList<Document>(Application.getBll().getDocuments());
+		if (documents == null) {
+			documents = new ArrayList<Document>(Application.getBll()
+					.getDocuments());
+		}
 		super.showed();
 	}
 
@@ -140,6 +143,12 @@ public class DocumentLister extends InnerPanel {
 			sash.setLayoutData(data);
 		}
 		layout();
+	}
+
+	public void freetextSearch(String freetext) {
+		documents = new ArrayList<Document>(Application.getBll()
+				.searchDocumentsFreeText(freetext));
+
 	}
 
 }

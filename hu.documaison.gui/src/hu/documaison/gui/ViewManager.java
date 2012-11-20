@@ -40,4 +40,8 @@ public class ViewManager {
 		return null;
 	}
 
+	public InnerPanel getView(String id) {
+		return viewer.getSheet(id);
+	}
+
 }
