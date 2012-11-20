@@ -32,6 +32,7 @@ public class SearchPanel extends Composite {
 				if (sheet != null) {
 					((DocumentLister) sheet).freetextSearch(searchField
 							.getText());
+					ViewManager.getDefault().showView(sheet);
 				}
 			}
 		});
