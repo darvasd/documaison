@@ -167,6 +167,15 @@ public class TagPanel extends Composite implements ITagSelectionChangeListener {
 				preItem = item;
 			}
 		}
+		if (i == 0) {
+			Label noTagLbl = new Label(tagListComposite, SWT.None);
+			noTagLbl.setText("No tags in the database...");
+			data = new FormData();
+			data.left = new FormAttachment(0, 10);
+			data.right = new FormAttachment(100, 0);
+			data.top = new FormAttachment(0, 0);
+			noTagLbl.setLayoutData(data);
+		}
 		tagListComposite.pack();
 		scrollComposite.setContent(tagListComposite);
 		scrollComposite.setExpandHorizontal(true);

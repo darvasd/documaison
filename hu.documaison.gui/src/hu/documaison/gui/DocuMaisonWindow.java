@@ -27,7 +27,7 @@ public class DocuMaisonWindow {
 		final Shell shell = new Shell(display);
 		prepareIcons(shell);
 		shell.setLayout(new FormLayout());
-		final Sash sash = new Sash(shell, SWT.VERTICAL);
+		final Sash sash = new Sash(shell, SWT.VERTICAL | SWT.SMOOTH);
 
 		FormData data = new FormData();
 		data.top = new FormAttachment(0, 0);

@@ -56,6 +56,7 @@ public class BllImplementation implements BllInterface {
 				Metadata metadata = dal.createMetadata();
 				metadata.setName(dmetadata.getName());
 				metadata.setValue(dmetadata.getValue());
+				metadata.setMetadataType(dmetadata.getMetadataType());
 				metadata.setParent(document);
 				dal.updateMetadata(metadata);
 			}

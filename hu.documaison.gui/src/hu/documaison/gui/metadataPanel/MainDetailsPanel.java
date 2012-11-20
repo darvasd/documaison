@@ -116,6 +116,7 @@ public class MainDetailsPanel extends Composite {
 	}
 
 	private void showTags(Document doc) {
+		System.out.println("Dispsing tags");
 		if (tags != null) {
 			tags.dispose();
 		}
@@ -127,6 +128,13 @@ public class MainDetailsPanel extends Composite {
 		data.right = new FormAttachment(100, -10);
 		tags.setLayoutData(data);
 		layout();
+	}
 
+	@Override
+	public void dispose() {
+		if (tags != null) {
+			tags.dispose();
+		}
+		super.dispose();
 	}
 }

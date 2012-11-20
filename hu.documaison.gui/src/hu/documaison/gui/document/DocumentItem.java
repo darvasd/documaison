@@ -9,8 +9,8 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
@@ -24,7 +24,8 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 
-public class DocumentItem extends Composite {
+public class DocumentItem extends Composite implements IDocumentChangeListener,
+		MouseListener {
 
 	private final Composite parent;
 	private final Label thumbnailImage;
@@ -35,6 +36,7 @@ public class DocumentItem extends Composite {
 	private boolean isSelected = false;
 	private MetadataEditors editor;
 	private Document doc;
+	private DocumentLister lister;
 
 	public DocumentItem(Composite parent, int style) {
 		super(parent, style);
@@ -93,25 +95,31 @@ public class DocumentItem extends Composite {
 
 		tagViewer = new TagViewer(this, SWT.NONE);
 		data = new FormData();
-		data.bottom = new FormAttachment(thumbnailImage, 88);
+		data.top = new FormAttachment(authorLabel, 10);
 		data.left = new FormAttachment(thumbnailImage, 10);
 		data.right = new FormAttachment(openButton, -10);
 		tagViewer.setLayoutData(data);
 
-		addMouseListener(new MouseAdapter() {
+		addEventListeners();
+	}
 
-			@Override
-			public void mouseDoubleClick(MouseEvent e) {
-				setSelection(true);
-			}
-
-		});
-
+	private void addEventListeners() {
+		addMouseListener(this);
+		thumbnailImage.addMouseListener(this);
+		titleLabel.addMouseListener(this);
+		authorLabel.addMouseListener(this);
+		tagViewer.addMouseListener(this);
 	}
 
 	public void setDocument(Document document) {
+		if (doc != document) {
+			if (doc != null) {
+				DocumentObserver.detach(doc.getId(), this);
+			}
+			DocumentObserver.attach(document.getId(), this);
+		}
 		doc = document;
-		setSelection(editor.isShowed(doc));
+		setSelection(editor.isShowed(doc), false);
 		if (document.getThumbnailBytes() != null) {
 			BufferedInputStream inputStreamReader = new BufferedInputStream(
 					new ByteArrayInputStream(document.getThumbnailBytes()));
@@ -125,6 +133,9 @@ public class DocumentItem extends Composite {
 
 		Metadata title = document.getMetadata("title");
 		if (title == null) {
+			title = document.getMetadata("Title");
+		}
+		if (title == null || title.getValue() == null) {
 			if (document.getLocation() != null) {
 				String[] loc = document.getLocation().split(File.separator);
 				titleLabel.setText(loc[loc.length - 1]);
@@ -136,6 +147,9 @@ public class DocumentItem extends Composite {
 		}
 
 		Metadata author = document.getMetadata("author");
+		if (author == null) {
+			author = document.getMetadata("Author");
+		}
 		if (author == null) {
 			authorLabel.setText("Unknown author");
 		} else {
@@ -151,16 +165,22 @@ public class DocumentItem extends Composite {
 		return super.computeSize(150, 123, changed);
 	}
 
-	public void setSelection(boolean selection) {
+	public void setSelection(boolean selection, boolean nomore) {
 		if (selection) {
 			isSelected = true;
-			titleLabel.setBackground(selectionBackground);
+			setBackground(selectionBackground);
 			if (doc != null) {
-				editor.showDoc(this);
+				if (!editor.isShowed(getDoc())) {
+					editor.showDoc(this);
+				}
 			}
+			lister.setDetailsVisible(true);
 		} else {
+			if (nomore == true) {
+				lister.setDetailsVisible(false);
+			}
 			isSelected = false;
-			titleLabel.setBackground(null);
+			setBackground(null);
 		}
 	}
 
@@ -170,6 +190,34 @@ public class DocumentItem extends Composite {
 
 	public Document getDoc() {
 		return doc;
+	}
+
+	public void setLister(DocumentLister lister) {
+		this.lister = lister;
+	}
+
+	@Override
+	public void setBackground(Color c) {
+		super.setBackground(c);
+		tagViewer.setBackground(c);
+	}
+
+	@Override
+	public void documentChanged() {
+		setDocument(doc);
+	}
+
+	@Override
+	public void mouseDoubleClick(MouseEvent arg0) {
+		setSelection(!isSelected, true);
+	}
+
+	@Override
+	public void mouseDown(MouseEvent arg0) {
+	}
+
+	@Override
+	public void mouseUp(MouseEvent arg0) {
 	}
 
 }

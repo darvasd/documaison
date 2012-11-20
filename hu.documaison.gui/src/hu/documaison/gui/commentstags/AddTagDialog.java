@@ -78,13 +78,19 @@ public class AddTagDialog {
 				existingCombo.add(tag.getName());
 			}
 		}
+		if (existingCombo.getItemCount() == 0) {
+			existingRadio.setEnabled(false);
+			newRadio.setSelection(true);
+		}
 		data = new FormData();
 		data.top = new FormAttachment(existingRadio, 0, SWT.CENTER);
 		data.left = new FormAttachment(existingRadio, 10);
 		existingCombo.setLayoutData(data);
 
 		newTagName = new Text(composite, SWT.BORDER);
-		newTagName.setEnabled(false);
+		if (existingCombo.getItemCount() > 0) {
+			newTagName.setEnabled(false);
+		}
 		data = new FormData();
 		data.top = new FormAttachment(newRadio, 0, SWT.CENTER);
 		data.left = new FormAttachment(existingRadio, 10);
@@ -93,7 +99,9 @@ public class AddTagDialog {
 
 		colorCombo = new Combo(composite, SWT.SINGLE | SWT.READ_ONLY
 				| SWT.DROP_DOWN);
-		colorCombo.setEnabled(false);
+		if (existingCombo.getItemCount() > 0) {
+			colorCombo.setEnabled(false);
+		}
 		List<String> colors = new ArrayList<String>(ColorMap.get().getColors());
 		Collections.sort(colors);
 		for (String color : colors) {
@@ -177,11 +185,14 @@ public class AddTagDialog {
 			@Override
 			public void handleEvent(Event e) {
 				try {
-					if (existingRadio.getSelection()) {
+					if (existingRadio.isEnabled()
+							&& existingRadio.getSelection()) {
 						Tag tag = Application.getBll().getTag(
 								existingCombo.getItem(existingCombo
 										.getSelectionIndex()));
-						Application.getBll().addTagToDocument(tag, doc);
+						if (!doc.getTags().contains(tag)) {
+							Application.getBll().addTagToDocument(tag, doc);
+						}
 					} else {
 						Tag tag = Application.getBll().createTag(
 								newTagName.getText());

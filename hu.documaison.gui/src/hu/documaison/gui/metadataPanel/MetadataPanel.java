@@ -5,6 +5,7 @@ import hu.documaison.data.entities.Document;
 import hu.documaison.data.entities.Metadata;
 import hu.documaison.data.exceptions.UnknownDocumentException;
 import hu.documaison.gui.NotifactionWindow;
+import hu.documaison.gui.document.DocumentObserver;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -45,7 +46,7 @@ public class MetadataPanel extends Composite {
 		addProp.addListener(SWT.Selection, new Listener() {
 			@Override
 			public void handleEvent(Event e) {
-				MoreMetadataDialog dialog = new MoreMetadataDialog();
+				AddMoreMetadataDialog dialog = new AddMoreMetadataDialog();
 				Metadata metadata = dialog.showAndHandle(getShell(), doc);
 				try {
 					doc = Application.getBll().getDocument(doc.getId());
@@ -53,7 +54,10 @@ public class MetadataPanel extends Composite {
 					NotifactionWindow.showError("Database error",
 							"Failed to update document from database.");
 				}
-				addProp(metadata);
+				if (metadata != null) {
+					addProp(metadata);
+					DocumentObserver.notify(doc.getId(), null);
+				}
 				pTable.layout();
 			}
 		});
@@ -118,9 +122,10 @@ public class MetadataPanel extends Composite {
 						break;
 
 					}
+					Application.getBll().updateMetadata(mtdt);
+					Application.getBll().updateDocument(doc);
+					DocumentObserver.notify(doc.getId(), null);
 				}
-
-				Application.getBll().updateDocument(doc);
 			}
 		});
 

@@ -26,7 +26,7 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-public class MoreMetadataDialog {
+public class AddMoreMetadataDialog {
 
 	private Control c;
 	private Combo typeCombo;
@@ -199,6 +199,7 @@ public class MoreMetadataDialog {
 							"Can't handle the selected metadata type");
 				}
 				Application.getBll().updateMetadata(metadata);
+				// Application.getBll().updateDocument(parentDoc);
 				dialog.dispose();
 			}
 		});

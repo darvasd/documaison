@@ -24,13 +24,13 @@ public class MetadataEditors extends Composite {
 	}
 
 	public void showDoc(Document doc) {
-		document = doc;
 		if (mainPanel != null) {
 			mainPanel.dispose();
 		}
 		if (morePanel != null) {
 			morePanel.dispose();
 		}
+		document = doc;
 		mainPanel = new MainDetailsPanel(this, SWT.NONE, doc);
 		FormData data = new FormData();
 		data.top = new FormAttachment(0, 0);
@@ -57,11 +57,11 @@ public class MetadataEditors extends Composite {
 	}
 
 	public void showDoc(DocumentItem documentItem) {
-		if (item != null) {
-			item.setSelection(false);
+		if (item != null && item != documentItem) {
+			item.setSelection(false, false);
 		}
 		showDoc(documentItem.getDoc());
 		item = documentItem;
-
 	}
+
 }
