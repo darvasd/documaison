@@ -31,6 +31,7 @@ public class MultiPanel extends Composite {
 		}
 		currentSheet = sheet;
 		sheet.setVisible(true);
+		sheet.showed();
 		layout();
 	}
 

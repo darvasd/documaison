@@ -1,5 +1,7 @@
 package hu.documaison.gui;
 
+import hu.documaison.gui.document.DocumentLister;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -163,7 +165,10 @@ public class DocuMaisonWindow {
 		allDocs.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				ViewManager.getDefault().showView("documents");
+				DocumentLister lister = (DocumentLister) ViewManager
+						.getDefault().getView("documents");
+				lister.showAll();
+				ViewManager.getDefault().showView(lister);
 			}
 		});
 

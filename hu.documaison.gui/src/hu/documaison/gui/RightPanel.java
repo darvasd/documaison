@@ -77,6 +77,5 @@ public class RightPanel extends Composite {
 		DocumentLister lister = new DocumentLister(multiPanel, SWT.NONE);
 		multiPanel.addSheet(lister, "documents");
 
-		multiPanel.selectSheet("settings");
 	}
 }

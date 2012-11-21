@@ -33,7 +33,7 @@ public class DocumentLister extends InnerPanel {
 	private MetadataEditors editor;
 
 	public DocumentLister(Composite parent, int style) {
-		super(parent, style, "All documents");
+		super(parent, style, "Documents");
 
 	}
 
@@ -168,4 +168,7 @@ public class DocumentLister extends InnerPanel {
 
 	}
 
+	public void showAll() {
+		documents = new ArrayList<Document>(Application.getBll().getDocuments());
+	}
 }
