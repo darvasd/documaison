@@ -1016,6 +1016,10 @@ class DalImplementation implements DalInterface {
 					where.and().like(AbstractMetadata.VALUE,
 							"%" + expr.getValue() + "%");
 					break;
+				case notcontains:
+					where.and().not().like(AbstractMetadata.VALUE,
+							"%" + expr.getValue() + "%");
+					break;
 				case le:
 					where.and().le(AbstractMetadata.VALUE, expr.getValue());
 					break;
@@ -1028,8 +1032,11 @@ class DalImplementation implements DalInterface {
 				case neq:
 					where.and().ne(AbstractMetadata.VALUE, expr.getValue());
 					break;
+//				case between:
+//					where.and().ge(AbstractMetadata.VALUE, expr.getValue(0))
+//					.and().le(AbstractMetadata.VALUE, expr.getValue(1));
+//					break;
 				default:
-
 					break;
 				}
 
@@ -1044,6 +1051,9 @@ class DalImplementation implements DalInterface {
 			return ret;
 		} catch (SQLException e) {
 			HandleSQLException(e, "searchDocuments(SearchExpression)");
+//		} catch (InvalidParameterException e) {
+//			System.err.println("Error with search expression.");
+//			return null;
 		} finally {
 			// close connection
 			if (connectionSource != null) {
