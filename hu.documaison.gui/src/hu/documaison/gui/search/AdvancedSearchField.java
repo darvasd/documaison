@@ -3,7 +3,11 @@ package hu.documaison.gui.search;
 import hu.documaison.Application;
 import hu.documaison.data.entities.Metadata;
 import hu.documaison.data.entities.MetadataType;
+<<<<<<< HEAD
 import hu.documaison.data.helper.MetadataNameTypePair;
+=======
+import hu.documaison.data.search.Operator;
+>>>>>>> Operator feature request
 import hu.documaison.gui.NotifactionWindow;
 
 import java.util.ArrayList;
@@ -96,7 +100,7 @@ public class AdvancedSearchField extends Composite {
 			choices.add("equals:");
 			choices.add("not equals:");
 			choices.add("starts with:");
-			choices.add("end with:");
+			choices.add("ends with:");
 		} else if (type == MetadataType.Integer) {
 			choices.add("equals:");
 			choices.add("not equals:");
@@ -104,9 +108,9 @@ public class AdvancedSearchField extends Composite {
 			choices.add("more than:");
 			choices.add("in between:");
 		} else if (type == MetadataType.Date) {
-			choices.add("equals");
-			choices.add("not equals");
-			choices.add("in between");
+			choices.add("equals:");
+			choices.add("not equals:");
+			choices.add("in between:");
 		}
 		choices.select(0);
 		loadInputsForSelection();
@@ -129,7 +133,6 @@ public class AdvancedSearchField extends Composite {
 		return searchFields.size();
 	}
 
-	// tüpptürüpp
 	private void loadInputFields(boolean isMultiple, MetadataType type) {
 		if (input1 != null) {
 			input1.dispose();
@@ -231,4 +234,47 @@ public class AdvancedSearchField extends Composite {
 		}
 	}
 
+	public String getSelectedMetadataName() {
+		return fieldName.getItem(fieldName.getSelectionIndex());
+	}
+
+	public Operator getOperator() {
+		// choices.add("contains:");
+		// choices.add("not contains:");
+		// choices.add("equals:");
+		// choices.add("not equals:");
+		// choices.add("starts with:");
+		// choices.add("end with:");
+		// } else if (type == MetadataType.Integer) {
+		// choices.add("equals:");
+		// choices.add("not equals:");
+		// choices.add("less than:");
+		// choices.add("more than:");
+		// choices.add("in between:");
+		// } else if (type == MetadataType.Date) {
+		// choices.add("equals:");
+		// choices.add("not equals");
+		// choices.add("in between");
+		String operatorString = choices.getItem(choices.getSelectionIndex());
+
+		if (operatorString.equalsIgnoreCase("contains:")) {
+			return Operator.contains;
+		} else if (operatorString.equals("not contains:")) {
+			return Operator.notcontains;
+		} else if (operatorString.equals("equals:")) {
+			return Operator.eq;
+		} else if (operatorString.equals("not equals:")) {
+			return Operator.neq;
+		} else if (operatorString.equals("starts with:")) {
+			return Operator.like;
+		} else if (operatorString.equals("ends with:")) {
+			return Operator.like;
+		} else if (operatorString.equals("less than:")) {
+			return Operator.lt;
+		} else if (operatorString.equals("more than:")) {
+			return Operator.gt;
+		} else if (operatorString.equals("in between:")) {
+			return Operator.between;
+		}
+	}
 }
