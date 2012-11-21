@@ -27,6 +27,10 @@ public class DocumentLister extends InnerPanel {
 	private ArrayList<Document> documents;
 	private Sash sash;
 	private boolean sashVisible = false;
+	private CompositeTable table;
+	private Composite panel;
+	private Label label;
+	private MetadataEditors editor;
 
 	public DocumentLister(Composite parent, int style) {
 		super(parent, style, "All documents");
@@ -35,8 +39,6 @@ public class DocumentLister extends InnerPanel {
 
 	@Override
 	protected void createComposite() {
-
-		documents = new ArrayList<Document>(Application.getBll().getDocuments());
 
 		sash = new Sash(this, SWT.HORIZONTAL | SWT.SMOOTH);
 		FormData data = new FormData();
@@ -75,7 +77,7 @@ public class DocumentLister extends InnerPanel {
 				setDetailsVisible(false);
 			}
 		});
-		Composite panel = new Composite(this, SWT.NONE);
+		panel = new Composite(this, SWT.NONE);
 		panel.setLayout(new FillLayout());
 		data = new FormData();
 		data.top = new FormAttachment(titleLabel, 25);
@@ -83,18 +85,40 @@ public class DocumentLister extends InnerPanel {
 		data.right = new FormAttachment(100, 0);
 		data.bottom = new FormAttachment(sash, 0);
 		panel.setLayoutData(data);
-		final MetadataEditors editor = new MetadataEditors(this, SWT.NONE);
+		editor = new MetadataEditors(this, SWT.NONE);
 		data = new FormData();
 		data.top = new FormAttachment(sash, 10);
 		data.left = new FormAttachment(0, 10);
 		data.right = new FormAttachment(100, -10);
 		data.bottom = new FormAttachment(100, 0);
 		editor.setLayoutData(data);
+
+	}
+
+	@Override
+	public void showed() {
+		if (documents == null) {
+			documents = new ArrayList<Document>(Application.getBll()
+					.getDocuments());
+		}
+
 		if (documents.size() == 0) {
-			new Label(panel, SWT.WRAP)
-					.setText("  No document found in the database for the current selection.");
+			if (table != null) {
+				table.dispose();
+				table = null;
+			}
+			if (label == null) {
+				label = new Label(panel, SWT.WRAP);
+				label.setText("  No document found in the database for the current selection.");
+			}
 		} else {
-			CompositeTable table = new CompositeTable(panel, SWT.NONE);
+			if (label != null) {
+				label.dispose();
+				label = null;
+			}
+			if (table == null) {
+				table = new CompositeTable(panel, SWT.NONE);
+			}
 			DocumentItem it = new DocumentItem(table, SWT.NONE);
 			table.setBackground(it.getBackground());
 			table.setRunTime(true);
@@ -111,15 +135,8 @@ public class DocumentLister extends InnerPanel {
 				}
 			});
 		}
+		panel.layout();
 
-	}
-
-	@Override
-	public void showed() {
-		if (documents == null) {
-			documents = new ArrayList<Document>(Application.getBll()
-					.getDocuments());
-		}
 		super.showed();
 	}
 
