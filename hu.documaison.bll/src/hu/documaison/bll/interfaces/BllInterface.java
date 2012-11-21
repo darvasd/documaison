@@ -12,6 +12,7 @@ import hu.documaison.data.exceptions.UnknownDocumentException;
 import hu.documaison.data.exceptions.UnknownDocumentTypeException;
 import hu.documaison.data.exceptions.UnknownTagException;
 import hu.documaison.data.helper.DocumentFilePointer;
+import hu.documaison.data.helper.MetadataNameTypePair;
 import hu.documaison.data.search.SearchExpression;
 
 import java.io.IOException;
@@ -101,5 +102,5 @@ public interface BllInterface {
 
 	public void updateTag(Tag tag);
 
-	public Collection<Metadata> getAllMetadata();
+	public Collection<MetadataNameTypePair> getAllMetadataKeys();
 }

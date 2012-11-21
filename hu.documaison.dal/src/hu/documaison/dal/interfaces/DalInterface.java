@@ -7,6 +7,7 @@ import hu.documaison.data.exceptions.UnknownDocumentException;
 import hu.documaison.data.exceptions.UnknownDocumentTypeException;
 import hu.documaison.data.exceptions.UnknownTagException;
 import hu.documaison.data.helper.DocumentFilePointer;
+import hu.documaison.data.helper.MetadataNameTypePair;
 import hu.documaison.data.search.SearchExpression;
 
 import java.util.Collection;
@@ -44,6 +45,7 @@ public interface DalInterface {
 	public Metadata createMetadata() throws UnableToCreateException;
 	public void updateMetadata(Metadata metadata);
 	public void removeMetadata(int id);
+	public Collection<MetadataNameTypePair> getAllMetadataKeys();
 	
 	// default metadata
 	public DefaultMetadata createDefaultMetadata() throws UnableToCreateException;
@@ -61,5 +63,4 @@ public interface DalInterface {
 	
 	// for indexing
 	public Collection<DocumentFilePointer> getDocumentPointers(String locationFilter);
-	
 }

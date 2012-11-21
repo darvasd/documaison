@@ -15,11 +15,14 @@ import hu.documaison.data.exceptions.UnknownDocumentTypeException;
 import hu.documaison.data.exceptions.UnknownTagException;
 import hu.documaison.data.helper.DocumentFilePointer;
 import hu.documaison.data.helper.FileHelper;
+import hu.documaison.data.helper.MetadataNameTypePair;
 import hu.documaison.data.search.SearchExpression;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
 
 public class BllImplementation implements BllInterface {
 
@@ -324,10 +327,8 @@ public class BllImplementation implements BllInterface {
 	}
 
 	@Override
-	public Collection<Metadata> getAllMetadata() {
-		// TODO: Only dummy implementation, shoud be replaced
-
-		return getDocuments().iterator().next().getMetadataCollection();
-
+	public Collection<MetadataNameTypePair> getAllMetadataKeys() {
+		DalInterface dal = DalSingletonProvider.getDalImplementation();
+		return dal.getAllMetadataKeys();
 	}
 }

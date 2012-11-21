@@ -3,6 +3,7 @@ package hu.documaison.gui.search;
 import hu.documaison.Application;
 import hu.documaison.data.entities.Metadata;
 import hu.documaison.data.entities.MetadataType;
+import hu.documaison.data.helper.MetadataNameTypePair;
 import hu.documaison.gui.NotifactionWindow;
 
 import java.util.ArrayList;
@@ -39,7 +40,7 @@ public class AdvancedSearchField extends Composite {
 		setLayout(new FormLayout());
 
 		fieldName = new Combo(this, SWT.READ_ONLY | SWT.DROP_DOWN);
-		int count = loadSearchFields(Application.getBll().getAllMetadata());
+		int count = loadSearchFields(Application.getBll().getAllMetadataKeys());
 		if (count == 0) {
 			NotifactionWindow.showError("Metadata error",
 					"No metadata entries found in the database.");
@@ -111,7 +112,7 @@ public class AdvancedSearchField extends Composite {
 		loadInputsForSelection();
 	}
 
-	private int loadSearchFields(Collection<Metadata> metadata) {
+	private int loadSearchFields(Collection<MetadataNameTypePair> metadata) {
 		// searchFields = provider.getSearchFields();
 		// for (SearchField sf : searchFields) {
 		// searchFieldCache.put(sf.getName(), sf);
@@ -119,8 +120,8 @@ public class AdvancedSearchField extends Composite {
 		// }
 		// return searchFields.size();
 
-		for (Metadata m : metadata) {
-			SearchField sf = new SearchField(m.getName(), m.getMetadataType());
+		for (MetadataNameTypePair m : metadata) {
+			SearchField sf = new SearchField(m.getName(), m.getType());
 			searchFieldCache.put(m.getName(), sf);
 			fieldName.add(sf.getName());
 			searchFields.add(sf);

@@ -9,6 +9,7 @@ import hu.documaison.data.exceptions.UnknownDocumentTypeException;
 import hu.documaison.data.exceptions.UnknownTagException;
 import hu.documaison.data.helper.DataHelper;
 import hu.documaison.data.helper.DocumentFilePointer;
+import hu.documaison.data.helper.MetadataNameTypePair;
 import hu.documaison.data.search.BoolOperator;
 import hu.documaison.data.search.Expression;
 import hu.documaison.data.search.SearchExpression;
@@ -17,6 +18,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 
 import com.j256.ormlite.dao.Dao;
@@ -1244,9 +1246,9 @@ class DalImplementation implements DalInterface {
 
 			Where<Metadata, Integer> where = qbMD.where();
 			where.like(AbstractMetadata.VALUE, expr);
-			//qb.where().like(Document.LOCATION, expr);
+			// qb.where().like(Document.LOCATION, expr);
 
-			//System.out.println("Search for: " + where.getStatement());
+			// System.out.println("Search for: " + where.getStatement());
 
 			List<Document> ret = dao.query(joinedQb.prepare());
 
@@ -1266,6 +1268,52 @@ class DalImplementation implements DalInterface {
 		}
 
 		return null;
+	}
+
+	private Collection<Metadata> getAllMetadata() {
+		// create a connection source to our database
+		ConnectionSource connectionSource = null;
+
+		try {
+			// create connection
+			connectionSource = DatabaseUtils.getConnectionSource();
+
+			// instantiate the dao
+			Dao<Metadata, Integer> dao = DaoManager.createDao(connectionSource,
+					Metadata.class);
+
+			// query
+			List<Metadata> ret = dao.queryForAll();
+
+			// return
+			return ret;
+		} catch (SQLException e) {
+			HandleSQLException(e, "getAllMetadata");
+		} finally {
+			// close connection
+			if (connectionSource != null) {
+				try {
+					connectionSource.close();
+				} catch (SQLException e) {
+					HandleSQLException(e, "getAllMetadata");
+				}
+			}
+		}
+
+		return null;
+	}
+
+	@Override
+	public Collection<MetadataNameTypePair> getAllMetadataKeys() {
+		HashSet<MetadataNameTypePair> set = new HashSet<MetadataNameTypePair>();
+
+		for (Metadata md : getAllMetadata()) {
+			MetadataNameTypePair pair = new MetadataNameTypePair(md.getName(),
+					md.getMetadataType());
+			set.add(pair);
+		}
+
+		return set;
 	}
 
 }
