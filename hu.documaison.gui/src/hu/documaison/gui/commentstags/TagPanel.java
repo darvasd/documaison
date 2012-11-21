@@ -1,10 +1,13 @@
-package hu.documaison.gui;
+package hu.documaison.gui.commentstags;
 
 import hu.documaison.Application;
 import hu.documaison.data.entities.Tag;
+import hu.documaison.gui.ITagSelectionChangeListener;
+import hu.documaison.gui.TagItem;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
@@ -86,7 +89,7 @@ public class TagPanel extends Composite implements ITagSelectionChangeListener {
 		}
 	}
 
-	public boolean isSelectionEmpty() {
+	public static boolean isSelectionEmpty() {
 		return (selectedItems.size() == 0);
 	}
 
@@ -192,5 +195,13 @@ public class TagPanel extends Composite implements ITagSelectionChangeListener {
 		});
 		addChangeListener(lastInstance);
 		lastInstance.layout();
+	}
+
+	public static List<Tag> getSelection() {
+		ArrayList<Tag> tags = new ArrayList<Tag>();
+		for (TagItem i : selectedItems) {
+			tags.add(i.getTag());
+		}
+		return tags;
 	}
 }

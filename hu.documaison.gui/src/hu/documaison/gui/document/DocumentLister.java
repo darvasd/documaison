@@ -3,7 +3,10 @@ package hu.documaison.gui.document;
 import hu.documaison.Application;
 import hu.documaison.data.entities.Document;
 import hu.documaison.data.search.SearchExpression;
+import hu.documaison.gui.ITagSelectionChangeListener;
 import hu.documaison.gui.InnerPanel;
+import hu.documaison.gui.NotifactionWindow;
+import hu.documaison.gui.commentstags.TagPanel;
 
 import java.util.ArrayList;
 
@@ -23,7 +26,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Sash;
 
-public class DocumentLister extends InnerPanel {
+public class DocumentLister extends InnerPanel implements
+		ITagSelectionChangeListener {
 
 	private ArrayList<Document> documents;
 	private Sash sash;
@@ -42,6 +46,7 @@ public class DocumentLister extends InnerPanel {
 	protected void createComposite() {
 
 		sash = new Sash(this, SWT.HORIZONTAL | SWT.SMOOTH);
+		TagPanel.addChangeListener(this);
 		FormData data = new FormData();
 		data.left = new FormAttachment(0, 0);
 		data.right = new FormAttachment(100, 0);
@@ -167,6 +172,10 @@ public class DocumentLister extends InnerPanel {
 		documents = new ArrayList<Document>(Application.getBll()
 				.searchDocumentsFreeText(freetext));
 
+		if (freetext.equalsIgnoreCase("tüptürüpp")) {
+			NotifactionWindow.showError("Easter's egg", "Cipciripp");
+		}
+
 	}
 
 	public void showAll() {
@@ -176,5 +185,16 @@ public class DocumentLister extends InnerPanel {
 	public void advancedSearch(SearchExpression expression) {
 		documents = new ArrayList<Document>(Application.getBll()
 				.searchDocuments(expression));
+	}
+
+	@Override
+	public void selectionChanged() {
+		if (TagPanel.isSelectionEmpty()) {
+			showAll();
+		} else {
+			documents = new ArrayList<Document>(Application.getBll()
+					.getDocumentsByTags(TagPanel.getSelection()));
+		}
+		showed();
 	}
 }

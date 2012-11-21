@@ -291,4 +291,8 @@ public class AdvancedSearchField extends Composite {
 					+ getSelectedMetadataName() + " field.");
 		}
 	}
+
+	public void reset() {
+		loadInputsForSelection();
+	}
 }

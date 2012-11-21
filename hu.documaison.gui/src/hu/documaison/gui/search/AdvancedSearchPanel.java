@@ -1,8 +1,10 @@
 package hu.documaison.gui.search;
 
+import hu.documaison.Application;
 import hu.documaison.data.search.BoolOperator;
 import hu.documaison.data.search.SearchExpression;
 import hu.documaison.gui.InnerPanel;
+import hu.documaison.gui.NotifactionWindow;
 import hu.documaison.gui.ViewManager;
 import hu.documaison.gui.document.DocumentLister;
 
@@ -181,6 +183,19 @@ public class AdvancedSearchPanel extends InnerPanel {
 			return BoolOperator.and;
 		} else {
 			return BoolOperator.or;
+		}
+	}
+
+	@Override
+	public void showed() {
+		if (Application.getBll().getAllMetadataKeys().size() == 0) {
+			NotifactionWindow.showError("Error", "The database is empty.");
+			ViewManager.getDefault().showView("documents");
+		} else {
+			for (int i = searchFields.size() - 1; i > 0; i--) {
+				removeListener(searchFields.get(i));
+			}
+			searchFields.get(0).reset();
 		}
 	}
 

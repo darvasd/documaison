@@ -2,6 +2,7 @@ package hu.documaison.gui;
 
 import hu.documaison.data.entities.Tag;
 import hu.documaison.gui.commentstags.ColorMap;
+import hu.documaison.gui.commentstags.TagPanel;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
@@ -103,6 +104,10 @@ public class TagItem extends Composite implements MouseListener {
 
 	public int getIndex() {
 		return index;
+	}
+
+	public Tag getTag() {
+		return tag;
 	}
 
 }

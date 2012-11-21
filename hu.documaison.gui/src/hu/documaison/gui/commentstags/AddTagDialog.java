@@ -8,7 +8,6 @@ import hu.documaison.data.exceptions.UnableToCreateException;
 import hu.documaison.data.exceptions.UnknownDocumentException;
 import hu.documaison.data.exceptions.UnknownTagException;
 import hu.documaison.gui.NotifactionWindow;
-import hu.documaison.gui.TagPanel;
 
 import java.util.ArrayList;
 import java.util.Collections;

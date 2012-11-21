@@ -1,5 +1,6 @@
 package hu.documaison.gui;
 
+import hu.documaison.gui.commentstags.TagPanel;
 import hu.documaison.gui.search.SearchPanel;
 
 import org.eclipse.swt.SWT;
