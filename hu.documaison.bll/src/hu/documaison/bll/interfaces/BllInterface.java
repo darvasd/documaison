@@ -1,6 +1,11 @@
 package hu.documaison.bll.interfaces;
 
-import hu.documaison.data.entities.*;
+import hu.documaison.data.entities.Comment;
+import hu.documaison.data.entities.DefaultMetadata;
+import hu.documaison.data.entities.Document;
+import hu.documaison.data.entities.DocumentType;
+import hu.documaison.data.entities.Metadata;
+import hu.documaison.data.entities.Tag;
 import hu.documaison.data.exceptions.InvalidParameterException;
 import hu.documaison.data.exceptions.UnableToCreateException;
 import hu.documaison.data.exceptions.UnknownDocumentException;
@@ -95,4 +100,6 @@ public interface BllInterface {
 	public void updateMetadata(Metadata metadata);
 
 	public void updateTag(Tag tag);
+
+	public Collection<Metadata> getAllMetadata();
 }

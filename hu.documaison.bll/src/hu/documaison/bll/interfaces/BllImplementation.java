@@ -2,7 +2,13 @@ package hu.documaison.bll.interfaces;
 
 import hu.documaison.dal.interfaces.DalInterface;
 import hu.documaison.dal.interfaces.DalSingletonProvider;
-import hu.documaison.data.entities.*;
+import hu.documaison.data.entities.Comment;
+import hu.documaison.data.entities.DefaultMetadata;
+import hu.documaison.data.entities.Document;
+import hu.documaison.data.entities.DocumentType;
+import hu.documaison.data.entities.Metadata;
+import hu.documaison.data.entities.MetadataType;
+import hu.documaison.data.entities.Tag;
 import hu.documaison.data.exceptions.InvalidParameterException;
 import hu.documaison.data.exceptions.UnableToCreateException;
 import hu.documaison.data.exceptions.UnknownDocumentException;
@@ -14,6 +20,7 @@ import hu.documaison.data.search.SearchExpression;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 
 public class BllImplementation implements BllInterface {
@@ -272,12 +279,12 @@ public class BllImplementation implements BllInterface {
 		}
 
 		// the simplest solution:
-		if (!oldFile.renameTo(target)){
+		if (!oldFile.renameTo(target)) {
 			// if the renameTo was unsuccessful due to platform limitations ...
 			FileHelper.copy(oldFile, target);
 			oldFile.delete();
 		}
-		
+
 		document.setLocation(target.getAbsolutePath());
 
 		DalInterface dal = DalSingletonProvider.getDalImplementation();
@@ -316,6 +323,28 @@ public class BllImplementation implements BllInterface {
 	public Collection<Document> searchDocumentsFreeText(String textFragment) {
 		DalInterface dal = DalSingletonProvider.getDalImplementation();
 		return dal.searchDocumentsFreeText(textFragment);
+	}
+
+	@Override
+	public Collection<Metadata> getAllMetadata() {
+		// TODO: Only dummy implementation, shoud be replaced
+
+		Collection<Metadata> mtdts = new ArrayList<Metadata>();
+
+		Metadata mtdt = new Metadata();
+		mtdt.setName("Title");
+		mtdt.setMetadataType(MetadataType.Text);
+		mtdts.add(mtdt);
+		mtdt = new Metadata();
+		mtdt.setName("Release date");
+		mtdt.setMetadataType(MetadataType.Date);
+		mtdts.add(mtdt);
+		mtdt = new Metadata();
+		mtdt.setMetadataType(MetadataType.Integer);
+		mtdt.setName("Line of codes");
+		mtdts.add(mtdt);
+
+		return mtdts;
 	}
 
 }
