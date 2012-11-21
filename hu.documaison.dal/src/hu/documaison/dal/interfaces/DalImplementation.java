@@ -1017,8 +1017,10 @@ class DalImplementation implements DalInterface {
 							"%" + expr.getValue() + "%");
 					break;
 				case notcontains:
-					where.and().not().like(AbstractMetadata.VALUE,
-							"%" + expr.getValue() + "%");
+					where.and()
+							.not()
+							.like(AbstractMetadata.VALUE,
+									"%" + expr.getValue() + "%");
 					break;
 				case le:
 					where.and().le(AbstractMetadata.VALUE, expr.getValue());
@@ -1032,10 +1034,10 @@ class DalImplementation implements DalInterface {
 				case neq:
 					where.and().ne(AbstractMetadata.VALUE, expr.getValue());
 					break;
-//				case between:
-//					where.and().ge(AbstractMetadata.VALUE, expr.getValue(0))
-//					.and().le(AbstractMetadata.VALUE, expr.getValue(1));
-//					break;
+				case between:
+					where.and().ge(AbstractMetadata.VALUE, expr.getValue(0))
+							.and().le(AbstractMetadata.VALUE, expr.getValue(1));
+					break;
 				default:
 					break;
 				}
@@ -1043,17 +1045,17 @@ class DalImplementation implements DalInterface {
 				notFirst = true;
 			}
 
-			System.out.println("Search for: " + where.getStatement()); // TODO:
-																		// delete
+			System.out.println("Search for: " + where.getStatement());
+			// TODO: delete
 			List<Document> ret = dao.query(qb.prepare());
 
 			// return
 			return ret;
 		} catch (SQLException e) {
 			HandleSQLException(e, "searchDocuments(SearchExpression)");
-//		} catch (InvalidParameterException e) {
-//			System.err.println("Error with search expression.");
-//			return null;
+		} catch (InvalidParameterException e) {
+			System.err.println("Error with search expression.");
+			return null;
 		} finally {
 			// close connection
 			if (connectionSource != null) {
