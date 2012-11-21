@@ -1001,7 +1001,7 @@ class DalImplementation implements DalInterface {
 					}
 				}
 
-				qbMD.where().eq(AbstractMetadata.NAME, expr.getMetadataName());
+				where.eq(AbstractMetadata.NAME, expr.getMetadataName());
 				switch (expr.getOperator()) {
 				case eq:
 					where.and().eq(AbstractMetadata.VALUE, expr.getValue());
