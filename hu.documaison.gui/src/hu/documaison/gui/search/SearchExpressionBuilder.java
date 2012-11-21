@@ -1,6 +1,7 @@
 package hu.documaison.gui.search;
 
 import hu.documaison.data.search.BoolOperator;
+import hu.documaison.data.search.Expression;
 import hu.documaison.data.search.SearchExpression;
 
 import java.util.Collection;
@@ -16,7 +17,12 @@ public class SearchExpressionBuilder {
 
 		for (AdvancedSearchField field : fields) {
 
+			expression.AddExpression(new Expression(field
+					.getSelectedMetadataName(), field.getOperator(), field
+					.getValue1()));
+
 		}
+		expression.setBoolOperator(operator);
 
 		return expression;
 	}

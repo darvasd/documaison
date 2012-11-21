@@ -1,17 +1,16 @@
 package hu.documaison.gui.search;
 
 import hu.documaison.Application;
-import hu.documaison.data.entities.Metadata;
+import hu.documaison.data.entities.AbstractMetadata;
 import hu.documaison.data.entities.MetadataType;
-<<<<<<< HEAD
 import hu.documaison.data.helper.MetadataNameTypePair;
-=======
 import hu.documaison.data.search.Operator;
->>>>>>> Operator feature request
 import hu.documaison.gui.NotifactionWindow;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 
 import org.eclipse.swt.SWT;
@@ -239,22 +238,6 @@ public class AdvancedSearchField extends Composite {
 	}
 
 	public Operator getOperator() {
-		// choices.add("contains:");
-		// choices.add("not contains:");
-		// choices.add("equals:");
-		// choices.add("not equals:");
-		// choices.add("starts with:");
-		// choices.add("end with:");
-		// } else if (type == MetadataType.Integer) {
-		// choices.add("equals:");
-		// choices.add("not equals:");
-		// choices.add("less than:");
-		// choices.add("more than:");
-		// choices.add("in between:");
-		// } else if (type == MetadataType.Date) {
-		// choices.add("equals:");
-		// choices.add("not equals");
-		// choices.add("in between");
 		String operatorString = choices.getItem(choices.getSelectionIndex());
 
 		if (operatorString.equalsIgnoreCase("contains:")) {
@@ -275,6 +258,37 @@ public class AdvancedSearchField extends Composite {
 			return Operator.gt;
 		} else if (operatorString.equals("in between:")) {
 			return Operator.between;
+		} else {
+			throw new UnsupportedOperationException("Unknown operator: '"
+					+ operatorString + "'.");
+		}
+	}
+
+	public String getValue1() {
+		if (input1 == null) {
+			throw new IllegalArgumentException("Can't load first input of "
+					+ getSelectedMetadataName() + " field.");
+		}
+
+		if (input1 instanceof Text) {
+			Text inputText = (Text) input1;
+			String operatorString = choices
+					.getItem(choices.getSelectionIndex());
+			if (operatorString.equalsIgnoreCase("starts with:")) {
+				return "%" + inputText.getText();
+			} else if (operatorString.equalsIgnoreCase("ends with:")) {
+				return inputText.getText() + "%";
+			} else {
+				return inputText.getText();
+			}
+		} else if (input1 instanceof DateTime) {
+			DateTime inputDateTime = (DateTime) input1;
+			Calendar inputCal = new GregorianCalendar(inputDateTime.getYear(),
+					inputDateTime.getMonth(), inputDateTime.getDay());
+			return AbstractMetadata.DATEFORMAT.format(inputCal.getTime());
+		} else {
+			throw new UnsupportedOperationException("Can't handle input for "
+					+ getSelectedMetadataName() + " field.");
 		}
 	}
 }

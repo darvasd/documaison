@@ -2,6 +2,7 @@ package hu.documaison.gui.document;
 
 import hu.documaison.Application;
 import hu.documaison.data.entities.Document;
+import hu.documaison.data.search.SearchExpression;
 import hu.documaison.gui.InnerPanel;
 
 import java.util.ArrayList;
@@ -170,5 +171,10 @@ public class DocumentLister extends InnerPanel {
 
 	public void showAll() {
 		documents = new ArrayList<Document>(Application.getBll().getDocuments());
+	}
+
+	public void advancedSearch(SearchExpression expression) {
+		documents = new ArrayList<Document>(Application.getBll()
+				.searchDocuments(expression));
 	}
 }

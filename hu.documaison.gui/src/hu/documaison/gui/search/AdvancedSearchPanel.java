@@ -1,6 +1,10 @@
 package hu.documaison.gui.search;
 
+import hu.documaison.data.search.BoolOperator;
+import hu.documaison.data.search.SearchExpression;
 import hu.documaison.gui.InnerPanel;
+import hu.documaison.gui.ViewManager;
+import hu.documaison.gui.document.DocumentLister;
 
 import java.util.ArrayList;
 
@@ -19,6 +23,8 @@ public class AdvancedSearchPanel extends InnerPanel {
 	private AdvancedSearchField firstSearch;
 	private ArrayList<AdvancedSearchField> searchFields;
 	private Label operator1;
+	private Combo operatorCombo;
+	private Button searchButton;
 
 	public AdvancedSearchPanel(Composite parent, int style) {
 		super(parent, style, "Advanced search");
@@ -34,7 +40,7 @@ public class AdvancedSearchPanel extends InnerPanel {
 		data.left = new FormAttachment(0, 10);
 		operator1.setLayoutData(data);
 
-		Combo operatorCombo = new Combo(this, SWT.READ_ONLY | SWT.DROP_DOWN);
+		operatorCombo = new Combo(this, SWT.READ_ONLY | SWT.DROP_DOWN);
 		data = new FormData();
 		data.top = new FormAttachment(operator1, 0, SWT.CENTER);
 		data.left = new FormAttachment(operator1, 5);
@@ -58,7 +64,7 @@ public class AdvancedSearchPanel extends InnerPanel {
 		firstSearch.setLayoutData(data);
 		searchFields.add(firstSearch);
 
-		Button searchButton = new Button(this, SWT.PUSH);
+		searchButton = new Button(this, SWT.PUSH);
 		searchButton.setText("Search");
 		data = new FormData();
 		data.bottom = new FormAttachment(100, -30);
@@ -118,6 +124,18 @@ public class AdvancedSearchPanel extends InnerPanel {
 
 		});
 
+		searchButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				SearchExpression expr = SearchExpressionBuilder
+						.createExpression(searchFields, getBoolOperator());
+				DocumentLister lister = (DocumentLister) ViewManager
+						.getDefault().getView("documents");
+				lister.advancedSearch(expr);
+				ViewManager.getDefault().showView(lister);
+			}
+		});
+
 	}
 
 	private void checkRemoveBtns() {
@@ -155,6 +173,15 @@ public class AdvancedSearchPanel extends InnerPanel {
 		field.dispose();
 		checkRemoveBtns();
 		layout();
+	}
+
+	private BoolOperator getBoolOperator() {
+		if (operatorCombo.getItem(operatorCombo.getSelectionIndex())
+				.equalsIgnoreCase("and")) {
+			return BoolOperator.and;
+		} else {
+			return BoolOperator.or;
+		}
 	}
 
 }
