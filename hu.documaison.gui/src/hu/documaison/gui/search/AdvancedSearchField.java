@@ -292,6 +292,34 @@ public class AdvancedSearchField extends Composite {
 		}
 	}
 
+	public String getValue2() {
+		if (input2 == null) {
+			throw new IllegalArgumentException("Can't load first input of "
+					+ getSelectedMetadataName() + " field.");
+		}
+
+		if (input2 instanceof Text) {
+			Text inputText = (Text) input2;
+			String operatorString = choices
+					.getItem(choices.getSelectionIndex());
+			if (operatorString.equalsIgnoreCase("starts with:")) {
+				return "%" + inputText.getText();
+			} else if (operatorString.equalsIgnoreCase("ends with:")) {
+				return inputText.getText() + "%";
+			} else {
+				return inputText.getText();
+			}
+		} else if (input2 instanceof DateTime) {
+			DateTime inputDateTime = (DateTime) input2;
+			Calendar inputCal = new GregorianCalendar(inputDateTime.getYear(),
+					inputDateTime.getMonth(), inputDateTime.getDay());
+			return AbstractMetadata.DATEFORMAT.format(inputCal.getTime());
+		} else {
+			throw new UnsupportedOperationException("Can't handle input for "
+					+ getSelectedMetadataName() + " field.");
+		}
+	}
+
 	public void reset() {
 		loadInputsForSelection();
 	}

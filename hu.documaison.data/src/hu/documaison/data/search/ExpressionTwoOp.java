@@ -3,9 +3,9 @@ package hu.documaison.data.search;
 import hu.documaison.data.exceptions.InvalidParameterException;
 
 public class ExpressionTwoOp extends Expression {
-	private String value2;
+	private final String value2;
 
-	protected ExpressionTwoOp(String metadataName, Operator operator,
+	public ExpressionTwoOp(String metadataName, Operator operator,
 			String value1, String value2) throws InvalidParameterException {
 		super(metadataName, value1);
 
