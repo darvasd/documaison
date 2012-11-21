@@ -1305,6 +1305,7 @@ class DalImplementation implements DalInterface {
 
 	@Override
 	public Collection<MetadataNameTypePair> getAllMetadataKeys() {
+		// not so smart and fast solution, but OrmLite has some limitations
 		HashSet<MetadataNameTypePair> set = new HashSet<MetadataNameTypePair>();
 
 		for (Metadata md : getAllMetadata()) {

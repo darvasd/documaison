@@ -24,6 +24,8 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 
+import sun.misc.Regexp;
+
 public class DocumentItem extends Composite implements IDocumentChangeListener,
 		MouseListener {
 
@@ -136,9 +138,11 @@ public class DocumentItem extends Composite implements IDocumentChangeListener,
 			title = document.getMetadata("Title");
 		}
 		if (title == null || title.getValue() == null) {
-			if (document.getLocation() != null) {
-				String[] loc = document.getLocation().split(File.separator);
-				titleLabel.setText(loc[loc.length - 1]);
+			if (document.getLocation() != null) { 
+//				String[] loc = document.getLocation().split(File.separatorChar);
+//				titleLabel.setText(loc[loc.length - 1]);
+				int idx = document.getLocation().lastIndexOf(File.separator);
+				titleLabel.setText(doc.getLocation().substring(idx+1));
 			} else {
 				titleLabel.setText("Untitled document");
 			}
