@@ -3,7 +3,6 @@ package hu.documaison.gui.commentstags;
 import hu.documaison.Application;
 import hu.documaison.data.entities.Tag;
 import hu.documaison.gui.ITagSelectionChangeListener;
-import hu.documaison.gui.TagItem;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -49,23 +48,31 @@ public class TagPanel extends Composite implements ITagSelectionChangeListener {
 		refresh();
 	}
 
-	public void addToSelection(TagItem item) {
-		selectedItems.add(item);
-		notifyListeners();
+	public void addToSelection(TagItem item, boolean enableNotication) {
+		if (selectedItems.contains(item) == false) {
+			selectedItems.add(item);
+		}
+		if (enableNotication) {
+			notifyListeners();
+		}
 	}
 
-	public void removeFromSelection(TagItem item) {
+	public void removeFromSelection(TagItem item, boolean enableNotification) {
 		selectedItems.remove(item);
-		notifyListeners();
+		if (enableNotification) {
+			notifyListeners();
+		}
 	}
 
-	public static void clearSelection() {
+	public static void clearSelection(boolean enabledNotification) {
 		ArrayList<TagItem> selectedItems_temp = new ArrayList<TagItem>(
 				selectedItems);
 		for (TagItem i : selectedItems_temp) {
-			i.setSelected(false);
+			i.setSelected(false, false);
 		}
-		notifyListeners();
+		if (enabledNotification) {
+			notifyListeners();
+		}
 	}
 
 	public void multipleSelection(TagItem last) {
@@ -85,8 +92,9 @@ public class TagPanel extends Composite implements ITagSelectionChangeListener {
 			end = a;
 		}
 		for (int i = start; i <= end; i++) {
-			items.get(i).setSelected(true);
+			items.get(i).setSelected(true, false);
 		}
+		notifyListeners();
 	}
 
 	public static boolean isSelectionEmpty() {
@@ -97,6 +105,7 @@ public class TagPanel extends Composite implements ITagSelectionChangeListener {
 		for (ITagSelectionChangeListener listener : changeListeners) {
 			listener.selectionChanged();
 		}
+		System.out.println("Notified " + changeListeners.size());
 	}
 
 	public static void addChangeListener(ITagSelectionChangeListener listener) {
@@ -189,7 +198,7 @@ public class TagPanel extends Composite implements ITagSelectionChangeListener {
 
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				clearSelection();
+				clearSelection(true);
 			}
 
 		});

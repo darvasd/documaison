@@ -1,8 +1,6 @@
-package hu.documaison.gui;
+package hu.documaison.gui.commentstags;
 
 import hu.documaison.data.entities.Tag;
-import hu.documaison.gui.commentstags.ColorMap;
-import hu.documaison.gui.commentstags.TagPanel;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
@@ -59,12 +57,12 @@ public class TagItem extends Composite implements MouseListener {
 
 	}
 
-	public void setSelected(boolean value) {
+	public void setSelected(boolean value, boolean enableNotification) {
 		selected = value;
 		if (selected) {
 			setBackground(selectionBackground);
 			textLabel.setForeground(white);
-			parentTagPanel.addToSelection(this);
+			parentTagPanel.addToSelection(this, enableNotification);
 		} else {
 			setBackground(null);
 			int rgb[] = ColorMap.get().getRGB(tag.getColorName());
@@ -73,7 +71,7 @@ public class TagItem extends Composite implements MouseListener {
 			}
 			textLabel.setForeground(new Color(getDisplay(), rgb[0], rgb[1],
 					rgb[2]));
-			parentTagPanel.removeFromSelection(this);
+			parentTagPanel.removeFromSelection(this, false);
 		}
 	}
 
@@ -85,15 +83,15 @@ public class TagItem extends Composite implements MouseListener {
 	public void mouseDown(MouseEvent e) {
 		if (((e.stateMask & SWT.CTRL) == SWT.CTRL)
 				|| ((e.stateMask & SWT.COMMAND) == SWT.COMMAND)) {
-			setSelected(!selected);
+			setSelected(!selected, true);
 		} else if ((e.stateMask & SWT.SHIFT) == SWT.SHIFT) {
 			parentTagPanel.multipleSelection(this);
 		} else {
-			if (parentTagPanel.isSelectionEmpty()) {
-				setSelected(!selected);
+			if (TagPanel.isSelectionEmpty()) {
+				setSelected(!selected, true);
 			} else {
-				parentTagPanel.clearSelection();
-				setSelected(!selected);
+				TagPanel.clearSelection(false);
+				setSelected(!selected, true);
 			}
 		}
 	}

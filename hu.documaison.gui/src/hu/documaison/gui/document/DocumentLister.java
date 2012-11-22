@@ -103,6 +103,7 @@ public class DocumentLister extends InnerPanel implements
 
 	@Override
 	public void showed() {
+		System.out.println("I am showed to you");
 		if (documents == null) {
 			documents = new ArrayList<Document>(Application.getBll()
 					.getDocuments());
@@ -173,7 +174,7 @@ public class DocumentLister extends InnerPanel implements
 				.searchDocumentsFreeText(freetext));
 
 		if (freetext.equalsIgnoreCase("tüptürüpp")) {
-			NotifactionWindow.showError("Easter's egg", "Cipciripp");
+			NotifactionWindow.showError("Easter egg", "Cipciripp");
 		}
 
 	}
@@ -183,6 +184,7 @@ public class DocumentLister extends InnerPanel implements
 	}
 
 	public void advancedSearch(SearchExpression expression) {
+
 		documents = new ArrayList<Document>(Application.getBll()
 				.searchDocuments(expression));
 	}
@@ -192,8 +194,10 @@ public class DocumentLister extends InnerPanel implements
 		if (TagPanel.isSelectionEmpty()) {
 			showAll();
 		} else {
+			System.out.println("Search started");
 			documents = new ArrayList<Document>(Application.getBll()
 					.getDocumentsByTags(TagPanel.getSelection()));
+			System.out.println("And it's done");
 		}
 		showed();
 	}

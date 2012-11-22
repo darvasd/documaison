@@ -2,6 +2,8 @@ package hu.documaison.gui.document;
 
 import hu.documaison.data.entities.Document;
 import hu.documaison.data.entities.Metadata;
+import hu.documaison.data.helper.DataHelper;
+import hu.documaison.gui.NotifactionWindow;
 import hu.documaison.gui.commentstags.TagViewer;
 
 import java.io.BufferedInputStream;
@@ -9,22 +11,29 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.dnd.Clipboard;
+import org.eclipse.swt.dnd.TextTransfer;
+import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
+import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
-
-import sun.misc.Regexp;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
 
 public class DocumentItem extends Composite implements IDocumentChangeListener,
 		MouseListener {
@@ -39,6 +48,8 @@ public class DocumentItem extends Composite implements IDocumentChangeListener,
 	private MetadataEditors editor;
 	private Document doc;
 	private DocumentLister lister;
+	private final Button openButton;
+	private final Button otherActions;
 
 	public DocumentItem(Composite parent, int style) {
 		super(parent, style);
@@ -54,7 +65,7 @@ public class DocumentItem extends Composite implements IDocumentChangeListener,
 		data.height = 93;
 		thumbnailImage.setLayoutData(data);
 
-		Button openButton = new Button(this, SWT.PUSH);
+		openButton = new Button(this, SWT.PUSH);
 		openButton.setText("Open");
 		Image openImage = new Image(null, "images/open.png");
 		openButton.setImage(openImage);
@@ -64,7 +75,8 @@ public class DocumentItem extends Composite implements IDocumentChangeListener,
 		data.height = 45;
 		openButton.setLayoutData(data);
 
-		Button otherActions = new Button(this, SWT.PUSH);
+		otherActions = new Button(this, SWT.PUSH);
+		loadOtherCommands();
 		data = new FormData();
 		data.top = new FormAttachment(thumbnailImage, 0, SWT.CENTER);
 		data.left = new FormAttachment(openButton, 2);
@@ -111,6 +123,17 @@ public class DocumentItem extends Composite implements IDocumentChangeListener,
 		titleLabel.addMouseListener(this);
 		authorLabel.addMouseListener(this);
 		tagViewer.addMouseListener(this);
+		openButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if (getDoc().getLocation() != null) {
+					Program.launch(getDoc().getLocation());
+				} else {
+					NotifactionWindow.showError("Database error",
+							"The location is a null value in the database.");
+				}
+			}
+		});
 	}
 
 	public void setDocument(Document document) {
@@ -138,11 +161,12 @@ public class DocumentItem extends Composite implements IDocumentChangeListener,
 			title = document.getMetadata("Title");
 		}
 		if (title == null || title.getValue() == null) {
-			if (document.getLocation() != null) { 
-//				String[] loc = document.getLocation().split(File.separatorChar);
-//				titleLabel.setText(loc[loc.length - 1]);
+			if (document.getLocation() != null) {
+				// String[] loc =
+				// document.getLocation().split(File.separatorChar);
+				// titleLabel.setText(loc[loc.length - 1]);
 				int idx = document.getLocation().lastIndexOf(File.separator);
-				titleLabel.setText(doc.getLocation().substring(idx+1));
+				titleLabel.setText(doc.getLocation().substring(idx + 1));
 			} else {
 				titleLabel.setText("Untitled document");
 			}
@@ -224,4 +248,78 @@ public class DocumentItem extends Composite implements IDocumentChangeListener,
 	public void mouseUp(MouseEvent arg0) {
 	}
 
+	public void copyBibTex(Document doc) {
+		Clipboard cb = new Clipboard(getDisplay());
+		TextTransfer textTransfer = TextTransfer.getInstance();
+		cb.setContents(new Object[] { DataHelper.createBibTex(doc) },
+				new Transfer[] { textTransfer });
+
+	}
+
+	private void loadOtherCommands() {
+		otherActions.addSelectionListener(new SelectionAdapter() {
+			Menu dropMenu = null;
+
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if (dropMenu == null) {
+					dropMenu = new Menu(getShell(), SWT.POP_UP);
+					getShell().setMenu(dropMenu);
+
+					MenuItem openFolder = new MenuItem(dropMenu, SWT.PUSH);
+					openFolder.setText("Open containing folder");
+					openFolder.addSelectionListener(new SelectionAdapter() {
+						@Override
+						public void widgetSelected(SelectionEvent e) {
+							openContainingFolder(getDoc());
+						}
+					});
+					MenuItem delItem = new MenuItem(dropMenu, SWT.PUSH);
+					delItem.setText("Remove document");
+					MenuItem moveItem = new MenuItem(dropMenu, SWT.PUSH);
+					moveItem.setText("Move document");
+					MenuItem copyItem = new MenuItem(dropMenu, SWT.PUSH);
+					copyItem.setText("Copy document");
+					new MenuItem(dropMenu, SWT.SEPARATOR);
+					MenuItem copyBibTex = new MenuItem(dropMenu, SWT.PUSH);
+					copyBibTex.setText("Copy BibTeX");
+					copyBibTex.addSelectionListener(new SelectionAdapter() {
+						@Override
+						public void widgetSelected(SelectionEvent e) {
+							copyBibTex(getDoc());
+						}
+					});
+
+					String location = getDoc().getLocation();
+					if (location == null || DataHelper.isURL(location)) {
+						openFolder.setEnabled(false);
+						moveItem.setEnabled(false);
+						copyItem.setEnabled(false);
+					}
+				}
+				Button button = (Button) e.widget;
+				if ((dropMenu != null) && (!dropMenu.isVisible())) {
+					Rectangle bounds = button.getBounds();
+					Point menuLoc = button.getParent().toDisplay(bounds.x,
+							bounds.y + bounds.height);
+					dropMenu.setLocation(menuLoc.x, menuLoc.y);
+					dropMenu.setVisible(true);
+				}
+
+			}
+		});
+	}
+
+	private void openContainingFolder(Document doc) {
+		if (doc.getLocation() != null
+				|| DataHelper.isURL(doc.getLocation()) == false) {
+			File f = new File(doc.getLocation());
+			if (f.exists() == false) {
+				NotifactionWindow
+						.showError("Error", "The file does not exist.");
+			} else {
+				Program.launch(f.getParent());
+			}
+		}
+	}
 }

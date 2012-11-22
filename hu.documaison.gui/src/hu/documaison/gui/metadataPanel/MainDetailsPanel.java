@@ -116,7 +116,6 @@ public class MainDetailsPanel extends Composite {
 	}
 
 	private void showTags(Document doc) {
-		System.out.println("Dispsing tags");
 		if (tags != null) {
 			tags.dispose();
 		}
