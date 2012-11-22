@@ -1,8 +1,12 @@
 package hu.documaison.gui.document;
 
+import hu.documaison.Application;
 import hu.documaison.data.entities.Document;
 import hu.documaison.data.entities.Metadata;
+import hu.documaison.data.exceptions.InvalidParameterException;
+import hu.documaison.data.exceptions.UnknownDocumentException;
 import hu.documaison.data.helper.DataHelper;
+import hu.documaison.data.helper.FileHelper;
 import hu.documaison.gui.NotifactionWindow;
 import hu.documaison.gui.commentstags.TagViewer;
 
@@ -31,6 +35,7 @@ import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
@@ -50,6 +55,11 @@ public class DocumentItem extends Composite implements IDocumentChangeListener,
 	private DocumentLister lister;
 	private final Button openButton;
 	private final Button otherActions;
+	private MenuItem openFolder;
+	private MenuItem delItem;
+	private MenuItem copyItem;
+	private MenuItem moveItem;
+	private MenuItem copyBibTex;
 
 	public DocumentItem(Composite parent, int style) {
 		super(parent, style);
@@ -76,7 +86,7 @@ public class DocumentItem extends Composite implements IDocumentChangeListener,
 		openButton.setLayoutData(data);
 
 		otherActions = new Button(this, SWT.PUSH);
-		loadOtherCommands();
+
 		data = new FormData();
 		data.top = new FormAttachment(thumbnailImage, 0, SWT.CENTER);
 		data.left = new FormAttachment(openButton, 2);
@@ -134,6 +144,7 @@ public class DocumentItem extends Composite implements IDocumentChangeListener,
 				}
 			}
 		});
+
 	}
 
 	public void setDocument(Document document) {
@@ -144,6 +155,7 @@ public class DocumentItem extends Composite implements IDocumentChangeListener,
 			DocumentObserver.attach(document.getId(), this);
 		}
 		doc = document;
+		loadOtherCommands();
 		setSelection(editor.isShowed(doc), false);
 		if (document.getThumbnailBytes() != null) {
 			BufferedInputStream inputStreamReader = new BufferedInputStream(
@@ -257,46 +269,34 @@ public class DocumentItem extends Composite implements IDocumentChangeListener,
 	}
 
 	private void loadOtherCommands() {
+		final Menu dropMenu = new Menu(getShell(), SWT.POP_UP);
+		getShell().setMenu(dropMenu);
+
+		openFolder = new MenuItem(dropMenu, SWT.PUSH);
+		openFolder.setText("Open containing folder");
+
+		delItem = new MenuItem(dropMenu, SWT.PUSH);
+		delItem.setText("Remove document");
+		moveItem = new MenuItem(dropMenu, SWT.PUSH);
+		moveItem.setText("Relocate document");
+
+		copyItem = new MenuItem(dropMenu, SWT.PUSH);
+		copyItem.setText("Export document");
+
+		new MenuItem(dropMenu, SWT.SEPARATOR);
+		copyBibTex = new MenuItem(dropMenu, SWT.PUSH);
+		copyBibTex.setText("Copy BibTeX");
+		String location = getDoc().getLocation();
+		if (location == null || DataHelper.isURL(location)) {
+			openFolder.setEnabled(false);
+			moveItem.setEnabled(false);
+			copyItem.setEnabled(false);
+		}
+		addOtherEventListeners();
 		otherActions.addSelectionListener(new SelectionAdapter() {
-			Menu dropMenu = null;
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				if (dropMenu == null) {
-					dropMenu = new Menu(getShell(), SWT.POP_UP);
-					getShell().setMenu(dropMenu);
-
-					MenuItem openFolder = new MenuItem(dropMenu, SWT.PUSH);
-					openFolder.setText("Open containing folder");
-					openFolder.addSelectionListener(new SelectionAdapter() {
-						@Override
-						public void widgetSelected(SelectionEvent e) {
-							openContainingFolder(getDoc());
-						}
-					});
-					MenuItem delItem = new MenuItem(dropMenu, SWT.PUSH);
-					delItem.setText("Remove document");
-					MenuItem moveItem = new MenuItem(dropMenu, SWT.PUSH);
-					moveItem.setText("Move document");
-					MenuItem copyItem = new MenuItem(dropMenu, SWT.PUSH);
-					copyItem.setText("Copy document");
-					new MenuItem(dropMenu, SWT.SEPARATOR);
-					MenuItem copyBibTex = new MenuItem(dropMenu, SWT.PUSH);
-					copyBibTex.setText("Copy BibTeX");
-					copyBibTex.addSelectionListener(new SelectionAdapter() {
-						@Override
-						public void widgetSelected(SelectionEvent e) {
-							copyBibTex(getDoc());
-						}
-					});
-
-					String location = getDoc().getLocation();
-					if (location == null || DataHelper.isURL(location)) {
-						openFolder.setEnabled(false);
-						moveItem.setEnabled(false);
-						copyItem.setEnabled(false);
-					}
-				}
 				Button button = (Button) e.widget;
 				if ((dropMenu != null) && (!dropMenu.isVisible())) {
 					Rectangle bounds = button.getBounds();
@@ -308,6 +308,82 @@ public class DocumentItem extends Composite implements IDocumentChangeListener,
 
 			}
 		});
+	}
+
+	private void addOtherEventListeners() {
+		copyBibTex.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				copyBibTex(getDoc());
+			}
+		});
+		copyItem.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				DirectoryDialog dialog = new DirectoryDialog(getShell());
+				dialog.setText("Export directory");
+				String path = dialog.open();
+				if (path != null) {
+					try {
+						String fileName = FileHelper.fileName(doc.getLocation());
+
+						Application.getBll().copyDocument(doc,
+								path + File.separator + fileName);
+						Program.launch(path);
+					} catch (Exception e1) {
+						NotifactionWindow.showError("Copy error",
+								"Failed to export the selected document. ("
+										+ e1.getMessage() + ")");
+					}
+				}
+			}
+		});
+		moveItem.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				DirectoryDialog dialog = new DirectoryDialog(getShell());
+				dialog.setText("New directory");
+				String path = dialog.open();
+				if (path != null) {
+					try {
+						String fileName = FileHelper.fileName(doc.getLocation());
+
+						Application.getBll().moveDocument(doc,
+								path + File.separator + fileName);
+					} catch (Exception e1) {
+						NotifactionWindow.showError("Copy error",
+								"Failed to export the selected document. ("
+										+ e1.getMessage() + ")");
+					}
+				}
+
+			}
+		});
+
+		delItem.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				try {
+					Application.getBll().deleteAndRemoveDocument(doc);
+				} catch (UnknownDocumentException e1) {
+					NotifactionWindow.showError("Error",
+							"Can't locate the document. (" + e1.getMessage()
+									+ ")");
+				} catch (InvalidParameterException e1) {
+					NotifactionWindow.showError("Error",
+							"Can't delete the document. (" + e1.getMessage()
+									+ ")");
+				}
+				DocumentObserver.notifyLister();
+			}
+		});
+		openFolder.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				openContainingFolder(getDoc());
+			}
+		});
+
 	}
 
 	private void openContainingFolder(Document doc) {
@@ -322,4 +398,5 @@ public class DocumentItem extends Composite implements IDocumentChangeListener,
 			}
 		}
 	}
+
 }

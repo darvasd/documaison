@@ -1,6 +1,11 @@
 package hu.documaison.data.helper;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 public class FileHelper {
 
@@ -66,5 +71,9 @@ public class FileHelper {
 		} catch (NullPointerException npe) {
 			return null;
 		}
+	}
+
+	public static String fileName(String path) {
+		return (new File(path)).getName();
 	}
 }

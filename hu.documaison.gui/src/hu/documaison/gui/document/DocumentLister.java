@@ -36,15 +36,17 @@ public class DocumentLister extends InnerPanel implements
 	private Composite panel;
 	private Label label;
 	private MetadataEditors editor;
+	private boolean showAll = true;
+	private SearchExpression searchExpression;
+	private String searchString;
 
 	public DocumentLister(Composite parent, int style) {
 		super(parent, style, "Documents");
-
 	}
 
 	@Override
 	protected void createComposite() {
-
+		DocumentObserver.setLister(this);
 		sash = new Sash(this, SWT.HORIZONTAL | SWT.SMOOTH);
 		TagPanel.addChangeListener(this);
 		FormData data = new FormData();
@@ -170,6 +172,9 @@ public class DocumentLister extends InnerPanel implements
 	}
 
 	public void freetextSearch(String freetext) {
+		showAll = false;
+		searchString = freetext;
+		searchExpression = null;
 		documents = new ArrayList<Document>(Application.getBll()
 				.searchDocumentsFreeText(freetext));
 
@@ -181,10 +186,14 @@ public class DocumentLister extends InnerPanel implements
 
 	public void showAll() {
 		documents = new ArrayList<Document>(Application.getBll().getDocuments());
+		showAll = true;
 	}
 
 	public void advancedSearch(SearchExpression expression) {
 
+		showAll = false;
+		searchString = null;
+		searchExpression = expression;
 		documents = new ArrayList<Document>(Application.getBll()
 				.searchDocuments(expression));
 	}
@@ -198,6 +207,22 @@ public class DocumentLister extends InnerPanel implements
 			documents = new ArrayList<Document>(Application.getBll()
 					.getDocumentsByTags(TagPanel.getSelection()));
 			System.out.println("And it's done");
+		}
+		showed();
+	}
+
+	public void notifyLister() {
+		if (showAll) {
+			showAll();
+		} else if (searchString != null) {
+			freetextSearch(searchString);
+		} else if (searchExpression != null) {
+			advancedSearch(searchExpression);
+		} else {
+			showAll = true;
+			searchExpression = null;
+			searchString = null;
+			showAll();
 		}
 		showed();
 	}

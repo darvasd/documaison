@@ -4,17 +4,22 @@ import hu.documaison.Application;
 import hu.documaison.data.entities.Document;
 import hu.documaison.data.entities.Metadata;
 import hu.documaison.data.exceptions.UnknownDocumentException;
+import hu.documaison.data.helper.DataHelper;
 import hu.documaison.gui.NotifactionWindow;
 import hu.documaison.gui.document.DocumentObserver;
+import hu.documaison.gui.document.IDocumentChangeListener;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Listener;
@@ -27,12 +32,15 @@ import org.mihalis.opal.propertyTable.editor.PTIntegerEditor;
 import org.mihalis.opal.propertyTable.editor.PTStringEditor;
 import org.mihalis.opal.propertyTable.editor.PTURLEditor;
 
-public class MetadataPanel extends Composite {
+public class MetadataPanel extends Composite implements IDocumentChangeListener {
 
 	private PropertyTable pTable;
 	private final Link addProp;
 	private Document doc;
 	private HashMap<String, Metadata> metadataMap;
+	private final Link remProp;
+	private Timer timer;
+	private TimerTask timerTask;
 
 	public MetadataPanel(Composite parent, int style) {
 		super(parent, style);
@@ -55,35 +63,37 @@ public class MetadataPanel extends Composite {
 							"Failed to update document from database.");
 				}
 				if (metadata != null) {
-					addProp(metadata);
 					DocumentObserver.notify(doc.getId(), null);
 				}
-				pTable.layout();
+			}
+		});
+		remProp = new Link(this, SWT.NONE);
+		remProp.setText("<a>Remove metadata</a>");
+		data = new FormData();
+		data.bottom = new FormAttachment(100, -5);
+		data.right = new FormAttachment(addProp, -5);
+		remProp.setLayoutData(data);
+		remProp.addListener(SWT.Selection, new Listener() {
+
+			@Override
+			public void handleEvent(Event event) {
+				RemoveMetadataDialog dialog = new RemoveMetadataDialog();
+				dialog.showAndHandle(getShell(), doc);
+				DocumentObserver.notify(doc.getId(), null);
 			}
 		});
 	}
 
 	public void setDocument(Document doc) {
+		if (this.doc != null && this.doc != doc) {
+			DocumentObserver.detach(this.doc.getId(), this);
+		}
+		if (this.doc != doc) {
+			DocumentObserver.attach(doc.getId(), this);
+		}
 		this.doc = doc;
 		createNewPropTable();
-
-		String loc = doc.getLocation();
-		if (loc != null) {
-			if (loc.startsWith("http://")) {
-				pTable.addProperty(new PTProperty("Location (URL)", "loc", "",
-						loc).setEditor(new PTURLEditor()));
-			} else {
-				pTable.addProperty(new PTProperty("Location (file)", "loc", "",
-						loc).setEditor(new PTFileEditor()));
-			}
-		}
-
-		metadataMap = new HashMap<String, Metadata>();
-		if (doc.getMetadataCollection() != null) {
-			for (Metadata mtdt : doc.getMetadataCollection()) {
-				addProp(mtdt);
-			}
-		}
+		addProperties();
 		layout();
 
 	}
@@ -122,11 +132,10 @@ public class MetadataPanel extends Composite {
 						break;
 
 					}
-					Application.getBll().updateMetadata(mtdt);
-					Application.getBll().updateDocument(doc);
-					DocumentObserver.notify(doc.getId(), null);
+					lazyUpdate(doc, mtdt);
 				}
 			}
+
 		});
 
 	}
@@ -154,4 +163,57 @@ public class MetadataPanel extends Composite {
 		}
 	}
 
+	@Override
+	public void documentChanged() {
+		createNewPropTable();
+		addProperties();
+		layout();
+	}
+
+	private void addProperties() {
+		String loc = doc.getLocation();
+		if (loc != null) {
+			if (DataHelper.isURL(loc)) {
+				pTable.addProperty(new PTProperty("Location (URL)", "loc", "",
+						loc).setEditor(new PTURLEditor()));
+			} else {
+				pTable.addProperty(new PTProperty("Location (file)", "loc", "",
+						loc).setEditor(new PTFileEditor()));
+			}
+		}
+
+		metadataMap = new HashMap<String, Metadata>();
+		if (doc.getMetadataCollection() != null) {
+			for (Metadata mtdt : doc.getMetadataCollection()) {
+				addProp(mtdt);
+			}
+		}
+	}
+
+	private void lazyUpdate(final Document doc, final Metadata mtdt) {
+
+		if (timer == null) {
+			timer = new Timer();
+		}
+		if (timerTask == null
+				|| timerTask.scheduledExecutionTime() < (new Date()).getTime()) {
+			timerTask = new TimerTask() {
+
+				@Override
+				public void run() {
+					Application.getBll().updateMetadata(mtdt);
+					Application.getBll().updateDocument(doc);
+					Display.getDefault().asyncExec(new Runnable() {
+						@Override
+						public void run() {
+							DocumentObserver.notify(doc.getId(),
+									MetadataPanel.this);
+						}
+					});
+
+				}
+			};
+			timer.schedule(timerTask, 300);
+		}
+	}
 }

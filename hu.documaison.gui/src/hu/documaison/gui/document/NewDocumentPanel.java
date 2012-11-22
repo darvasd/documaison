@@ -150,6 +150,7 @@ public class NewDocumentPanel extends InnerPanel {
 							.getDefault().showView("metaedit",
 							NewDocumentPanel.this));
 					panel.setDocument(doc);
+					Application.getBll().updateDocument(doc);
 				} catch (UnknownDocumentTypeException e1) {
 					NotifactionWindow.showError("Unknown type",
 							"Failed to load the definition of the selected type. ("
@@ -179,6 +180,7 @@ public class NewDocumentPanel extends InnerPanel {
 
 	@Override
 	public void showed() {
+		locText.setText("");
 		loadDocTypes();
 		layout();
 		validate();

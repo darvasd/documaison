@@ -21,8 +21,6 @@ import hu.documaison.data.search.SearchExpression;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
 
 public class BllImplementation implements BllInterface {
 
@@ -330,5 +328,28 @@ public class BllImplementation implements BllInterface {
 	public Collection<MetadataNameTypePair> getAllMetadataKeys() {
 		DalInterface dal = DalSingletonProvider.getDalImplementation();
 		return dal.getAllMetadataKeys();
+	}
+
+	@Override
+	public void copyDocument(Document document, String newLocation)
+			throws InvalidParameterException, UnknownDocumentException,
+			IOException {
+		File target = new File(newLocation);
+		if (target == null || target.exists()) {
+			throw new InvalidParameterException("newLocation");
+		}
+		if (document == null) {
+			throw new UnknownDocumentException(0);
+		}
+
+		File oldFile;
+		try {
+			oldFile = new File(document.getLocation());
+		} catch (NullPointerException npe) {
+			throw new InvalidParameterException("document");
+		}
+
+		FileHelper.copy(oldFile, target);
+
 	}
 }

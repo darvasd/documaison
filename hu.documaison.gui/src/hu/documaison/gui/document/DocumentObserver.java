@@ -6,6 +6,7 @@ import java.util.HashMap;
 public class DocumentObserver {
 
 	private static HashMap<Integer, ArrayList<IDocumentChangeListener>> observers = new HashMap<Integer, ArrayList<IDocumentChangeListener>>();
+	private static DocumentLister lister;
 
 	public static void attach(int id, IDocumentChangeListener observer) {
 		ArrayList<IDocumentChangeListener> list = observers.get(id);
@@ -36,6 +37,16 @@ public class DocumentObserver {
 					l.documentChanged();
 				}
 			}
+		}
+	}
+
+	public static void setLister(DocumentLister lister) {
+		DocumentObserver.lister = lister;
+	}
+
+	public static void notifyLister() {
+		if (lister != null) {
+			lister.notifyLister();
 		}
 	}
 

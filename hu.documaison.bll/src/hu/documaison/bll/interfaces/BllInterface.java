@@ -22,6 +22,10 @@ public interface BllInterface {
 	public void addTagToDocument(Tag tag, Document document)
 			throws InvalidParameterException;
 
+	public void copyDocument(Document document, String newLocation)
+			throws InvalidParameterException, UnknownDocumentException,
+			IOException;
+
 	public Comment createComment(Document parent)
 			throws UnableToCreateException;
 
@@ -42,6 +46,8 @@ public interface BllInterface {
 			throws InvalidParameterException, UnknownDocumentException;
 
 	public Collection<DocumentType> getAllDocumentTypes();
+
+	public Collection<MetadataNameTypePair> getAllMetadataKeys();
 
 	public Document getDocument(int id) throws UnknownDocumentException;
 
@@ -101,6 +107,4 @@ public interface BllInterface {
 	public void updateMetadata(Metadata metadata);
 
 	public void updateTag(Tag tag);
-
-	public Collection<MetadataNameTypePair> getAllMetadataKeys();
 }
