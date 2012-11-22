@@ -80,6 +80,10 @@ public abstract class AbstractMetadata extends DatabaseObject {
 	}
 
 	private static boolean isInteger(String str) {
+		if (str == null){
+			return false;
+		}
+		
 		try {
 			Integer.parseInt(str);
 			return true;
@@ -89,6 +93,10 @@ public abstract class AbstractMetadata extends DatabaseObject {
 	}
 
 	private static boolean isDate(String str) {
+		if (str == null){
+			return false;
+		}
+		
 		try {
 			DATEFORMAT.parse(str);
 			return true;
@@ -101,7 +109,8 @@ public abstract class AbstractMetadata extends DatabaseObject {
 		MetadataType oldType = this.metadataType;
 		this.metadataType = metadataType;
 
-		if (oldType == this.metadataType) {
+		if (oldType == this.metadataType || this.value == null) {
+			// there is no need to drop the old value
 			return;
 		}
 
