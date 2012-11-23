@@ -1,5 +1,6 @@
 package hu.documaison.gui;
 
+import hu.documaison.gui.commentstags.TagPanel;
 import hu.documaison.gui.document.DocumentLister;
 
 import org.eclipse.swt.SWT;
@@ -167,6 +168,7 @@ public class DocuMaisonWindow {
 			public void widgetSelected(SelectionEvent arg0) {
 				DocumentLister lister = (DocumentLister) ViewManager
 						.getDefault().getView("documents");
+				TagPanel.clearSelection(false);
 				lister.showAll();
 				ViewManager.getDefault().showView(lister);
 			}

@@ -16,6 +16,7 @@ import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -29,9 +30,11 @@ public class TagViewer extends Composite implements SelectionListener,
 
 	private final ArrayList<Control> controls = new ArrayList<Control>();
 	private Document doc;
+	private final Composite parent;
 
 	public TagViewer(Composite parent, int style) {
 		super(parent, style);
+		this.parent = parent;
 		RowLayout layout = new RowLayout();
 		layout.wrap = true;
 		setLayout(layout);
@@ -49,6 +52,7 @@ public class TagViewer extends Composite implements SelectionListener,
 	}
 
 	public void createControls(final Document doc) {
+		System.out.println(getBounds().width);
 		if (this.doc != doc) {
 			if (this.doc != null) {
 				DocumentObserver.detach(this.doc.getId(), this);
@@ -133,6 +137,7 @@ public class TagViewer extends Composite implements SelectionListener,
 	public void documentChanged() {
 
 		createControls(doc);
+		pack();
 	}
 
 	@Override
@@ -143,4 +148,9 @@ public class TagViewer extends Composite implements SelectionListener,
 		super.addMouseListener(arg0);
 	}
 
+	@Override
+	public Point computeSize(int wHint, int hHint, boolean changed) {
+		return super.computeSize(parent.getBounds().width, hHint, changed);
+
+	}
 }

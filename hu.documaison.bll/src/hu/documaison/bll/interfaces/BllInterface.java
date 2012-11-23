@@ -107,4 +107,8 @@ public interface BllInterface {
 	public void updateMetadata(Metadata metadata);
 
 	public void updateTag(Tag tag);
+
+	public Document changeDocumentType(Document doc, DocumentType type)
+			throws UnknownDocumentException, UnknownDocumentTypeException,
+			UnableToCreateException;
 }

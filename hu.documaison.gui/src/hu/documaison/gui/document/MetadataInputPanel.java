@@ -4,6 +4,7 @@ import hu.documaison.data.entities.Document;
 import hu.documaison.gui.InnerPanel;
 import hu.documaison.gui.ViewManager;
 import hu.documaison.gui.metadataPanel.MainDetailsPanel;
+import hu.documaison.gui.metadataPanel.MetadataEditors;
 import hu.documaison.gui.metadataPanel.MetadataPanel;
 
 import org.eclipse.swt.SWT;
@@ -45,7 +46,7 @@ public class MetadataInputPanel extends InnerPanel {
 		data.right = new FormAttachment(100, -10);
 		saveBtn.setLayoutData(data);
 
-		editors = new MetadataEditors(this, SWT.NONE);
+		editors = new MetadataEditors(this, SWT.NONE, null);
 		data = new FormData();
 		data.top = new FormAttachment(infoLabel, 5);
 		data.left = new FormAttachment(0, 20);

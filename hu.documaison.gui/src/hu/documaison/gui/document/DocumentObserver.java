@@ -17,14 +17,12 @@ public class DocumentObserver {
 		if (!list.contains(observer)) {
 			list.add(observer);
 		}
-		// System.out.println(id + " => " + list.size());
 	}
 
 	public static void detach(int id, IDocumentChangeListener observer) {
 		ArrayList<IDocumentChangeListener> list = observers.get(id);
 		if (list != null) {
 			list.remove(observer);
-			// System.out.println(id + " => " + list.size());
 		}
 	}
 
@@ -42,6 +40,21 @@ public class DocumentObserver {
 
 	public static void setLister(DocumentLister lister) {
 		DocumentObserver.lister = lister;
+	}
+
+	public static void detachAllDocumentItem() {
+		ArrayList<IDocumentChangeListener> toRemove = new ArrayList<IDocumentChangeListener>();
+
+		for (ArrayList<IDocumentChangeListener> lists : observers.values()) {
+			for (IDocumentChangeListener l : lists) {
+				if (l instanceof DocumentItem) {
+					toRemove.add(l);
+				}
+			}
+			lists.removeAll(toRemove);
+			toRemove.clear();
+		}
+
 	}
 
 	public static void notifyLister() {

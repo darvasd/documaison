@@ -7,8 +7,10 @@ import hu.documaison.gui.ITagSelectionChangeListener;
 import hu.documaison.gui.InnerPanel;
 import hu.documaison.gui.NotifactionWindow;
 import hu.documaison.gui.commentstags.TagPanel;
+import hu.documaison.gui.metadataPanel.MetadataEditors;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.eclipse.nebula.widgets.compositetable.CompositeTable;
 import org.eclipse.nebula.widgets.compositetable.IRowContentProvider;
@@ -27,7 +29,7 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Sash;
 
 public class DocumentLister extends InnerPanel implements
-		ITagSelectionChangeListener {
+		ITagSelectionChangeListener, IRowContentProvider {
 
 	private ArrayList<Document> documents;
 	private Sash sash;
@@ -39,6 +41,7 @@ public class DocumentLister extends InnerPanel implements
 	private boolean showAll = true;
 	private SearchExpression searchExpression;
 	private String searchString;
+	private final HashMap<Integer, DocumentItem> itemMap = new HashMap<Integer, DocumentItem>();
 
 	public DocumentLister(Composite parent, int style) {
 		super(parent, style, "Documents");
@@ -93,7 +96,7 @@ public class DocumentLister extends InnerPanel implements
 		data.right = new FormAttachment(100, 0);
 		data.bottom = new FormAttachment(sash, 0);
 		panel.setLayoutData(data);
-		editor = new MetadataEditors(this, SWT.NONE);
+		editor = new MetadataEditors(this, SWT.NONE, this);
 		data = new FormData();
 		data.top = new FormAttachment(sash, 10);
 		data.left = new FormAttachment(0, 10);
@@ -105,7 +108,6 @@ public class DocumentLister extends InnerPanel implements
 
 	@Override
 	public void showed() {
-		System.out.println("I am showed to you");
 		if (documents == null) {
 			documents = new ArrayList<Document>(Application.getBll()
 					.getDocuments());
@@ -125,24 +127,20 @@ public class DocumentLister extends InnerPanel implements
 				label.dispose();
 				label = null;
 			}
-			if (table == null) {
-				table = new CompositeTable(panel, SWT.NONE);
+			if (table != null && !table.isDisposed()) {
+				table.dispose();
 			}
+			setDetailsVisible(false);
+			DocumentObserver.detachAllDocumentItem();
+			table = new CompositeTable(panel, SWT.NONE);
+			itemMap.clear();
 			DocumentItem it = new DocumentItem(table, SWT.NONE);
 			table.setBackground(it.getBackground());
 			table.setRunTime(true);
 			table.setNumRowsInCollection(documents.size());
 
-			table.addRowContentProvider(new IRowContentProvider() {
-				@Override
-				public void refresh(CompositeTable sender,
-						int currentObjectOffset, Control rowControl) {
-					DocumentItem row = (DocumentItem) rowControl;
-					row.setEditor(editor);
-					row.setLister(DocumentLister.this);
-					row.setDocument(documents.get(currentObjectOffset));
-				}
-			});
+			table.removeRowContentProvider(this);
+			table.addRowContentProvider(this);
 		}
 		panel.layout();
 
@@ -162,6 +160,7 @@ public class DocumentLister extends InnerPanel implements
 			sash.setLayoutData(data);
 		} else {
 			sashVisible = false;
+			editor.setHidden();
 			FormData data = new FormData();
 			data.left = new FormAttachment(0, 0);
 			data.right = new FormAttachment(100, 0);
@@ -212,6 +211,7 @@ public class DocumentLister extends InnerPanel implements
 	}
 
 	public void notifyLister() {
+		setDetailsVisible(false);
 		if (showAll) {
 			showAll();
 		} else if (searchString != null) {
@@ -225,5 +225,20 @@ public class DocumentLister extends InnerPanel implements
 			showAll();
 		}
 		showed();
+	}
+
+	@Override
+	public void refresh(CompositeTable sender, int currentObjectOffset,
+			Control rowControl) {
+		DocumentItem row = (DocumentItem) rowControl;
+		row.setEditor(editor);
+		row.setLister(DocumentLister.this);
+		Document documentToShow = documents.get(currentObjectOffset);
+		row.setDocument(documentToShow);
+		itemMap.put(documentToShow.getId(), row);
+	}
+
+	public DocumentItem getItemForDocument(int ID) {
+		return itemMap.get(ID);
 	}
 }

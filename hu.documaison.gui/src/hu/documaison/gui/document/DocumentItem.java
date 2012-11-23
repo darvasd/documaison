@@ -7,8 +7,9 @@ import hu.documaison.data.exceptions.InvalidParameterException;
 import hu.documaison.data.exceptions.UnknownDocumentException;
 import hu.documaison.data.helper.DataHelper;
 import hu.documaison.data.helper.FileHelper;
+import hu.documaison.gui.ImageHelper;
 import hu.documaison.gui.NotifactionWindow;
-import hu.documaison.gui.commentstags.TagViewer;
+import hu.documaison.gui.metadataPanel.MetadataEditors;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
@@ -34,6 +35,7 @@ import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Label;
@@ -44,17 +46,15 @@ public class DocumentItem extends Composite implements IDocumentChangeListener,
 		MouseListener {
 
 	private final Composite parent;
-	private final Label thumbnailImage;
-	private final Label titleLabel;
-	private final TagViewer tagViewer;
-	private final Label authorLabel;
+	private Canvas thumbnailImage;
+	private Label titleLabel;
+	private Label authorLabel;
 	private final Color selectionBackground = new Color(null, 189, 210, 238);
-	private boolean isSelected = false;
 	private MetadataEditors editor;
 	private Document doc;
 	private DocumentLister lister;
-	private final Button openButton;
-	private final Button otherActions;
+	private Button openButton;
+	private Button otherActions;
 	private MenuItem openFolder;
 	private MenuItem delItem;
 	private MenuItem copyItem;
@@ -66,13 +66,17 @@ public class DocumentItem extends Composite implements IDocumentChangeListener,
 
 		setLayout(new FormLayout());
 		this.parent = parent;
+		createComposites();
 
-		thumbnailImage = new Label(this, SWT.NONE);
+	}
+
+	private void createComposites() {
+		thumbnailImage = new Canvas(this, SWT.NO_BACKGROUND);
 		FormData data = new FormData();
 		data.top = new FormAttachment(0, 10);
 		data.left = new FormAttachment(0, 30);
-		data.width = 80;
-		data.height = 93;
+		data.width = 50;
+		data.height = 60;
 		thumbnailImage.setLayoutData(data);
 
 		openButton = new Button(this, SWT.PUSH);
@@ -117,22 +121,69 @@ public class DocumentItem extends Composite implements IDocumentChangeListener,
 		fontData[0].setStyle(SWT.ITALIC);
 		authorLabel.setFont(new Font(null, fontData[0]));
 
-		tagViewer = new TagViewer(this, SWT.NONE);
-		data = new FormData();
-		data.top = new FormAttachment(authorLabel, 10);
-		data.left = new FormAttachment(thumbnailImage, 10);
-		data.right = new FormAttachment(openButton, -10);
-		tagViewer.setLayoutData(data);
-
 		addEventListeners();
+	}
+
+	public void setDocument(Document document) {
+		if (doc != document) {
+			if (doc != null) {
+				DocumentObserver.detach(doc.getId(), this);
+			}
+			DocumentObserver.attach(document.getId(), this);
+		}
+		try {
+			doc = Application.getBll().getDocument(document.getId());
+		} catch (UnknownDocumentException e) {
+			NotifactionWindow.showError("DB error",
+					"Can't update document data");
+		}
+
+		if (editor.isShowed(doc)) {
+			setSelection(true, false);
+		} else {
+			setSelection(false, false);
+		}
+
+		if (document.getThumbnailBytes() != null) {
+			BufferedInputStream inputStreamReader = new BufferedInputStream(
+					new ByteArrayInputStream(document.getThumbnailBytes()));
+			ImageData imageData = new ImageData(inputStreamReader);
+			Image byteImage = new Image(parent.getDisplay(), imageData);
+			ImageHelper.setResizedBackground(thumbnailImage, byteImage);
+		} else {
+			ImageHelper.setResizedBackground(thumbnailImage, new Image(
+					getDisplay(), "images/unknwon.png"));
+		}
+		loadOtherCommands();
+		Metadata title = doc.getMetadata("title");
+		if (title == null) {
+			title = doc.getMetadata("Title");
+		}
+		if (title == null || title.getValue() == null) {
+			titleLabel.setText("Untitled document");
+		} else {
+			titleLabel.setText(title.getValue());
+		}
+
+		Metadata author = doc.getMetadata("author");
+		if (author == null) {
+			author = doc.getMetadata("Author");
+		}
+		if (author == null || author.getValue() == null) {
+			authorLabel.setText("Unknown author");
+		} else {
+			authorLabel.setText(author.getValue());
+		}
+
 	}
 
 	private void addEventListeners() {
 		addMouseListener(this);
-		thumbnailImage.addMouseListener(this);
+		if (thumbnailImage != null) {
+			thumbnailImage.addMouseListener(this);
+		}
 		titleLabel.addMouseListener(this);
 		authorLabel.addMouseListener(this);
-		tagViewer.addMouseListener(this);
 		openButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -147,67 +198,15 @@ public class DocumentItem extends Composite implements IDocumentChangeListener,
 
 	}
 
-	public void setDocument(Document document) {
-		if (doc != document) {
-			if (doc != null) {
-				DocumentObserver.detach(doc.getId(), this);
-			}
-			DocumentObserver.attach(document.getId(), this);
-		}
-		doc = document;
-		loadOtherCommands();
-		setSelection(editor.isShowed(doc), false);
-		if (document.getThumbnailBytes() != null) {
-			BufferedInputStream inputStreamReader = new BufferedInputStream(
-					new ByteArrayInputStream(document.getThumbnailBytes()));
-			ImageData imageData = new ImageData(inputStreamReader);
-			Image byteImage = new Image(parent.getDisplay(), imageData);
-			thumbnailImage.setImage(byteImage);
-		} else {
-			thumbnailImage.setImage(new Image(getDisplay(),
-					"images/unknown.png"));
-		}
-
-		Metadata title = document.getMetadata("title");
-		if (title == null) {
-			title = document.getMetadata("Title");
-		}
-		if (title == null || title.getValue() == null) {
-			if (document.getLocation() != null) {
-				// String[] loc =
-				// document.getLocation().split(File.separatorChar);
-				// titleLabel.setText(loc[loc.length - 1]);
-				int idx = document.getLocation().lastIndexOf(File.separator);
-				titleLabel.setText(doc.getLocation().substring(idx + 1));
-			} else {
-				titleLabel.setText("Untitled document");
-			}
-		} else {
-			titleLabel.setText(title.getValue());
-		}
-
-		Metadata author = document.getMetadata("author");
-		if (author == null) {
-			author = document.getMetadata("Author");
-		}
-		if (author == null) {
-			authorLabel.setText("Unknown author");
-		} else {
-			authorLabel.setText(author.getValue());
-		}
-
-		tagViewer.createControls(document);
-
-	}
-
 	@Override
 	public Point computeSize(int wHint, int hHint, boolean changed) {
-		return super.computeSize(150, 123, changed);
+		return super.computeSize(150, 80, changed);
+
 	}
 
 	public void setSelection(boolean selection, boolean nomore) {
+
 		if (selection) {
-			isSelected = true;
 			setBackground(selectionBackground);
 			if (doc != null) {
 				if (!editor.isShowed(getDoc())) {
@@ -217,9 +216,9 @@ public class DocumentItem extends Composite implements IDocumentChangeListener,
 			lister.setDetailsVisible(true);
 		} else {
 			if (nomore == true) {
+				editor.setHidden();
 				lister.setDetailsVisible(false);
 			}
-			isSelected = false;
 			setBackground(null);
 		}
 	}
@@ -239,7 +238,6 @@ public class DocumentItem extends Composite implements IDocumentChangeListener,
 	@Override
 	public void setBackground(Color c) {
 		super.setBackground(c);
-		tagViewer.setBackground(c);
 	}
 
 	@Override
@@ -249,7 +247,7 @@ public class DocumentItem extends Composite implements IDocumentChangeListener,
 
 	@Override
 	public void mouseDoubleClick(MouseEvent arg0) {
-		setSelection(!isSelected, true);
+		setSelection(!editor.isShowed(doc), true);
 	}
 
 	@Override
@@ -364,7 +362,12 @@ public class DocumentItem extends Composite implements IDocumentChangeListener,
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				try {
-					Application.getBll().deleteAndRemoveDocument(doc);
+					if (doc.getLocation() == null
+							|| doc.getLocation().isEmpty()) {
+						Application.getBll().removeDocument(doc.getId());
+					} else {
+						Application.getBll().deleteAndRemoveDocument(doc);
+					}
 				} catch (UnknownDocumentException e1) {
 					NotifactionWindow.showError("Error",
 							"Can't locate the document. (" + e1.getMessage()
@@ -397,6 +400,16 @@ public class DocumentItem extends Composite implements IDocumentChangeListener,
 				Program.launch(f.getParent());
 			}
 		}
+	}
+
+	@Override
+	public void dispose() {
+		System.out.println("Disposing item");
+		if (editor.isShowed(doc)) {
+			lister.setDetailsVisible(false);
+		}
+		DocumentObserver.detach(doc.getId(), this);
+		super.dispose();
 	}
 
 }

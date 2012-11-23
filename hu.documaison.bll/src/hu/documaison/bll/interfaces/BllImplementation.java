@@ -352,4 +352,29 @@ public class BllImplementation implements BllInterface {
 		FileHelper.copy(oldFile, target);
 
 	}
+
+	@Override
+	public Document changeDocumentType(Document doc, DocumentType type)
+			throws UnableToCreateException, UnknownDocumentTypeException,
+			UnknownDocumentException {
+		DalInterface dal = DalSingletonProvider.getDalImplementation();
+		Document dbDoc = getDocument(doc.getId());
+		DocumentType dbType = getDocumentType(type.getId());
+		for (DefaultMetadata dmetadata : dbType.getDefaultMetadataCollection()) {
+			Metadata docMeta = dbDoc.getMetadata(dmetadata.getName());
+			if (docMeta == null
+					|| docMeta.getMetadataType() != dmetadata.getMetadataType()) {
+				Metadata metadata = dal.createMetadata();
+				metadata.setName(dmetadata.getName());
+				metadata.setValue(dmetadata.getValue());
+				metadata.setMetadataType(dmetadata.getMetadataType());
+				metadata.setParent(dbDoc);
+				dal.updateMetadata(metadata);
+			}
+		}
+		dbDoc.setType(dbType);
+		dal.updateDocument(dbDoc);
+		return dbDoc;
+	}
+
 }

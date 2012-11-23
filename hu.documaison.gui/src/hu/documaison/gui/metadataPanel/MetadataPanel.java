@@ -41,9 +41,11 @@ public class MetadataPanel extends Composite implements IDocumentChangeListener 
 	private final Link remProp;
 	private Timer timer;
 	private TimerTask timerTask;
+	private final Composite parent;
 
 	public MetadataPanel(Composite parent, int style) {
 		super(parent, style);
+		this.parent = parent;
 		setLayout(new FormLayout());
 		addProp = new Link(this, SWT.NONE);
 		addProp.setText("<a>Add more metadata...</a>");
@@ -94,14 +96,17 @@ public class MetadataPanel extends Composite implements IDocumentChangeListener 
 		this.doc = doc;
 		createNewPropTable();
 		addProperties();
-		layout();
+		pack();
+		layout(true);
 
 	}
 
 	private void createNewPropTable() {
+
 		if (pTable != null) {
 			pTable.dispose();
 		}
+
 		pTable = new PropertyTable(this, SWT.BORDER);
 		FormData data = new FormData();
 		data.bottom = new FormAttachment(addProp, -5);
@@ -132,6 +137,7 @@ public class MetadataPanel extends Composite implements IDocumentChangeListener 
 						break;
 
 					}
+
 					lazyUpdate(doc, mtdt);
 				}
 			}
@@ -144,20 +150,26 @@ public class MetadataPanel extends Composite implements IDocumentChangeListener 
 		metadataMap.put("" + mtdt.getId(), mtdt);
 		switch (mtdt.getMetadataType()) {
 		case Date:
-			pTable.addProperty(new PTProperty(mtdt.getName(),
-					"" + mtdt.getId(), null, mtdt.getDateValue())
-					.setEditor(new PTDateEditor()));
+			if (!pTable.getProperties().containsKey(mtdt.getName())) {
+				pTable.addProperty(new PTProperty(mtdt.getName(), ""
+						+ mtdt.getId(), null, mtdt.getDateValue())
+						.setEditor(new PTDateEditor()));
+			}
 			break;
 		case Integer:
-			pTable.addProperty(new PTProperty(mtdt.getName(),
-					"" + mtdt.getId(), null, mtdt.getIntValue())
-					.setEditor(new PTIntegerEditor()));
+			if (!pTable.getProperties().containsKey(mtdt.getName())) {
+				pTable.addProperty(new PTProperty(mtdt.getName(), ""
+						+ mtdt.getId(), null, mtdt.getIntValue())
+						.setEditor(new PTIntegerEditor()));
+			}
 			break;
 		case Text:
 		default:
-			pTable.addProperty(new PTProperty(mtdt.getName(),
-					"" + mtdt.getId(), null, mtdt.getValue())
-					.setEditor(new PTStringEditor()));
+			if (!pTable.getProperties().containsKey(mtdt.getName())) {
+				pTable.addProperty(new PTProperty(mtdt.getName(), ""
+						+ mtdt.getId(), null, mtdt.getValue())
+						.setEditor(new PTStringEditor()));
+			}
 			break;
 
 		}
@@ -167,10 +179,17 @@ public class MetadataPanel extends Composite implements IDocumentChangeListener 
 	public void documentChanged() {
 		createNewPropTable();
 		addProperties();
-		layout();
+		pack();
+		parent.layout();
 	}
 
 	private void addProperties() {
+		try {
+			doc = Application.getBll().getDocument(doc.getId());
+		} catch (UnknownDocumentException e) {
+			NotifactionWindow.showError("DB error",
+					"Failed to update the document from db.");
+		}
 		String loc = doc.getLocation();
 		if (loc != null) {
 			if (DataHelper.isURL(loc)) {
@@ -201,11 +220,12 @@ public class MetadataPanel extends Composite implements IDocumentChangeListener 
 
 				@Override
 				public void run() {
+
 					Application.getBll().updateMetadata(mtdt);
-					Application.getBll().updateDocument(doc);
 					Display.getDefault().asyncExec(new Runnable() {
 						@Override
 						public void run() {
+							System.out.println("Runned");
 							DocumentObserver.notify(doc.getId(),
 									MetadataPanel.this);
 						}
@@ -214,6 +234,14 @@ public class MetadataPanel extends Composite implements IDocumentChangeListener 
 				}
 			};
 			timer.schedule(timerTask, 300);
+			System.out.println("Scheduled");
 		}
 	}
+
+	@Override
+	public void dispose() {
+		DocumentObserver.detach(doc.getId(), this);
+		super.dispose();
+	}
+
 }

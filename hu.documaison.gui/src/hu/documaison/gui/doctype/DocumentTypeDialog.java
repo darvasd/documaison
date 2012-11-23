@@ -3,12 +3,11 @@ package hu.documaison.gui.doctype;
 import hu.documaison.Application;
 import hu.documaison.data.entities.DocumentType;
 import hu.documaison.data.exceptions.UnableToCreateException;
+import hu.documaison.gui.ImageHelper;
 import hu.documaison.gui.NotifactionWindow;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 
 import org.eclipse.swt.SWT;
@@ -95,7 +94,12 @@ public class DocumentTypeDialog {
 			Image byteImage = new Image(parent.getDisplay(), imageData);
 			thumbnailImage.setImage(byteImage);
 		} else {
-			storeNewThumbnail("images/unknown.png");
+			try {
+				storeNewThumbnail("images/unknown.png");
+			} catch (IOException e) {
+				NotifactionWindow.showError("Error",
+						"Can't load default thumbnail");
+			}
 		}
 		gridData = new GridData();
 		gridData.verticalSpan = 2;
@@ -162,7 +166,12 @@ public class DocumentTypeDialog {
 						"*.bmp", "*.gif" });
 				String path = dialog.open();
 				if (path != null) {
-					storeNewThumbnail(path);
+					try {
+						storeNewThumbnail(path);
+					} catch (IOException e1) {
+						NotifactionWindow.showError("I/O error",
+								e1.getMessage());
+					}
 				}
 				validateInputs();
 			}
@@ -183,28 +192,16 @@ public class DocumentTypeDialog {
 		});
 	}
 
-	private void storeNewThumbnail(String path) {
-		File thumbFile = new File(path);
-		if (thumbFile.exists() == false || thumbFile.canRead() == false) {
-			NotifactionWindow
-					.showError("File error",
-							"The selected file is not existing or DocuMaison has no permission to read it.");
-		} else {
-			try {
-				thumbBytes = new byte[(int) thumbFile.length()];
-				FileInputStream fis = new FileInputStream(thumbFile);
-				fis.read(thumbBytes);
-				fis.close();
-				BufferedInputStream inputStreamReader = new BufferedInputStream(
-						new ByteArrayInputStream(thumbBytes));
-				ImageData imageData = new ImageData(inputStreamReader);
-				Image byteImage = new Image(null, imageData);
-				thumbnailImage.setImage(byteImage);
-			} catch (IOException ex) {
-				NotifactionWindow.showError("File error",
-						"Failed to load the file");
-			}
-		}
+	private byte[] storeNewThumbnail(String path) throws IOException {
+
+		byte[] thumbBytes = ImageHelper.getImageBytes(path);
+		BufferedInputStream inputStreamReader = new BufferedInputStream(
+				new ByteArrayInputStream(thumbBytes));
+		ImageData imageData = new ImageData(inputStreamReader);
+		Image byteImage = new Image(null, imageData);
+		thumbnailImage.setImage(byteImage);
+		return thumbBytes;
+
 	}
 
 	private void validateInputs() {

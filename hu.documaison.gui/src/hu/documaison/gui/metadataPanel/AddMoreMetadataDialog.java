@@ -69,6 +69,7 @@ public class AddMoreMetadataDialog {
 			MetadataType metadataType = values[i];
 			typeCombo.add(metadataType + "");
 		}
+		typeCombo.select(0);
 		gridData = new GridData(SWT.FILL, SWT.FILL, true, false);
 		gridData.widthHint = 300;
 		typeCombo.setLayoutData(gridData);
@@ -199,9 +200,9 @@ public class AddMoreMetadataDialog {
 							"Can't handle the selected metadata type");
 				}
 				Application.getBll().updateMetadata(metadata);
-				// Application.getBll().updateDocument(parentDoc);
 				dialog.dispose();
 			}
 		});
+
 	}
 }
