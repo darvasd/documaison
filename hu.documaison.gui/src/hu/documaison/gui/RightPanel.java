@@ -41,17 +41,7 @@ public class RightPanel extends Composite {
 		// data.height = 123;
 		// doc2.setLayoutData(data);
 
-		AdvancedSearchPanel asp = new AdvancedSearchPanel(multiPanel, SWT.NONE);
-		multiPanel.addSheet(asp, "advancedSearch");
 
-		asp.addHomeSelectionListener(new SelectionAdapter() {
-
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				ViewManager.getDefault().showView("documents");
-			}
-
-		});
 
 		SettingsPanel sp = new SettingsPanel(multiPanel, SWT.None);
 		multiPanel.addSheet(sp, "settings");
@@ -77,5 +67,17 @@ public class RightPanel extends Composite {
 		DocumentLister lister = new DocumentLister(multiPanel, SWT.NONE);
 		multiPanel.addSheet(lister, "documents");
 
+		AdvancedSearchPanel asp = new AdvancedSearchPanel(multiPanel, SWT.NONE);
+		multiPanel.addSheet(asp, "advancedSearch");
+		asp.addHomeSelectionListener(new SelectionAdapter() {
+			
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				ViewManager.getDefault().showView("documents");
+			}
+			
+		});
+		
+		multiPanel.selectSheet(lister);
 	}
 }

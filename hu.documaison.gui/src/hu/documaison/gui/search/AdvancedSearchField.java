@@ -44,14 +44,12 @@ public class AdvancedSearchField extends Composite {
 
 		fieldName = new Combo(this, SWT.READ_ONLY | SWT.DROP_DOWN);
 		int count = loadSearchFields(Application.getBll().getAllMetadataKeys());
-		if (count == 0) {
-			NotifactionWindow.showError("Metadata error",
-					"No metadata entries found in the database.");
-		} else {
+		SearchField selectedSF = null;
+		if (count > 0) {
 			fieldName.select(0);
+			selectedSF = searchFields.get(0);
 		}
 
-		SearchField selectedSF = searchFields.get(0);
 		FormData data = new FormData();
 		data.top = new FormAttachment(0, 3);
 		data.bottom = new FormAttachment(100, -3);
@@ -86,8 +84,9 @@ public class AdvancedSearchField extends Composite {
 		data.right = new FormAttachment(addBtn, 0);
 		removeBtn.setLayoutData(data);
 
+		if (selectedSF != null ){
 		loadInputFields(false, selectedSF.getType());
-
+		}
 		createEventHandlers();
 	}
 

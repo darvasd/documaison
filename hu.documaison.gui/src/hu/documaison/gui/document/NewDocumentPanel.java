@@ -149,8 +149,8 @@ public class NewDocumentPanel extends InnerPanel {
 					MetadataInputPanel panel = (MetadataInputPanel) (ViewManager
 							.getDefault().showView("metaedit",
 							NewDocumentPanel.this));
-					panel.setDocument(doc);
 					Application.getBll().updateDocument(doc);
+					panel.setDocument(doc);
 				} catch (UnknownDocumentTypeException e1) {
 					NotifactionWindow.showError("Unknown type",
 							"Failed to load the definition of the selected type. ("

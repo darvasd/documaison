@@ -71,7 +71,7 @@ public class DocumentItem extends Composite implements IDocumentChangeListener,
 	}
 
 	private void createComposites() {
-		thumbnailImage = new Canvas(this, SWT.NO_BACKGROUND);
+		thumbnailImage = new Canvas(this, SWT.NONE);
 		FormData data = new FormData();
 		data.top = new FormAttachment(0, 10);
 		data.left = new FormAttachment(0, 30);
@@ -152,7 +152,7 @@ public class DocumentItem extends Composite implements IDocumentChangeListener,
 			ImageHelper.setResizedBackground(thumbnailImage, byteImage);
 		} else {
 			ImageHelper.setResizedBackground(thumbnailImage, new Image(
-					getDisplay(), "images/unknwon.png"));
+					getDisplay(), "images/unknown.png"));
 		}
 		loadOtherCommands();
 		Metadata title = doc.getMetadata("title");
@@ -237,6 +237,9 @@ public class DocumentItem extends Composite implements IDocumentChangeListener,
 
 	@Override
 	public void setBackground(Color c) {
+		titleLabel.setBackground(c);
+		authorLabel.setBackground(c);
+		thumbnailImage.setBackground(c);
 		super.setBackground(c);
 	}
 

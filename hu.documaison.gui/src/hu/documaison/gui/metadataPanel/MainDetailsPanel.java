@@ -79,12 +79,17 @@ public class MainDetailsPanel extends Composite {
 		data.left = new FormAttachment(typeCombo, 10);
 		commentLink.setLayoutData(data);
 
-		thumbnailImage = new Canvas(this, SWT.NO_BACKGROUND);
+		thumbnailImage = new Canvas(this, SWT.NONE);
+		thumbnailImage.setBackground(getBackground());
+		if (doc.getThumbnailBytes() != null) {
 		BufferedInputStream inputStreamReader = new BufferedInputStream(
 				new ByteArrayInputStream(doc.getThumbnailBytes()));
 		ImageData imageData = new ImageData(inputStreamReader);
 		Image byteImage = new Image(parent.getDisplay(), imageData);
 		ImageHelper.setResizedBackground(thumbnailImage, byteImage);
+		} else {
+			ImageHelper.setResizedBackground(thumbnailImage, new Image(Display.getDefault(), "images/unknown.png"));
+		}
 		data = new FormData();
 		data.left = new FormAttachment(typeLabel, 5);
 		data.top = new FormAttachment(typeCombo, 5);

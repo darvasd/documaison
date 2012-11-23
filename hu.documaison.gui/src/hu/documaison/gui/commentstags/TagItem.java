@@ -18,11 +18,13 @@ public class TagItem extends Composite implements MouseListener {
 	private boolean selected = false;
 	private final Color white = new Color(null, 255, 255, 255);
 	private final Color selectionBackground = new Color(null, 43, 89, 190);
+	private final Color unselectedBackground;
 	private final Image image = new Image(getDisplay(), "images/tagIcon.png");
 	private final Label textLabel;
 	private final TagPanel parentTagPanel;
 	private final int index;
 	private final Tag tag;
+	private Label imageLabel;
 
 	public TagItem(Composite parent, int style, int index, Tag tag,
 			TagPanel parentTagPanel) {
@@ -32,7 +34,7 @@ public class TagItem extends Composite implements MouseListener {
 		this.parentTagPanel = parentTagPanel;
 		FormLayout layout = new FormLayout();
 		setLayout(layout);
-		Label imageLabel = new Label(this, SWT.None);
+		imageLabel = new Label(this, SWT.None);
 		imageLabel.setImage(image);
 		FormData data = new FormData();
 		data.left = new FormAttachment(0, 15);
@@ -43,6 +45,7 @@ public class TagItem extends Composite implements MouseListener {
 		if (rgb == null) {
 			rgb = ColorMap.get().getRGB("Black");
 		}
+		unselectedBackground = getBackground();
 		textLabel
 				.setForeground(new Color(getDisplay(), rgb[0], rgb[1], rgb[2]));
 		data = new FormData();
@@ -64,7 +67,7 @@ public class TagItem extends Composite implements MouseListener {
 			textLabel.setForeground(white);
 			parentTagPanel.addToSelection(this, enableNotification);
 		} else {
-			setBackground(null);
+			setBackground(unselectedBackground);
 			int rgb[] = ColorMap.get().getRGB(tag.getColorName());
 			if (rgb == null) {
 				rgb = ColorMap.get().getRGB("Black");
@@ -107,5 +110,14 @@ public class TagItem extends Composite implements MouseListener {
 	public Tag getTag() {
 		return tag;
 	}
+
+	@Override
+	public void setBackground(Color color) {
+		imageLabel.setBackground(color);
+		textLabel.setBackground(color);
+		super.setBackground(color);
+	}
+	
+	
 
 }

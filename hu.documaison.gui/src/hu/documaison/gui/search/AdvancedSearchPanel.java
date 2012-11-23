@@ -189,7 +189,6 @@ public class AdvancedSearchPanel extends InnerPanel {
 	@Override
 	public void showed() {
 		if (Application.getBll().getAllMetadataKeys().size() == 0) {
-			NotifactionWindow.showError("Error", "The database is empty.");
 			ViewManager.getDefault().showView("documents");
 		} else {
 			for (int i = searchFields.size() - 1; i > 0; i--) {

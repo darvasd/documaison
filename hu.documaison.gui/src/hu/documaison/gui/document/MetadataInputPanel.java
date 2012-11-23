@@ -57,6 +57,7 @@ public class MetadataInputPanel extends InnerPanel {
 		saveBtn.addListener(SWT.Selection, new Listener() {
 			@Override
 			public void handleEvent(Event e) {
+				DocumentObserver.notifyLister();
 				ViewManager.getDefault().showView("documents");
 			}
 		});
