@@ -5,6 +5,7 @@ import hu.documaison.data.entities.Document;
 import hu.documaison.data.entities.DocumentType;
 import hu.documaison.data.exceptions.UnableToCreateException;
 import hu.documaison.data.exceptions.UnknownDocumentTypeException;
+import hu.documaison.data.helper.DataHelper;
 import hu.documaison.gui.InnerPanel;
 import hu.documaison.gui.NotificationWindow;
 import hu.documaison.gui.ViewManager;
@@ -120,6 +121,7 @@ public class NewDocumentPanel extends InnerPanel {
 		cancelBtn.setLayoutData(data);
 
 		addEventListeners();
+		
 
 	}
 
@@ -139,7 +141,7 @@ public class NewDocumentPanel extends InnerPanel {
 			}
 		});
 
-		locText.addListener(SWT.Verify, new Listener() {
+		locText.addListener(SWT.Modify, new Listener() {
 			@Override
 			public void handleEvent(Event e) {
 				validate();
@@ -216,7 +218,7 @@ public class NewDocumentPanel extends InnerPanel {
 		nextBtn.setEnabled(false);
 		if (locText.getText().isEmpty() == false) {
 			File f = new File(locText.getText());
-			if (f.exists() || locText.getText().startsWith("http://")) {
+			if (f.exists() || DataHelper.isURL(locText.getText())) {
 				if (typeCombo.getSelectionIndex() != -1) {
 					nextBtn.setEnabled(true);
 				}

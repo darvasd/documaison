@@ -20,7 +20,6 @@ import org.eclipse.swt.widgets.Listener;
 public class MetadataInputPanel extends InnerPanel {
 
 	private Document documentToEdit = null;
-	private MetadataPanel mtdtPanel;
 	private Label infoLabel;
 	private MetadataEditors editors;
 
@@ -80,13 +79,6 @@ public class MetadataInputPanel extends InnerPanel {
 
 	}
 
-	@Override
-	public void showed() {
-		if (documentToEdit != null) {
-			mtdtPanel.setDocument(documentToEdit);
-		}
-		super.showed();
-	}
 
 	public void setDocument(Document doc) {
 		documentToEdit = doc;
