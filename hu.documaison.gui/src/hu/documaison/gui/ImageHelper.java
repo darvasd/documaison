@@ -14,6 +14,7 @@ public class ImageHelper {
 
 	public static void setResizedBackground(final Canvas c, final Image image) {
 		c.setData(image);
+		c.redraw();
 
 		if (c.getListeners(SWT.Paint).length == 0) {
 			c.addPaintListener(new PaintListener() {

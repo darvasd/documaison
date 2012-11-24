@@ -250,11 +250,11 @@ public class DocumentItem extends Composite implements IDocumentChangeListener,
 
 	@Override
 	public void mouseDoubleClick(MouseEvent arg0) {
-		setSelection(!editor.isShowed(doc), true);
 	}
 
 	@Override
 	public void mouseDown(MouseEvent arg0) {
+		setSelection(!editor.isShowed(doc), true);
 	}
 
 	@Override

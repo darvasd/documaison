@@ -17,6 +17,7 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
@@ -34,7 +35,7 @@ public class DocumentTypeDialog {
 	private Shell dialog;
 	private Text extText;
 	private Button browseThumbnail;
-	private Label thumbnailImage;
+	private Canvas thumbnailImage;
 	private DocumentType previousType;
 	private byte[] thumbBytes;
 
@@ -84,15 +85,15 @@ public class DocumentTypeDialog {
 		// Thumbnail
 		Label thumbnailLabel = new Label(composite, SWT.NONE);
 		thumbnailLabel.setText("Default thumbnail:");
-		thumbnailImage = new Label(composite, SWT.BORDER);
-		if (previousType != null) {
+		thumbnailImage = new Canvas(composite, SWT.NONE);
+		if (previousType != null && previousType.getDefaultThumbnailBytes() != null) {
 			thumbBytes = previousType.getDefaultThumbnailBytes();
 			BufferedInputStream inputStreamReader = new BufferedInputStream(
 					new ByteArrayInputStream(
 							previousType.getDefaultThumbnailBytes()));
 			ImageData imageData = new ImageData(inputStreamReader);
 			Image byteImage = new Image(parent.getDisplay(), imageData);
-			thumbnailImage.setImage(byteImage);
+			ImageHelper.setResizedBackground(thumbnailImage, byteImage);
 		} else {
 			try {
 				storeNewThumbnail("images/unknown.png");
@@ -194,12 +195,12 @@ public class DocumentTypeDialog {
 
 	private byte[] storeNewThumbnail(String path) throws IOException {
 
-		byte[] thumbBytes = ImageHelper.getImageBytes(path);
+		thumbBytes = ImageHelper.getImageBytes(path);
 		BufferedInputStream inputStreamReader = new BufferedInputStream(
 				new ByteArrayInputStream(thumbBytes));
 		ImageData imageData = new ImageData(inputStreamReader);
 		Image byteImage = new Image(null, imageData);
-		thumbnailImage.setImage(byteImage);
+		ImageHelper.setResizedBackground(thumbnailImage, byteImage);
 		return thumbBytes;
 
 	}

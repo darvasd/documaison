@@ -3,6 +3,7 @@ package hu.documaison.gui.commentstags;
 import hu.documaison.Application;
 import hu.documaison.data.entities.Document;
 import hu.documaison.data.entities.Tag;
+import hu.documaison.data.exceptions.InvalidParameterException;
 import hu.documaison.data.exceptions.UnknownDocumentException;
 import hu.documaison.data.exceptions.UnknownTagException;
 import hu.documaison.gui.NotifactionWindow;
@@ -48,11 +49,22 @@ public class TagViewer extends Composite implements SelectionListener,
 
 	@Override
 	public void widgetSelected(SelectionEvent arg0) {
-
+		if (arg0.getSource() instanceof Link) {
+			Link link  = (Link)arg0.getSource();
+			if (link.getData() != null) {
+				Tag tag =(Tag)link.getData();
+				try {
+					Application.getBll().removeTagFromDocument(tag, doc);
+					Application.getBll().updateDocument(doc);
+					DocumentObserver.notify(doc.getId(), null);
+				} catch (InvalidParameterException e) {
+					NotifactionWindow.showError("Error", "Failed to remove tag from document.");
+				}
+			}
+		}
 	}
 
 	public void createControls(final Document doc) {
-		System.out.println(getBounds().width);
 		if (this.doc != doc) {
 			if (this.doc != null) {
 				DocumentObserver.detach(this.doc.getId(), this);
