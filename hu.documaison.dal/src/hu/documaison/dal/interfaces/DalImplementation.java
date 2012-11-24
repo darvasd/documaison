@@ -990,17 +990,8 @@ class DalImplementation implements DalInterface {
 
 			// TODO: review
 			Where<Metadata, Integer> where = qbMD.where();
-			Boolean notFirst = false;
-			for (Expression expr : sexpr.getExpressions()) {
-				// Expression-ök összefûzése
-				if (notFirst) {
-					if (sexpr.getBoolOperator() == BoolOperator.or) {
-						where.or();
-					} else {
-						where.and();
-					}
-				}
 
+			for (Expression expr : sexpr.getExpressions()) {
 				where.eq(AbstractMetadata.NAME, expr.getMetadataName());
 				switch (expr.getOperator()) {
 				case eq:
@@ -1041,10 +1032,15 @@ class DalImplementation implements DalInterface {
 				default:
 					break;
 				}
-
-				notFirst = true;
 			}
-
+			
+			// add operator
+			if (sexpr.getBoolOperator() == BoolOperator.or) {
+				where.or(sexpr.getExpressions().size());
+			} else {
+				where.and(sexpr.getExpressions().size());
+			}
+			
 			System.out.println("Search for: " + where.getStatement());
 			// TODO: delete
 			List<Document> ret = dao.query(qb.prepare());
