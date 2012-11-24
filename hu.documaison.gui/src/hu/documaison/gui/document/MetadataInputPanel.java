@@ -3,7 +3,6 @@ package hu.documaison.gui.document;
 import hu.documaison.data.entities.Document;
 import hu.documaison.gui.InnerPanel;
 import hu.documaison.gui.ViewManager;
-import hu.documaison.gui.metadataPanel.MainDetailsPanel;
 import hu.documaison.gui.metadataPanel.MetadataEditors;
 import hu.documaison.gui.metadataPanel.MetadataPanel;
 
@@ -21,7 +20,6 @@ public class MetadataInputPanel extends InnerPanel {
 	private Document documentToEdit = null;
 	private MetadataPanel mtdtPanel;
 	private Label infoLabel;
-	private MainDetailsPanel mainDetails;
 	private MetadataEditors editors;
 
 	public MetadataInputPanel(Composite parent, int style) {

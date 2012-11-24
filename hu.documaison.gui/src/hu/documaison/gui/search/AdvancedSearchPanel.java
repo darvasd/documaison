@@ -4,7 +4,6 @@ import hu.documaison.Application;
 import hu.documaison.data.search.BoolOperator;
 import hu.documaison.data.search.SearchExpression;
 import hu.documaison.gui.InnerPanel;
-import hu.documaison.gui.NotificationWindow;
 import hu.documaison.gui.ViewManager;
 import hu.documaison.gui.document.DocumentLister;
 

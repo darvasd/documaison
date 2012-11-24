@@ -1,6 +1,5 @@
 package hu.documaison.gui;
 
-import javax.management.NotificationEmitter;
 
 import hu.documaison.Application;
 import hu.documaison.data.exceptions.InvalidFolderException;
