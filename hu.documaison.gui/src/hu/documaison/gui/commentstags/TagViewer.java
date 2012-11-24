@@ -6,7 +6,7 @@ import hu.documaison.data.entities.Tag;
 import hu.documaison.data.exceptions.InvalidParameterException;
 import hu.documaison.data.exceptions.UnknownDocumentException;
 import hu.documaison.data.exceptions.UnknownTagException;
-import hu.documaison.gui.NotifactionWindow;
+import hu.documaison.gui.NotificationWindow;
 import hu.documaison.gui.document.DocumentObserver;
 import hu.documaison.gui.document.IDocumentChangeListener;
 
@@ -58,7 +58,7 @@ public class TagViewer extends Composite implements SelectionListener,
 					Application.getBll().updateDocument(doc);
 					DocumentObserver.notify(doc.getId(), null);
 				} catch (InvalidParameterException e) {
-					NotifactionWindow.showError("Error", "Failed to remove tag from document.");
+					NotificationWindow.showError("Error", "Failed to remove tag from document.");
 				}
 			}
 		}
@@ -76,7 +76,7 @@ public class TagViewer extends Composite implements SelectionListener,
 		try {
 			updatedDoc = Application.getBll().getDocument(doc.getId());
 		} catch (UnknownDocumentException e1) {
-			NotifactionWindow.showError("Database error",
+			NotificationWindow.showError("Database error",
 					"Failed to update the document from the database.");
 		}
 
@@ -95,7 +95,7 @@ public class TagViewer extends Composite implements SelectionListener,
 				try {
 					tag = Application.getBll().getTag(tag.getId());
 				} catch (UnknownTagException e1) {
-					NotifactionWindow.showError("Database error",
+					NotificationWindow.showError("Database error",
 							"Failed to update tag from database.");
 				}
 				Link link = new Link(this, SWT.NO_SCROLL);

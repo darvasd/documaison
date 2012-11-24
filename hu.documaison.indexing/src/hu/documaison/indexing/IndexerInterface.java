@@ -6,4 +6,8 @@ public interface IndexerInterface {
 	public void refresh();
 
 	public void setDispatcher(IndexerInterceptorDispatcher dispatcher);
+	
+	public String getIndexingPath();
+	
+	public String getComputerId();
 }

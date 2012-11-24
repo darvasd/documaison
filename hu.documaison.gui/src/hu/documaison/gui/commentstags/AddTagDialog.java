@@ -7,7 +7,7 @@ import hu.documaison.data.exceptions.InvalidParameterException;
 import hu.documaison.data.exceptions.UnableToCreateException;
 import hu.documaison.data.exceptions.UnknownDocumentException;
 import hu.documaison.data.exceptions.UnknownTagException;
-import hu.documaison.gui.NotifactionWindow;
+import hu.documaison.gui.NotificationWindow;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -42,7 +42,7 @@ public class AddTagDialog {
 			doc = Application.getBll().getDocument(document.getId());
 		} catch (UnknownDocumentException e) {
 			doc = document;
-			NotifactionWindow.showError("Database error",
+			NotificationWindow.showError("Database error",
 					"Failed to update the document from the database.");
 		}
 		dialog = new Shell(parent, SWT.APPLICATION_MODAL | SWT.BORDER
@@ -204,15 +204,15 @@ public class AddTagDialog {
 						TagPanel.refresh();
 					}
 				} catch (UnableToCreateException e1) {
-					NotifactionWindow.showError("Database error",
+					NotificationWindow.showError("Database error",
 							"Failed to save the tag due to an error in the database. ("
 									+ e1.getMessage() + ")");
 				} catch (InvalidParameterException e1) {
-					NotifactionWindow.showError("Parameter error",
+					NotificationWindow.showError("Parameter error",
 							"Can't add the selected tag to the document. ("
 									+ e1.getMessage() + ")");
 				} catch (UnknownTagException e1) {
-					NotifactionWindow
+					NotificationWindow
 							.showError("Database error",
 									"Unable to locate the selected tag in the database.");
 				}

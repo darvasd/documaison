@@ -5,7 +5,7 @@ import hu.documaison.data.entities.DefaultMetadata;
 import hu.documaison.data.entities.DocumentType;
 import hu.documaison.data.exceptions.UnknownDocumentTypeException;
 import hu.documaison.gui.InnerPanel;
-import hu.documaison.gui.NotifactionWindow;
+import hu.documaison.gui.NotificationWindow;
 import hu.documaison.gui.ViewManager;
 
 import java.util.Collection;
@@ -191,7 +191,7 @@ public class DocTypeEditor extends InnerPanel {
 					tree.redraw();
 					item.setExpanded(true);
 				} catch (UnknownDocumentTypeException e1) {
-					NotifactionWindow
+					NotificationWindow
 							.showError("Unknwon document type",
 									"Failed to load the document type from the database.");
 				}
@@ -227,12 +227,12 @@ public class DocTypeEditor extends InnerPanel {
 						tree.redraw();
 						item.setExpanded(true);
 					} catch (UnknownDocumentTypeException e1) {
-						NotifactionWindow
+						NotificationWindow
 								.showError("Unknwon document type",
 										"Failed to load the document type from the database.");
 					}
 				} else {
-					NotifactionWindow
+					NotificationWindow
 							.showError("Error",
 									"Failed to load the metadata object from database.");
 				}

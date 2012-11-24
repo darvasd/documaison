@@ -5,7 +5,7 @@ import hu.documaison.data.entities.Document;
 import hu.documaison.data.search.SearchExpression;
 import hu.documaison.gui.ITagSelectionChangeListener;
 import hu.documaison.gui.InnerPanel;
-import hu.documaison.gui.NotifactionWindow;
+import hu.documaison.gui.NotificationWindow;
 import hu.documaison.gui.commentstags.TagPanel;
 import hu.documaison.gui.metadataPanel.MetadataEditors;
 
@@ -178,7 +178,7 @@ public class DocumentLister extends InnerPanel implements
 				.searchDocumentsFreeText(freetext));
 
 		if (freetext.equalsIgnoreCase("tüptürüpp")) {
-			NotifactionWindow.showError("Easter egg", "Cipciripp");
+			NotificationWindow.showError("Easter egg", "Cipciripp");
 		}
 
 	}

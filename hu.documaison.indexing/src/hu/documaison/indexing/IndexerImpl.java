@@ -231,4 +231,14 @@ class IndexerImpl implements IndexerInterface {
 		this.dispatcher = dispatcher;
 	}
 
+	@Override
+	public String getIndexingPath() {
+		return folder;
+	}
+
+	@Override
+	public String getComputerId() {
+		return currentComputerId;
+	}
+
 }

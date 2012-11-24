@@ -1,7 +1,10 @@
 package hu.documaison.gui.settings;
 
+import hu.documaison.Application;
 import hu.documaison.gui.InnerPanel;
-import hu.documaison.gui.NotifactionWindow;
+import hu.documaison.gui.NotificationWindow;
+import hu.documaison.indexing.AutomaticIndexing;
+import hu.documaison.indexing.IndexerFactory;
 import hu.documaison.settings.SettingsData;
 import hu.documaison.settings.SettingsManager;
 
@@ -22,7 +25,6 @@ public class SettingsPanel extends InnerPanel{
 	private Button addFolderBtn;
 	private Button removeFolderBtn;
 	private List indexingFolders;
-	private Button evernoteCheck;
 	private Button browseBtn;
 	private Text dbText;
 	private Button indexingCheck;
@@ -38,11 +40,11 @@ public class SettingsPanel extends InnerPanel{
 		try {
 			settings = SettingsManager.getCurrentSettings();
 		} catch (Exception e) {
-			NotifactionWindow.showError("File error", "Failed to load the application's settings.");
+			NotificationWindow.showError("File error", "Failed to load the application's settings.");
 		}
 		
 		indexingCheck = new Button(this, SWT.CHECK);
-		indexingCheck.setText("Enable automatic indexing of documents");
+		indexingCheck.setText("Enable automatic indexing of documents. Manual refresh can be done from the File menu anytime.");
 		indexingCheck.setSelection(settings.isIndexingEnabled());
 		FormData data = new FormData();
 		data.top = new FormAttachment(titleLabel, 20);
@@ -84,19 +86,11 @@ public class SettingsPanel extends InnerPanel{
 		data.right = new FormAttachment(100, -10);
 		indexingFolders.setLayoutData(data);
 		
-		evernoteCheck = new Button(this, SWT.CHECK);
-		evernoteCheck.setText("Monitor Evernote documents");
-		evernoteCheck.setSelection(settings.isEvernoteIndexingEnabled());
-		data = new FormData();
-		data.top = new FormAttachment(indexingFolders, 20);
-		data.left = new FormAttachment(0, 10);
-		evernoteCheck.setLayoutData(data);
-		
 		Label dbLabel = new Label(this, SWT.None);
 		dbLabel.setText("Document database file location:");
 		data = new FormData();
 		data.left = new FormAttachment(0, 10);
-		data.top = new FormAttachment(evernoteCheck, 50);
+		data.top = new FormAttachment(indexingFolders, 50);
 		dbLabel.setLayoutData(data);
 		
 		browseBtn = new Button(this, SWT.None);
@@ -127,7 +121,7 @@ public class SettingsPanel extends InnerPanel{
 					SettingsManager.storeSettings(settings);
 				} catch (Exception ex) {
 					indexingCheck.setSelection(false);
-					NotifactionWindow.showError("Error", "Failed to modify application settings.");
+					NotificationWindow.showError("Error", "Failed to modify application settings.");
 				}
 				if (indexingCheck.getSelection()) {
 					setIndexing(true);
@@ -151,7 +145,7 @@ public class SettingsPanel extends InnerPanel{
 						SettingsManager.storeSettings(settings);
 					} catch (Exception e1) {
 						dbText.setText(oldLoc);
-						NotifactionWindow.showError("Error", "Failed to modify application settings.");
+						NotificationWindow.showError("Error", "Failed to modify application settings.");
 					}
 				}
 			}
@@ -185,31 +179,15 @@ public class SettingsPanel extends InnerPanel{
 				indexingFolders.setSelection(-1);
 			}
 		});
-		evernoteCheck.addListener(SWT.Selection, new Listener() {
-			public void handleEvent(Event e) {
-				SettingsData settings = null;
-				try {
-					settings = SettingsManager.getCurrentSettings();
-					settings.setEvernoteIndexingEnabled(evernoteCheck.getSelection());
-					try {
-						SettingsManager.storeSettings(settings);
-					} catch (Exception e1) {
-						evernoteCheck.setSelection(!evernoteCheck.getSelection());
-						NotifactionWindow.showError("Error", "Failed to modify application settings.");
-					}
-				} catch (Exception e2) {
-					NotifactionWindow.showError("File error", "Failed to load application settings.");
-				}
-			}
-		});
+
 	}
 	
 	private void setIndexing(boolean enabled) {		
-		indexingFolders.setEnabled(enabled);
-		addFolderBtn.setEnabled(enabled);
-		removeFolderBtn.setEnabled(false);
-		evernoteCheck.setEnabled(enabled);
-		indexingLabel.setEnabled(enabled);
+		if (enabled) {
+			AutomaticIndexing.enableAutomaticIndexing();
+		} else {
+			AutomaticIndexing.disableAutomaticIndexing();
+		}
 	}
 	
 	private void addFolder(String path) {
@@ -220,8 +198,9 @@ public class SettingsPanel extends InnerPanel{
 				data.getIndexedFolders().add(path);
 			}
 			SettingsManager.storeSettings(data);
+			AutomaticIndexing.getIndexers().addIndexer(IndexerFactory.getIndexing(path, data.getComputerId(), Application.getBll()));
 		} catch (Exception e) {
-			NotifactionWindow.showError("Error", "Failed to modify application settings.");
+			NotificationWindow.showError("Error", "Failed to modify application settings.");
 		}
 	}
 	
@@ -233,8 +212,9 @@ public class SettingsPanel extends InnerPanel{
 			}
 			SettingsManager.storeSettings(data);
 			indexingFolders.remove(path);
+			AutomaticIndexing.getIndexers().removeIndexer(path, data.getComputerId());
 		} catch (Exception e) {
-			NotifactionWindow.showError("Error", "Failed to modify application settings.");
+			NotificationWindow.showError("Error", "Failed to modify application settings.");
 		}
 	}
 

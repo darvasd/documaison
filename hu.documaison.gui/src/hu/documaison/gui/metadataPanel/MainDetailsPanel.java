@@ -4,7 +4,7 @@ import hu.documaison.Application;
 import hu.documaison.data.entities.Document;
 import hu.documaison.data.entities.DocumentType;
 import hu.documaison.gui.ImageHelper;
-import hu.documaison.gui.NotifactionWindow;
+import hu.documaison.gui.NotificationWindow;
 import hu.documaison.gui.commentstags.CommentDialog;
 import hu.documaison.gui.commentstags.TagViewer;
 import hu.documaison.gui.document.DocumentObserver;
@@ -150,7 +150,7 @@ public class MainDetailsPanel extends Composite {
 						Application.getBll().updateDocument(document);
 						DocumentObserver.notify(document.getId(), null);
 					} catch (IOException e) {
-						NotifactionWindow.showError("Error",
+						NotificationWindow.showError("Error",
 								"Failed to load resource:" + e.getMessage());
 					}
 				}
@@ -165,7 +165,7 @@ public class MainDetailsPanel extends Composite {
 					Application.getBll().changeDocumentType(document,
 							doctypemap.get(typeCombo.getSelectionIndex()));
 				} catch (Exception e1) {
-					NotifactionWindow.showError(
+					NotificationWindow.showError(
 							"DB error",
 							"Failed to change document type ("
 									+ e1.getMessage() + ")");

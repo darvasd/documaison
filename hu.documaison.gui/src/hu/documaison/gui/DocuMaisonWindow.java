@@ -1,7 +1,17 @@
 package hu.documaison.gui;
 
+import javax.management.NotificationEmitter;
+
+import hu.documaison.Application;
+import hu.documaison.data.exceptions.InvalidFolderException;
+import hu.documaison.data.exceptions.InvalidParameterException;
+import hu.documaison.data.exceptions.SettingsAccessException;
 import hu.documaison.gui.commentstags.TagPanel;
 import hu.documaison.gui.document.DocumentLister;
+import hu.documaison.indexing.AutomaticIndexing;
+import hu.documaison.indexing.ConcreteIndexerInterceptor;
+import hu.documaison.indexing.IndexerCollection;
+import hu.documaison.indexing.IndexerFactory;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -27,6 +37,7 @@ public class DocuMaisonWindow {
 	private MenuItem allDocs;
 	private MenuItem search;
 	private MenuItem manageDocTypes;
+	private IndexerCollection collection;
 
 	/**
 	 * @param args
@@ -84,6 +95,27 @@ public class DocuMaisonWindow {
 
 		createMenus(shell);
 
+		//Indexing
+		try {
+			collection = IndexerFactory.getAllIndexers(Application.getBll());
+			collection.getDispatcher().register(new ConcreteIndexerInterceptor());
+			AutomaticIndexing.setIndexers(collection);
+			AutomaticIndexing.initialize();
+			new Thread(new Runnable() {
+				
+				@Override
+				public void run() {
+					collection.refreshAll();
+				}
+			}).start();
+		} catch (InvalidFolderException e1) {
+			NotificationWindow.showError("Indexing error", "Faild to create indexer for one of the directories (+ "+e1+")");
+		} catch (SettingsAccessException e1) {
+			NotificationWindow.showError("Error", "Can't acces the settings file.");
+		} catch (InvalidParameterException e1) {
+			NotificationWindow.showError("Error", "Invalid parameter exception: " + e1.getMessage());
+		}
+		
 		shell.open();
 
 		// Create and check the event loop
@@ -185,6 +217,21 @@ public class DocuMaisonWindow {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
 				ViewManager.getDefault().showView("doctypeeditor");
+			}
+		});
+		
+		refreshMenu.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				if (collection != null) {
+					new Thread(new Runnable() {
+						
+						@Override
+						public void run() {
+							collection.refreshAll();
+						}
+					}).start();
+				}
 			}
 		});
 

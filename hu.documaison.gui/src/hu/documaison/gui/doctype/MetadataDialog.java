@@ -5,7 +5,7 @@ import hu.documaison.data.entities.DefaultMetadata;
 import hu.documaison.data.entities.DocumentType;
 import hu.documaison.data.entities.MetadataType;
 import hu.documaison.data.exceptions.UnableToCreateException;
-import hu.documaison.gui.NotifactionWindow;
+import hu.documaison.gui.NotificationWindow;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -164,7 +164,7 @@ public class MetadataDialog {
 			}
 			return dateField;
 		} else {
-			NotifactionWindow.showError("Internal error",
+			NotificationWindow.showError("Internal error",
 					"Unknown metadata type, can't create field for " + type
 							+ ".");
 			Text textField = new Text(parent, SWT.BORDER);
@@ -197,7 +197,7 @@ public class MetadataDialog {
 						metadata = Application.getBll().createDefaultMetadata(
 								parentType);
 					} catch (UnableToCreateException e1) {
-						NotifactionWindow
+						NotificationWindow
 								.showError("Database error",
 										"Unable to create metadata entry, the changes are not saved!");
 						return;
@@ -226,7 +226,7 @@ public class MetadataDialog {
 							}
 						}
 					} catch (Exception ex) {
-						NotifactionWindow.showError("Conversion error",
+						NotificationWindow.showError("Conversion error",
 								"Failed to convert data");
 					}
 				} else if (c instanceof DateTime) {
@@ -235,7 +235,7 @@ public class MetadataDialog {
 					cal.set(dt.getYear(), dt.getMonth(), dt.getDay());
 					metadata.setValue(cal.getTime());
 				} else {
-					NotifactionWindow.showError("Conversion error",
+					NotificationWindow.showError("Conversion error",
 							"Can't handle the selected metadata type");
 				}
 				Application.getBll().updateDefaultMetadata(metadata);

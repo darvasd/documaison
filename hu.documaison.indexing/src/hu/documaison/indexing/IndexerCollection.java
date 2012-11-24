@@ -23,4 +23,16 @@ public class IndexerCollection {
 			indexer.refresh();
 		}
 	}
+	
+	public void removeIndexer(String path, String computerId) {
+		IndexerInterface toRemove = null;
+		for (IndexerInterface i : indexers) {
+			if (i.getComputerId().equals(computerId) && i.getIndexingPath().equals(path)) {
+				toRemove = i;
+				break;
+			}
+		}
+		indexers.remove(toRemove);
+		
+	}
 }

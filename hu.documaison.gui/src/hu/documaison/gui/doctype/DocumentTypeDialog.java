@@ -4,7 +4,7 @@ import hu.documaison.Application;
 import hu.documaison.data.entities.DocumentType;
 import hu.documaison.data.exceptions.UnableToCreateException;
 import hu.documaison.gui.ImageHelper;
-import hu.documaison.gui.NotifactionWindow;
+import hu.documaison.gui.NotificationWindow;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
@@ -98,7 +98,7 @@ public class DocumentTypeDialog {
 			try {
 				storeNewThumbnail("images/unknown.png");
 			} catch (IOException e) {
-				NotifactionWindow.showError("Error",
+				NotificationWindow.showError("Error",
 						"Can't load default thumbnail");
 			}
 		}
@@ -147,7 +147,7 @@ public class DocumentTypeDialog {
 						Application.getBll().updateDocumentType(dt);
 						dialog.dispose();
 					} catch (UnableToCreateException e1) {
-						NotifactionWindow.showError(
+						NotificationWindow.showError(
 								"Database error",
 								"Unable to create new document type. ("
 										+ e1.getMessage() + ")");
@@ -170,7 +170,7 @@ public class DocumentTypeDialog {
 					try {
 						storeNewThumbnail(path);
 					} catch (IOException e1) {
-						NotifactionWindow.showError("I/O error",
+						NotificationWindow.showError("I/O error",
 								e1.getMessage());
 					}
 				}

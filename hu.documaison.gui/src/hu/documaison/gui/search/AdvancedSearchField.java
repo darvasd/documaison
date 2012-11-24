@@ -5,7 +5,7 @@ import hu.documaison.data.entities.AbstractMetadata;
 import hu.documaison.data.entities.MetadataType;
 import hu.documaison.data.helper.MetadataNameTypePair;
 import hu.documaison.data.search.Operator;
-import hu.documaison.gui.NotifactionWindow;
+import hu.documaison.gui.NotificationWindow;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -177,7 +177,7 @@ public class AdvancedSearchField extends Composite {
 					| SWT.MEDIUM);
 			return dateField;
 		} else {
-			NotifactionWindow.showError("Internal error",
+			NotificationWindow.showError("Internal error",
 					"Unknown metadata type, can't create search field");
 			Text textField = new Text(this, SWT.BORDER);
 			return textField;

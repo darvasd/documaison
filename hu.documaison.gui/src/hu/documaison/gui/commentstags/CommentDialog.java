@@ -5,7 +5,7 @@ import hu.documaison.data.entities.Comment;
 import hu.documaison.data.entities.Document;
 import hu.documaison.data.exceptions.UnableToCreateException;
 import hu.documaison.data.exceptions.UnknownDocumentException;
-import hu.documaison.gui.NotifactionWindow;
+import hu.documaison.gui.NotificationWindow;
 
 import java.text.DateFormat;
 import java.util.Date;
@@ -108,7 +108,7 @@ public class CommentDialog {
 			com.setMessage(comment);
 			Application.getBll().updateComment(com);
 		} catch (UnableToCreateException e) {
-			NotifactionWindow.showError(
+			NotificationWindow.showError(
 					"Database error",
 					"Failed to store the comment in the database ("
 							+ e.getMessage() + ")");

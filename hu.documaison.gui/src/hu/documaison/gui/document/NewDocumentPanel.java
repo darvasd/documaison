@@ -6,7 +6,7 @@ import hu.documaison.data.entities.DocumentType;
 import hu.documaison.data.exceptions.UnableToCreateException;
 import hu.documaison.data.exceptions.UnknownDocumentTypeException;
 import hu.documaison.gui.InnerPanel;
-import hu.documaison.gui.NotifactionWindow;
+import hu.documaison.gui.NotificationWindow;
 import hu.documaison.gui.ViewManager;
 
 import java.io.File;
@@ -152,11 +152,11 @@ public class NewDocumentPanel extends InnerPanel {
 					Application.getBll().updateDocument(doc);
 					panel.setDocument(doc);
 				} catch (UnknownDocumentTypeException e1) {
-					NotifactionWindow.showError("Unknown type",
+					NotificationWindow.showError("Unknown type",
 							"Failed to load the definition of the selected type. ("
 									+ e1.getMessage() + ")");
 				} catch (UnableToCreateException e1) {
-					NotifactionWindow.showError(
+					NotificationWindow.showError(
 							"Database error",
 							"Unable to create new document. ("
 									+ e1.getMessage() + ")");

@@ -4,7 +4,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.MessageBox;
 
-public class NotifactionWindow {
+public class NotificationWindow {
 
 	public static void showError(String title, String errorMessage) {
 		MessageBox dialog = new MessageBox(Display.getDefault()

@@ -29,7 +29,6 @@ public class DocumentObserver {
 	public static void notify(int id, IDocumentChangeListener caller) {
 		ArrayList<IDocumentChangeListener> list = observers.get(id);
 		if (list != null) {
-			System.out.println("Notify " + list.size());
 			for (IDocumentChangeListener l : list) {
 				if (l != caller) {
 					l.documentChanged();

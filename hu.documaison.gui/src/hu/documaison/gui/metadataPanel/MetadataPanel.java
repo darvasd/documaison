@@ -5,7 +5,7 @@ import hu.documaison.data.entities.Document;
 import hu.documaison.data.entities.Metadata;
 import hu.documaison.data.exceptions.UnknownDocumentException;
 import hu.documaison.data.helper.DataHelper;
-import hu.documaison.gui.NotifactionWindow;
+import hu.documaison.gui.NotificationWindow;
 import hu.documaison.gui.document.DocumentObserver;
 import hu.documaison.gui.document.IDocumentChangeListener;
 
@@ -61,7 +61,7 @@ public class MetadataPanel extends Composite implements IDocumentChangeListener 
 				try {
 					doc = Application.getBll().getDocument(doc.getId());
 				} catch (UnknownDocumentException e1) {
-					NotifactionWindow.showError("Database error",
+					NotificationWindow.showError("Database error",
 							"Failed to update document from database.");
 				}
 				if (metadata != null) {
@@ -187,7 +187,7 @@ public class MetadataPanel extends Composite implements IDocumentChangeListener 
 		try {
 			doc = Application.getBll().getDocument(doc.getId());
 		} catch (UnknownDocumentException e) {
-			NotifactionWindow.showError("DB error",
+			NotificationWindow.showError("DB error",
 					"Failed to update the document from db.");
 		}
 		String loc = doc.getLocation();

@@ -8,7 +8,7 @@ import hu.documaison.data.exceptions.UnknownDocumentException;
 import hu.documaison.data.helper.DataHelper;
 import hu.documaison.data.helper.FileHelper;
 import hu.documaison.gui.ImageHelper;
-import hu.documaison.gui.NotifactionWindow;
+import hu.documaison.gui.NotificationWindow;
 import hu.documaison.gui.metadataPanel.MetadataEditors;
 
 import java.io.BufferedInputStream;
@@ -134,7 +134,7 @@ public class DocumentItem extends Composite implements IDocumentChangeListener,
 		try {
 			doc = Application.getBll().getDocument(document.getId());
 		} catch (UnknownDocumentException e) {
-			NotifactionWindow.showError("DB error",
+			NotificationWindow.showError("DB error",
 					"Can't update document data");
 		}
 
@@ -160,7 +160,15 @@ public class DocumentItem extends Composite implements IDocumentChangeListener,
 			title = doc.getMetadata("Title");
 		}
 		if (title == null || title.getValue() == null) {
-			titleLabel.setText("Untitled document");
+			if (doc.getLocation() != null) {
+				if (DataHelper.isURL(doc.getLocation())) {
+					titleLabel.setText(doc.getLocation());
+				} else {
+					titleLabel.setText(FileHelper.fileName(doc.getLocation()));
+				}
+			} else {
+				titleLabel.setText("Untitled document");
+			}
 		} else {
 			titleLabel.setText(title.getValue());
 		}
@@ -190,7 +198,7 @@ public class DocumentItem extends Composite implements IDocumentChangeListener,
 				if (getDoc().getLocation() != null) {
 					Program.launch(getDoc().getLocation());
 				} else {
-					NotifactionWindow.showError("Database error",
+					NotificationWindow.showError("Database error",
 							"The location is a null value in the database.");
 				}
 			}
@@ -332,7 +340,7 @@ public class DocumentItem extends Composite implements IDocumentChangeListener,
 								path + File.separator + fileName);
 						Program.launch(path);
 					} catch (Exception e1) {
-						NotifactionWindow.showError("Copy error",
+						NotificationWindow.showError("Copy error",
 								"Failed to export the selected document. ("
 										+ e1.getMessage() + ")");
 					}
@@ -352,7 +360,7 @@ public class DocumentItem extends Composite implements IDocumentChangeListener,
 						Application.getBll().moveDocument(doc,
 								path + File.separator + fileName);
 					} catch (Exception e1) {
-						NotifactionWindow.showError("Copy error",
+						NotificationWindow.showError("Copy error",
 								"Failed to export the selected document. ("
 										+ e1.getMessage() + ")");
 					}
@@ -372,11 +380,11 @@ public class DocumentItem extends Composite implements IDocumentChangeListener,
 						Application.getBll().deleteAndRemoveDocument(doc);
 					}
 				} catch (UnknownDocumentException e1) {
-					NotifactionWindow.showError("Error",
+					NotificationWindow.showError("Error",
 							"Can't locate the document. (" + e1.getMessage()
 									+ ")");
 				} catch (InvalidParameterException e1) {
-					NotifactionWindow.showError("Error",
+					NotificationWindow.showError("Error",
 							"Can't delete the document. (" + e1.getMessage()
 									+ ")");
 				}
@@ -397,7 +405,7 @@ public class DocumentItem extends Composite implements IDocumentChangeListener,
 				|| DataHelper.isURL(doc.getLocation()) == false) {
 			File f = new File(doc.getLocation());
 			if (f.exists() == false) {
-				NotifactionWindow
+				NotificationWindow
 						.showError("Error", "The file does not exist.");
 			} else {
 				Program.launch(f.getParent());
