@@ -65,7 +65,7 @@ public class AddTagDialog {
 		existingRadio.setLayoutData(data);
 		existingRadio.setSelection(true);
 		data = new FormData();
-		data.top = new FormAttachment(existingRadio, 5);
+		data.top = new FormAttachment(existingRadio, 15);
 		data.left = new FormAttachment(0, 10);
 		newRadio.setLayoutData(data);
 		newRadio.setSelection(false);
@@ -108,7 +108,7 @@ public class AddTagDialog {
 		}
 		data = new FormData();
 		data.top = new FormAttachment(newRadio, 0, SWT.CENTER);
-		data.left = new FormAttachment(newTagName);
+		data.left = new FormAttachment(newTagName, 5);
 		colorCombo.setLayoutData(data);
 		colorCombo.select(0);
 
