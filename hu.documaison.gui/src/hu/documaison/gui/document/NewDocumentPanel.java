@@ -35,6 +35,7 @@ public class NewDocumentPanel extends InnerPanel {
 	private Text locText;
 	private HashMap<String, Integer> typeIdMap;
 	private Button browseButton;
+	private Button cancelBtn;
 
 	public NewDocumentPanel(Composite parent, int style) {
 		super(parent, style, "Add new document");
@@ -107,9 +108,16 @@ public class NewDocumentPanel extends InnerPanel {
 		nextBtn.setEnabled(false);
 		data = new FormData();
 		data.top = new FormAttachment(typeCombo, 30);
-		data.left = new FormAttachment(0, 100);
+		data.left = new FormAttachment(0, 150);
 		data.right = new FormAttachment(100, -100);
 		nextBtn.setLayoutData(data);
+		
+		cancelBtn = new Button(this, SWT.PUSH);
+		cancelBtn.setText("Cancel");
+		data = new FormData();
+		data.top = new FormAttachment(typeCombo, 30);
+		data.right = new FormAttachment(nextBtn, -10);
+		cancelBtn.setLayoutData(data);
 
 		addEventListeners();
 
@@ -174,6 +182,14 @@ public class NewDocumentPanel extends InnerPanel {
 				if (path != null) {
 					locText.setText(path);
 				}
+			}
+		});
+		
+		cancelBtn.addListener(SWT.Selection, new Listener() {
+			
+			@Override
+			public void handleEvent(Event arg0) {
+				ViewManager.getDefault().showView("documents");
 			}
 		});
 	}

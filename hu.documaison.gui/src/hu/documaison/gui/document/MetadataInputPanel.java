@@ -1,5 +1,6 @@
 package hu.documaison.gui.document;
 
+import hu.documaison.Application;
 import hu.documaison.data.entities.Document;
 import hu.documaison.gui.InnerPanel;
 import hu.documaison.gui.ViewManager;
@@ -14,6 +15,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
+
 
 public class MetadataInputPanel extends InnerPanel {
 
@@ -43,6 +45,13 @@ public class MetadataInputPanel extends InnerPanel {
 		data.bottom = new FormAttachment(100, -10);
 		data.right = new FormAttachment(100, -10);
 		saveBtn.setLayoutData(data);
+		
+		Button cancelBtn = new Button(this, SWT.PUSH);
+		cancelBtn.setText("Cancel");
+		data = new FormData();
+		data.bottom = new FormAttachment(100, -10);
+		data.right = new FormAttachment(saveBtn, -10);
+		cancelBtn.setLayoutData(data);
 
 		editors = new MetadataEditors(this, SWT.NONE, null);
 		data = new FormData();
@@ -56,6 +65,15 @@ public class MetadataInputPanel extends InnerPanel {
 			@Override
 			public void handleEvent(Event e) {
 				DocumentObserver.notifyLister();
+				ViewManager.getDefault().showView("documents");
+			}
+		});
+		
+		cancelBtn.addListener(SWT.Selection, new Listener() {
+			
+			@Override
+			public void handleEvent(Event arg0) {
+				Application.getBll().removeDocument(documentToEdit.getId());
 				ViewManager.getDefault().showView("documents");
 			}
 		});

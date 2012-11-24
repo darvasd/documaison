@@ -374,7 +374,7 @@ public class DocumentItem extends Composite implements IDocumentChangeListener,
 			public void widgetSelected(SelectionEvent e) {
 				try {
 					if (doc.getLocation() == null
-							|| doc.getLocation().isEmpty()) {
+							|| doc.getLocation().isEmpty() || DataHelper.isURL(doc.getLocation())) {
 						Application.getBll().removeDocument(doc.getId());
 					} else {
 						Application.getBll().deleteAndRemoveDocument(doc);
