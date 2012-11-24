@@ -117,6 +117,8 @@ public class DocumentTypeDialog {
 		saveBtn.setLayoutData(gridData);
 
 		addEventHandlers();
+		
+		validateInputs();
 
 		dialog.pack();
 		dialog.open();
@@ -141,11 +143,6 @@ public class DocumentTypeDialog {
 				} else {
 					try {
 						dt = Application.getBll().createDocumentType();
-						dt.setDefaultExt(extText.getText());
-						dt.setTypeName(nameText.getText());
-						dt.setDefaultThumbnailBytes(thumbBytes);
-						Application.getBll().updateDocumentType(dt);
-						dialog.dispose();
 					} catch (UnableToCreateException e1) {
 						NotificationWindow.showError(
 								"Database error",
@@ -154,6 +151,11 @@ public class DocumentTypeDialog {
 					}
 					previousType = dt;
 				}
+				dt.setDefaultExt(extText.getText());
+				dt.setTypeName(nameText.getText());
+				dt.setDefaultThumbnailBytes(thumbBytes);
+				Application.getBll().updateDocumentType(dt);
+				dialog.dispose();
 			}
 		});
 
