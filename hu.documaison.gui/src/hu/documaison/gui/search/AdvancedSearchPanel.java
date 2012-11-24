@@ -26,6 +26,7 @@ public class AdvancedSearchPanel extends InnerPanel {
 	private Label operator1;
 	private Combo operatorCombo;
 	private Button searchButton;
+	private Button cancelButton;
 
 	public AdvancedSearchPanel(Composite parent, int style) {
 		super(parent, style, "Advanced search");
@@ -71,6 +72,14 @@ public class AdvancedSearchPanel extends InnerPanel {
 		data.bottom = new FormAttachment(100, -30);
 		data.right = new FormAttachment(100, -50);
 		searchButton.setLayoutData(data);
+		
+		cancelButton = new Button(this, SWT.PUSH);
+		cancelButton.setText("Cancel");
+		data = new FormData();
+		data.bottom = new FormAttachment(100, -30);
+		data.right = new FormAttachment(searchButton, -10);
+		cancelButton.setLayoutData(data);
+
 		addEventListeners();
 	}
 
@@ -133,6 +142,16 @@ public class AdvancedSearchPanel extends InnerPanel {
 				DocumentLister lister = (DocumentLister) ViewManager
 						.getDefault().getView("documents");
 				lister.advancedSearch(expr);
+				ViewManager.getDefault().showView(lister);
+			}
+		});
+		
+		cancelButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				DocumentLister lister = (DocumentLister) ViewManager
+						.getDefault().getView("documents");
+				lister.showAll();
 				ViewManager.getDefault().showView(lister);
 			}
 		});

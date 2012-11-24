@@ -5,7 +5,6 @@ import hu.documaison.data.entities.Document;
 import hu.documaison.gui.InnerPanel;
 import hu.documaison.gui.ViewManager;
 import hu.documaison.gui.metadataPanel.MetadataEditors;
-import hu.documaison.gui.metadataPanel.MetadataPanel;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FormAttachment;

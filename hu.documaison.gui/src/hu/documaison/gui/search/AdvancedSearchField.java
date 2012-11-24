@@ -274,9 +274,9 @@ public class AdvancedSearchField extends Composite {
 			String operatorString = choices
 					.getItem(choices.getSelectionIndex());
 			if (operatorString.equalsIgnoreCase("starts with:")) {
-				return "%" + inputText.getText();
-			} else if (operatorString.equalsIgnoreCase("ends with:")) {
 				return inputText.getText() + "%";
+			} else if (operatorString.equalsIgnoreCase("ends with:")) {
+				return "%" + inputText.getText();
 			} else {
 				return inputText.getText();
 			}
