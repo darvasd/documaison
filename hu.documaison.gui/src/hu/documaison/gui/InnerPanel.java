@@ -48,8 +48,9 @@ public abstract class InnerPanel extends Composite {
 	private void createBreadcrumb() {
 		breadcrumb = new Breadcrumb(this, SWT.BORDER_SOLID);
 		home = new BreadcrumbItem(breadcrumb, SWT.PUSH);
-		home.setText("  Documents  ");
+		home.setText("  DocuMaison  ");
 		item = new BreadcrumbItem(breadcrumb, SWT.PUSH);
+		
 		item.setText("  " + title + "  ");
 		FormData data = new FormData();
 		data.left = new FormAttachment(0, 0);
