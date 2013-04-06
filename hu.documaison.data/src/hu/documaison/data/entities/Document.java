@@ -5,13 +5,16 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+
 import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
-import com.j256.ormlite.table.DatabaseTable;
 
-@DatabaseTable(tableName = "Documents")
+
+@Entity(name = "Documents")
 public class Document extends DatabaseObject {
 	public static final String TAGS = "tags";
 	public static final String METADATA = "metadata";
@@ -19,44 +22,44 @@ public class Document extends DatabaseObject {
 	public static final String LOCATION = "location";
 	protected static final String CREATOR_COMPUTERID = "creator_computerid";
 
-	@DatabaseField(columnName = LOCATION)
+	//@DatabaseField(columnName = LOCATION)
+	@Column(name = LOCATION)
 	private String location;
 
-	@DatabaseField(columnName = CREATOR_COMPUTERID)
+	//@DatabaseField(columnName = CREATOR_COMPUTERID)
+	@Column(name = CREATOR_COMPUTERID)
 	private String creatorComputerId;
 
 	@DatabaseField(foreign = true, foreignAutoRefresh = true)
+	//@ManyToOne
 	private DocumentType type;
 
-	@DatabaseField
+	//@DatabaseField
+	@Column
 	private Date dateAdded;
 
-	// @DatabaseField(dataType = DataType.SERIALIZABLE)
 	@DatabaseField(dataType = DataType.BYTE_ARRAY)
+	//@Column
 	private byte[] thumbnailBytes;
 
 	@ForeignCollectionField(eager = true, columnName = TAGS)
+	//@OneToMany(fetch = FetchType.EAGER, mappedBy = DocumentTagConnection.DOCUMENTID)
+	//@JoinColumn(name = TAGS)
 	private ForeignCollection<DocumentTagConnection> tags;
 
 	@ForeignCollectionField(eager = true, columnName = METADATA)
+	//@OneToMany(fetch = FetchType.EAGER, mappedBy = Metadata.PARENT)
+	//@JoinColumn(name = METADATA)
 	private ForeignCollection<Metadata> metadataCollection;
 
 	@ForeignCollectionField(eager = true, columnName = COMMENTS)
+	//@OneToMany(fetch = FetchType.EAGER, mappedBy = Comment.PARENT)
+	//@JoinColumn(name = COMMENTS)
 	private ForeignCollection<Comment> commentCollection;
 
 	public Document() {
 		// ORMLite needs a no-arg constructor
 	}
-
-	// public Document(DocumentType type, Dao<Document, Integer> dao)
-	// throws SQLException {
-	// this.type = type;
-	// dao.getEmptyForeignCollection(TAGS);
-	// dao.getEmptyForeignCollection(METADATA);
-	// dao.getEmptyForeignCollection(COMMENTS);
-	//
-	// // TODO copy default metadata
-	// }
 
 	/**
 	 * @return the location

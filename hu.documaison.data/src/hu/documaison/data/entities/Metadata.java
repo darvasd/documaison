@@ -1,13 +1,17 @@
 package hu.documaison.data.entities;
 
 
-import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.table.DatabaseTable;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
-@DatabaseTable(tableName = "Metadata")
+@Entity(name = "Metadata")
 public class Metadata extends AbstractMetadata {
-	@DatabaseField(canBeNull = true, foreign = true, columnName = PARENT)
+	//@DatabaseField(canBeNull = true, foreign = true, columnName = PARENT)
+	@ManyToOne
+	@JoinColumn(name = PARENT, nullable = true)
 	protected Document parent;
+	
 	public Metadata() {
 		// ORMLite needs a no-arg constructor
 	}

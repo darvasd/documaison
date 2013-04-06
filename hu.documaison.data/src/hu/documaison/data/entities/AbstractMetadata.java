@@ -4,6 +4,10 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import javax.persistence.Column;
+
+import org.apache.log4j.Logger;
+
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 
@@ -13,14 +17,19 @@ public abstract class AbstractMetadata extends DatabaseObject {
 	public static final String NAME = "name";
 	public static final String PARENT = "parent";
 	public static final String VALUE = "value";
+	
+	private static final Logger logger = Logger.getLogger("DocuMaison.DAL");
 
 	@DatabaseField(dataType = DataType.ENUM_INTEGER)
+	// @Column
 	protected MetadataType metadataType = MetadataType.Text;
 
-	@DatabaseField(canBeNull = true, columnName = NAME)
+	// @DatabaseField(canBeNull = true, columnName = NAME)
+	@Column(name = NAME, nullable = true)
 	protected String name; // TODO must not be null
 
-	@DatabaseField(canBeNull = true, columnName = VALUE)
+	// @DatabaseField(canBeNull = true, columnName = VALUE)
+	@Column(name = VALUE, nullable = true)
 	protected String value = null;
 
 	public AbstractMetadata() {
@@ -32,12 +41,16 @@ public abstract class AbstractMetadata extends DatabaseObject {
 			try {
 				return DATEFORMAT.parse(this.getValueInternal());
 			} catch (ParseException e) {
-				System.err.println("Unable to convert data: "
+				logger.error("Unable to convert data: "
+						+ this.getValueInternal());
+			} catch (NullPointerException e) {
+				logger.error("Unable to convert data: "
 						+ this.getValueInternal());
 			}
+
 		} else {
-			System.err.println("Unable to convert data.");
-			// TODO: rendes hibakezelés
+			logger.error("Unable to convert data (as date): "
+					+ this.getValueInternal());
 		}
 		return null;
 	}
@@ -47,11 +60,12 @@ public abstract class AbstractMetadata extends DatabaseObject {
 			try {
 				return Integer.parseInt(this.getValueInternal());
 			} catch (NumberFormatException e) {
-				System.err.println("Unable to convert data: "
+				logger.error("Unable to convert data: "
 						+ this.getValueInternal());
 			}
 		} else {
-			System.err.println("Unable to convert data.");
+			logger.error("Unable to convert data (as integer): "
+					+ this.getValueInternal());
 			// TODO: rendes hibakezelés
 		}
 		return -1;
@@ -80,10 +94,10 @@ public abstract class AbstractMetadata extends DatabaseObject {
 	}
 
 	private static boolean isInteger(String str) {
-		if (str == null){
+		if (str == null) {
 			return false;
 		}
-		
+
 		try {
 			Integer.parseInt(str);
 			return true;
@@ -93,10 +107,10 @@ public abstract class AbstractMetadata extends DatabaseObject {
 	}
 
 	private static boolean isDate(String str) {
-		if (str == null){
+		if (str == null) {
 			return false;
 		}
-		
+
 		try {
 			DATEFORMAT.parse(str);
 			return true;
@@ -147,8 +161,7 @@ public abstract class AbstractMetadata extends DatabaseObject {
 		if (this.getMetadataType() == MetadataType.Date) {
 			setValueInternal(DATEFORMAT.format(date));
 		} else {
-			System.err.println("Unable to convert data.");
-			// TODO: rendes hibakezelés
+			logger.error("Unable to convert data @ setValue(Date).");
 		}
 	}
 
@@ -156,7 +169,7 @@ public abstract class AbstractMetadata extends DatabaseObject {
 		if (this.getMetadataType() == MetadataType.Integer) {
 			setValueInternal(Integer.toString(x));
 		} else {
-			System.err.println("Unable to convert data.");
+			logger.error("Unable to convert data @ setValue(int).");
 			// TODO: rendes hibakezelés
 		}
 	}
@@ -166,15 +179,15 @@ public abstract class AbstractMetadata extends DatabaseObject {
 	 *            the value to set
 	 */
 	public void setValue(String value) {
-		if (this.getMetadataType() == MetadataType.Text) {
-			setValueInternal(value);
-		} else {
-			System.err.println("Unable to convert data.");
-			// TODO: rendes hibakezelés
-		}
+		setValueInternal(value);
+//		if (this.getMetadataType() == MetadataType.Text) {
+//			setValueInternal(value);
+//		} else {
+//			logger.error("Unable to convert data @ setValue(String), because field type = " + this.getMetadataType().toString());
+//		}
 	}
 
-	protected void setValueInternal(String value) {
+	protected void setValueInternal(String value) {		
 		this.value = value;
 	}
 }

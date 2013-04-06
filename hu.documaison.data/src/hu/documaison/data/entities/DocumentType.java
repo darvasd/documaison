@@ -1,30 +1,42 @@
 package hu.documaison.data.entities;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
-import com.j256.ormlite.table.DatabaseTable;
 
-@DatabaseTable(tableName = "DocumentTypes")
+@Entity(name = "DocumentTypes")
 public class DocumentType extends DatabaseObject {
 	public static final String METADATA = "metadata";
 	public static final String DEFAULTEXTS = "defaultExt";
 
-	@DatabaseField
+	// @DatabaseField
+	@Column
 	private String typeName;
 
-	@DatabaseField(columnName = DEFAULTEXTS)
+	// @DatabaseField(columnName = DEFAULTEXTS)
+	@Column(name = DEFAULTEXTS)
 	private String defaultExt;
 
 	@DatabaseField(dataType = DataType.BYTE_ARRAY)
+	// @Column
 	private byte[] defaultThumbnailBytes;
 
 	@ForeignCollectionField(eager = true, foreignFieldName = DefaultMetadata.PARENT, columnName = METADATA)
+	// @OneToMany(fetch = FetchType.EAGER, mappedBy = DefaultMetadata.PARENT)
+	// @JoinColumn(name = METADATA)
 	private ForeignCollection<DefaultMetadata> defaultMetadataCollection;
 
 	public DocumentType() {

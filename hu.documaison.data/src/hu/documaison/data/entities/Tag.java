@@ -1,25 +1,37 @@
 package hu.documaison.data.entities;
 
-import com.j256.ormlite.dao.ForeignCollection;
-import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.field.ForeignCollectionField;
-import com.j256.ormlite.table.DatabaseTable;
+import java.util.Collection;
 
-@DatabaseTable(tableName = "Tags")
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+
+import com.j256.ormlite.dao.ForeignCollection;
+import com.j256.ormlite.field.ForeignCollectionField;
+
+
+@Entity(name = "Tags")
 public class Tag extends DatabaseObject {
 	public static final String NAME = "name";
 	public static final String DOCUMENTS = "documents";
 
-	@DatabaseField(columnName = NAME)
+	//@DatabaseField(columnName = NAME)
+	@Column(name = NAME)
 	private String name;
 
-	@DatabaseField
+	//@DatabaseField
+	@Column
 	private String colorName;
 
-	@DatabaseField
+	//@DatabaseField
+	@Column
 	private boolean hidden;
 	
 	@ForeignCollectionField(eager = false, columnName = DOCUMENTS)
+	//@OneToMany(fetch = FetchType.EAGER)
+	//@JoinColumn(name = DOCUMENTS)
 	private ForeignCollection<DocumentTagConnection> dtcs;
 
 	public Tag() {

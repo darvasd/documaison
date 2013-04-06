@@ -1,17 +1,23 @@
 package hu.documaison.data.entities;
 
-import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.table.DatabaseTable;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
-@DatabaseTable
+
+@Entity
 public class DocumentTagConnection extends DatabaseObject {
 	public static final String DOCUMENTID = "document";
 	public static final String TAGID = "tag";
 	
-	@DatabaseField(canBeNull = false, foreign = true, columnName = DOCUMENTID)
+	//@DatabaseField(canBeNull = false, foreign = true, columnName = DOCUMENTID)
+	@ManyToOne
+	@JoinColumn(nullable = false, name = DOCUMENTID)
 	private Document document;
 	
-	@DatabaseField(canBeNull = false, foreign = true, columnName = TAGID)
+	//@DatabaseField(canBeNull = false, foreign = true, columnName = TAGID)
+	@ManyToOne
+	@JoinColumn(nullable = false, name = TAGID)
 	private Tag tag;
 
 	public DocumentTagConnection()

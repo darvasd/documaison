@@ -4,6 +4,10 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/hu.documaison.dal"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/hu.documaison.data"/>
-	<classpathentry kind="lib" path="/hu.documaison.dal/ormlite-core-4.42.jar" sourcepath="C:/Users/Dani/.m2/repository/com/j256/ormlite/ormlite-core/4.42/ormlite-core-4.42-sources.jar"/>
+	<classpathentry kind="lib" path="/hu.documaison.dal/lib/ormlite-core-4.45.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/hu.documaison.dal/lib/ormlite-core-4.45-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

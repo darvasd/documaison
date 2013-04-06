@@ -1,11 +1,14 @@
 package hu.documaison.data.entities;
 
-import com.j256.ormlite.field.DatabaseField;
+import javax.persistence.Column;
+import javax.persistence.Id;
 
 public abstract class DatabaseObject {
 	public static final String ID = "id";
 	
-	@DatabaseField(generatedId = true, allowGeneratedIdInsert = true, columnName=ID)
+	//@DatabaseField(generatedId = true, allowGeneratedIdInsert = true, columnName=ID)
+	@Id
+	@Column(name = ID)
 	private int id;
 
 	/**

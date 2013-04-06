@@ -2,21 +2,27 @@ package hu.documaison.data.entities;
 
 import java.util.Date;
 
-import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.table.DatabaseTable;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
-@DatabaseTable(tableName="Comments")
+
+@Entity(name="Comments")
 public class Comment extends DatabaseObject {
 	public static final String PARENT = "parent";
 	
-	
-	@DatabaseField
+	//@DatabaseField
+	@Column
 	private String message;
 	
-	@DatabaseField
+	//@DatabaseField
+	@Column
 	private Date createdDate;
 	
-	@DatabaseField(canBeNull = true, foreign = true, columnName = PARENT)
+	//@DatabaseField(canBeNull = true, foreign = true, columnName = PARENT)
+	@ManyToOne
+	@JoinColumn(name = PARENT, nullable = true)
 	protected Document parent;
 	
 	public Document getParent() {
