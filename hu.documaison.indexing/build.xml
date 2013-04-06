@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- WARNING: Eclipse auto-generated file.
+              Any modifications will be overwritten.
+              To include a user specific buildfile here, simply create one in the same
+              directory with the processing instruction <?eclipse.ant.import?>
+              as the first entry and export the buildfile again. -->
+<project basedir="." default="build" name="hu.documaison.indexing">
+    <property environment="env"/>
+    <property name="hu.documaison.dal.location" value="../hu.documaison.dal"/>
+    <property name="hu.documaison.gui.location" value="../hu.documaison.gui"/>
+    <property name="hu.documaison.data.location" value="../hu.documaison.data"/>
+    <property name="hu.documaison.settings.location" value="../hu.documaison.settings"/>
+    <property name="hu.documaison.bll.location" value="../hu.documaison.bll"/>
+    <property name="debuglevel" value="source,lines,vars"/>
+    <property name="target" value="1.6"/>
+    <property name="source" value="1.6"/>
+    <path id="hu.documaison.data.classpath">
+        <pathelement location="${hu.documaison.data.location}/bin"/>
+        <pathelement location="${hu.documaison.dal.location}/ormlite-core-4.42.jar"/>
+    </path>
+    <path id="hu.documaison.settings.classpath">
+        <pathelement location="${hu.documaison.settings.location}/bin"/>
+        <pathelement location="${hu.documaison.settings.location}/jaxb-api.jar"/>
+        <pathelement location="${hu.documaison.settings.location}/jaxb-impl.jar"/>
+    </path>
+    <path id="hu.documaison.dal.classpath">
+        <pathelement location="${hu.documaison.dal.location}/bin"/>
+        <pathelement location="${hu.documaison.dal.location}/ormlite-core-4.42.jar"/>
+        <pathelement location="${hu.documaison.dal.location}/ormlite-jdbc-4.42.jar"/>
+        <pathelement location="${hu.documaison.dal.location}/sqlite-jdbc-3.7.2.jar"/>
+        <pathelement location="${hu.documaison.dal.location}/lib/log4j-1.2.17.jar"/>
+        <path refid="hu.documaison.data.classpath"/>
+        <path refid="hu.documaison.settings.classpath"/>
+    </path>
+    <path id="hu.documaison.bll.classpath">
+        <pathelement location="${hu.documaison.bll.location}/bin"/>
+        <path refid="hu.documaison.dal.classpath"/>
+        <path refid="hu.documaison.data.classpath"/>
+        <pathelement location="${hu.documaison.dal.location}/ormlite-core-4.42.jar"/>
+    </path>
+    <path id="hu.documaison.indexing.classpath">
+        <pathelement location="bin"/>
+        <path refid="hu.documaison.bll.classpath"/>
+        <path refid="hu.documaison.data.classpath"/>
+        <path refid="hu.documaison.settings.classpath"/>
+    </path>
+    <target name="init">
+        <mkdir dir="bin"/>
+        <copy includeemptydirs="false" todir="bin">
+            <fileset dir="src">
+                <exclude name="**/*.ucls"/>
+                <exclude name="**/*.java"/>
+            </fileset>
+        </copy>
+    </target>
+    <target name="clean">
+        <delete dir="bin"/>
+    </target>
+    <target depends="clean" name="cleanall">
+        <ant antfile="build.xml" dir="${hu.documaison.data.location}" inheritAll="false" target="clean"/>
+        <ant antfile="build.xml" dir="${hu.documaison.settings.location}" inheritAll="false" target="clean"/>
+        <ant antfile="build.xml" dir="${hu.documaison.dal.location}" inheritAll="false" target="clean"/>
+        <ant antfile="build.xml" dir="${hu.documaison.bll.location}" inheritAll="false" target="clean"/>
+    </target>
+    <target depends="build-subprojects,build-project" name="build"/>
+    <target name="build-subprojects">
+        <ant antfile="build.xml" dir="${hu.documaison.data.location}" inheritAll="false" target="build-project"/>
+        <ant antfile="build.xml" dir="${hu.documaison.settings.location}" inheritAll="false" target="build-project"/>
+        <ant antfile="build.xml" dir="${hu.documaison.dal.location}" inheritAll="false" target="build-project"/>
+        <ant antfile="build.xml" dir="${hu.documaison.bll.location}" inheritAll="false" target="build-project"/>
+    </target>
+    <target depends="init" name="build-project">
+        <echo message="${ant.project.name}: ${ant.file}"/>
+        <javac debug="true" debuglevel="${debuglevel}" destdir="bin" includeantruntime="false" source="${source}" target="${target}">
+            <src path="src"/>
+            <classpath refid="hu.documaison.indexing.classpath"/>
+        </javac>
+    </target>
+    <target description="Build all projects which reference this project. Useful to propagate changes." name="build-refprojects">
+        <ant antfile="build.xml" dir="${hu.documaison.gui.location}" inheritAll="false" target="clean"/>
+        <ant antfile="build.xml" dir="${hu.documaison.gui.location}" inheritAll="false" target="build"/>
+    </target>
+    <target name="IndexingTest">
+        <java classname="IndexingTest" failonerror="true" fork="yes">
+            <classpath refid="hu.documaison.indexing.classpath"/>
+        </java>
+    </target>
+</project>
