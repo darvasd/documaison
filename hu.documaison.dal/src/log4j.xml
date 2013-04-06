@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+
+<appender name="APPR" class="org.apache.log4j.ConsoleAppender"> 
+    <layout class="org.apache.log4j.PatternLayout">
+    	<param name="ConversionPattern" value="LOG4J [%d{HH:mm:ss.SS}] %C{1} - %p : %m%n"/> 
+    </layout>  
+</appender>
+
+<appender name="FILEAPPR" class="org.apache.log4j.FileAppender"> 
+    <param name="File" value="Documaison.DAL.log"/>
+    
+    <layout class="org.apache.log4j.PatternLayout">
+    	<param name="ConversionPattern" value="LOG4J [%d{HH:mm:ss.SS}] %C{1},%M(%F:%L) - %p : %m%n"/> 
+    </layout>  
+</appender>
+
+
+
+<logger name="DocuMaison">
+	<level value="info"/>
+	<appender-ref ref="APPR"/>
+</logger>
+<logger name="DocuMaison.DAL">
+	<level value="error"/>
+	<appender-ref ref="FILEAPPR"/>
+</logger>
+</log4j:configuration>

@@ -1,6 +1,9 @@
 package hu.documaison.dal.interfaces;
 
 import hu.documaison.dal.database.DatabaseUtils;
+import org.apache.log4j.Logger;
+import org.apache.log4j.Priority;
+
 import hu.documaison.data.entities.*;
 import hu.documaison.data.exceptions.InvalidParameterException;
 import hu.documaison.data.exceptions.UnableToCreateException;
@@ -29,7 +32,8 @@ import com.j256.ormlite.stmt.Where;
 import com.j256.ormlite.support.ConnectionSource;
 
 class DalImplementation implements DalInterface {
-
+	private static final Logger logger = Logger.getLogger("DocuMaison.DAL");
+	
 	private <T extends DatabaseObject> T genericCreate(Class<T> c, String info) {
 		T instance;
 		try {
@@ -133,6 +137,8 @@ class DalImplementation implements DalInterface {
 
 	@Override
 	public Comment createComment() throws UnableToCreateException {
+		logger.info("createComment called.");
+		
 		// create a connection source to our database
 		ConnectionSource connectionSource = null;
 
@@ -168,6 +174,8 @@ class DalImplementation implements DalInterface {
 	@Override
 	public DefaultMetadata createDefaultMetadata()
 			throws UnableToCreateException {
+		logger.info("createDefaultMetadata called.");
+		
 		// create a connection source to our database
 		ConnectionSource connectionSource = null;
 
@@ -203,6 +211,8 @@ class DalImplementation implements DalInterface {
 	@Override
 	public Document createDocument(int typeId)
 			throws UnknownDocumentTypeException, UnableToCreateException {
+		logger.info("createDocument called.");
+		
 		// create a connection source to our database
 		ConnectionSource connectionSource = null;
 
@@ -261,6 +271,8 @@ class DalImplementation implements DalInterface {
 
 	@Override
 	public DocumentType createDocumentType() throws UnableToCreateException {
+		logger.info("createDocumentType called.");
+		
 		// create a connection source to our database
 		ConnectionSource connectionSource = null;
 
@@ -295,6 +307,8 @@ class DalImplementation implements DalInterface {
 
 	@Override
 	public Metadata createMetadata() throws UnableToCreateException {
+		logger.info("createMetadata called.");
+		
 		// create a connection source to our database
 		ConnectionSource connectionSource = null;
 
@@ -334,6 +348,8 @@ class DalImplementation implements DalInterface {
 
 	@Override
 	public Document getDocument(int id) throws UnknownDocumentException {
+		logger.info("getDocument(int) called.");
+		
 		// create a connection source to our database
 		ConnectionSource connectionSource = null;
 
@@ -369,38 +385,10 @@ class DalImplementation implements DalInterface {
 		return null;
 	}
 
-	// @Override
-	// public void addTag(Tag tag) {
-	// // create a connection source to our database
-	// ConnectionSource connectionSource = null;
-	//
-	// try {
-	// // create connection
-	// connectionSource = DatabaseUtils.getConnectionSource();
-	//
-	// // instantiate the dao
-	// Dao<Tag, Integer> dao = DaoManager.createDao(connectionSource,
-	// Tag.class);
-	//
-	// // add
-	// dao.create(tag);
-	//
-	// } catch (SQLException e) {
-	// HandleSQLException(e, "addTag");
-	// } finally {
-	// // close connection
-	// if (connectionSource != null) {
-	// try {
-	// connectionSource.close();
-	// } catch (SQLException e) {
-	// HandleSQLException(e, "addTag");
-	// }
-	// }
-	// }
-	// }
-
 	@Override
 	public Collection<Document> getDocuments() {
+		logger.info("getDocuments called.");
+		
 		// create a connection source to our database
 		ConnectionSource connectionSource = null;
 
@@ -435,6 +423,8 @@ class DalImplementation implements DalInterface {
 
 	@Override
 	public Collection<Document> getDocumentsByTags(List<Tag> tags) {
+		logger.info("getDocumentsByTags called.");
+		
 		if (tags == null) {
 			return new ArrayList<Document>();
 		}
@@ -452,6 +442,8 @@ class DalImplementation implements DalInterface {
 	}
 
 	private Collection<Document> getDocumentsByTagId(int tagId) {
+		logger.info("getDocumentsByTagId called.");
+		
 		// create a connection source to our database
 		ConnectionSource connectionSource = null;
 
@@ -495,6 +487,8 @@ class DalImplementation implements DalInterface {
 	}
 
 	private Collection<Document> getDocumentsByTagIds(List<Integer> tagIds) {
+		logger.info("getDocumentsByTagIds called.");
+		
 		// create a connection source to our database
 		ConnectionSource connectionSource = null;
 
@@ -541,6 +535,8 @@ class DalImplementation implements DalInterface {
 	@Override
 	public DocumentType getDocumentType(int id)
 			throws UnknownDocumentTypeException {
+		logger.info("getDocumentType called.");
+		
 		// create a connection source to our database
 		ConnectionSource connectionSource = null;
 
@@ -578,6 +574,8 @@ class DalImplementation implements DalInterface {
 
 	@Override
 	public Collection<DocumentType> getDocumentTypes() {
+		logger.info("getDocumentTypes called.");
+		
 		// create a connection source to our database
 		ConnectionSource connectionSource = null;
 
@@ -612,6 +610,8 @@ class DalImplementation implements DalInterface {
 
 	@Override
 	public Tag getTag(int id) throws UnknownTagException {
+		logger.info("getTag called.");
+		
 		// create a connection source to our database
 		ConnectionSource connectionSource = null;
 
@@ -647,38 +647,10 @@ class DalImplementation implements DalInterface {
 		return null;
 	}
 
-	// @Override
-	// public void addDocumentType(DocumentType documentType) {
-	// // create a connection source to our database
-	// ConnectionSource connectionSource = null;
-	//
-	// try {
-	// // create connection
-	// connectionSource = DatabaseUtils.getConnectionSource();
-	//
-	// // instantiate the dao
-	// Dao<DocumentType, Integer> dao = DaoManager.createDao(
-	// connectionSource, DocumentType.class);
-	//
-	// // add
-	// dao.create(documentType);
-	//
-	// } catch (SQLException e) {
-	// HandleSQLException(e, "addDocumentType");
-	// } finally {
-	// // close connection
-	// if (connectionSource != null) {
-	// try {
-	// connectionSource.close();
-	// } catch (SQLException e) {
-	// HandleSQLException(e, "addDocumentType");
-	// }
-	// }
-	// }
-	// }
-
 	@Override
 	public Tag getTag(String name) throws UnknownTagException {
+		logger.info("getTag called.");
+		
 		// create a connection source to our database
 		ConnectionSource connectionSource = null;
 
@@ -717,6 +689,8 @@ class DalImplementation implements DalInterface {
 
 	@Override
 	public Collection<Tag> getTags() {
+		logger.info("getTags called.");
+		
 		// create a connection source to our database
 		ConnectionSource connectionSource = null;
 
@@ -750,22 +724,30 @@ class DalImplementation implements DalInterface {
 	}
 
 	private void HandleSQLException(SQLException e, String method) {
+		logger.error("SQL exception at " + method, e);
+		
 		System.err.println("Exception @ " + method);
 		e.printStackTrace();
 	}
 
 	@Override
 	public void removeComment(int id) {
+		logger.info("removeComment called.");
+		
 		genericDelete(id, Comment.class, "removeComment");
 	}
 
 	@Override
 	public void removeDefaultMetadata(int id) {
+		logger.info("removeDefaultMetadata called.");
+		
 		genericDelete(id, DefaultMetadata.class, "removeDefaultMetadata");
 	}
 
 	@Override
 	public void removeDocument(int id) {
+		logger.info("removeDocument called.");
+		
 		// create a connection source to our database
 		ConnectionSource connectionSource = null;
 
@@ -796,6 +778,8 @@ class DalImplementation implements DalInterface {
 
 	@Override
 	public void removeDocumentType(int id) {
+		logger.info("removeDocumentType called.");
+		
 		// create a connection source to our database
 		ConnectionSource connectionSource = null;
 
@@ -826,11 +810,15 @@ class DalImplementation implements DalInterface {
 
 	@Override
 	public void removeMetadata(int id) {
+		logger.info("removeMetadata called.");
+		
 		genericDelete(id, Metadata.class, "removeMetadata");
 	}
 
 	@Override
 	public void removeTag(int id) {
+		logger.info("removeTag called.");
+		
 		// create a connection source to our database
 		ConnectionSource connectionSource = null;
 
@@ -861,16 +849,22 @@ class DalImplementation implements DalInterface {
 
 	@Override
 	public void updateComment(Comment comment) {
+		logger.info("updateComment called.");		
+		
 		genericUpdate(comment, Comment.class, "updateComment");
 	}
 
 	@Override
 	public void updateDefaultMetadata(DefaultMetadata metadata) {
+		logger.info("updateDefaultMetadata called.");		
+		
 		genericUpdate(metadata, DefaultMetadata.class, "updateDefaultMetadata");
 	}
 
 	@Override
 	public void updateDocument(Document document) {
+		logger.info("updateDocument called.");		
+		
 		// create a connection source to our database
 		ConnectionSource connectionSource = null;
 
@@ -901,6 +895,8 @@ class DalImplementation implements DalInterface {
 
 	@Override
 	public void updateDocumentType(DocumentType documentType) {
+		logger.info("updateDocumentType called.");		
+		
 		// create a connection source to our database
 		ConnectionSource connectionSource = null;
 
@@ -931,12 +927,16 @@ class DalImplementation implements DalInterface {
 
 	@Override
 	public void updateMetadata(Metadata metadata) {
+		logger.info("updateMetadata called.");		
+		
 		genericUpdate(metadata, Metadata.class, "updateMetadata");
 
 	}
 
 	@Override
 	public void updateTag(Tag tag) {
+		logger.info("updateTag called.");		
+		
 		// create a connection source to our database
 		ConnectionSource connectionSource = null;
 
@@ -967,6 +967,8 @@ class DalImplementation implements DalInterface {
 
 	@Override
 	public Collection<Document> searchDocuments(SearchExpression sexpr) {
+		logger.info("searchDocuments called.");		
+		
 		// create a connection source to our database
 		ConnectionSource connectionSource = null;
 
@@ -1069,6 +1071,8 @@ class DalImplementation implements DalInterface {
 	@Override
 	public void addTagToDocument(Tag tag, Document document)
 			throws InvalidParameterException {
+		logger.info("addTagToDocument called.");		
+		
 		// parameter check
 		if (tag == null || !DataHelper.isValidId(tag.getId())) {
 			throw new InvalidParameterException("tag");
@@ -1090,6 +1094,8 @@ class DalImplementation implements DalInterface {
 	@Override
 	public void removeTagFromDocument(Tag tag, Document document)
 			throws InvalidParameterException {
+		logger.info("removeTagFromDocument called.");
+		
 		// parameter check
 		if (tag == null || !DataHelper.isValidId(tag.getId())) {
 			throw new InvalidParameterException("tag");
@@ -1138,6 +1144,8 @@ class DalImplementation implements DalInterface {
 	@Override
 	public Collection<DocumentFilePointer> getDocumentPointers(
 			String locationFilter) {
+		logger.info("getDocumentPointers called.");
+		
 		// create a connection source to our database
 		ConnectionSource connectionSource = null;
 
@@ -1184,6 +1192,8 @@ class DalImplementation implements DalInterface {
 
 	@Override
 	public DocumentType getDocumentTypeForExtension(String extension) {
+		logger.info("getDocumentTypeForExtension called.");
+		
 		// create a connection source to our database
 		ConnectionSource connectionSource = null;
 
@@ -1227,6 +1237,8 @@ class DalImplementation implements DalInterface {
 
 	@Override
 	public Collection<Document> searchDocumentsFreeText(String textFragment) {
+		logger.info("searchDocumentsFreeText called.");
+		
 		if (textFragment == null) {
 			return new ArrayList<Document>();
 		}
@@ -1279,6 +1291,8 @@ class DalImplementation implements DalInterface {
 	}
 
 	private Collection<Metadata> getAllMetadata() {
+		logger.info("getAllMetadata called.");
+		
 		// create a connection source to our database
 		ConnectionSource connectionSource = null;
 
@@ -1313,6 +1327,8 @@ class DalImplementation implements DalInterface {
 
 	@Override
 	public Collection<MetadataNameTypePair> getAllMetadataKeys() {
+		logger.info("getAllMetadataKeys called.");
+		
 		// not so smart and fast solution, but OrmLite has some limitations
 		HashSet<MetadataNameTypePair> set = new HashSet<MetadataNameTypePair>();
 
