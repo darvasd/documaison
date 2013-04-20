@@ -99,6 +99,10 @@ public class DocumentType extends DatabaseObject {
 	public Collection<DefaultMetadata> getDefaultMetadataCollection() {
 		return defaultMetadataCollection;
 	}
+	
+	public void setDefaultMetadataCollection(ForeignCollection<DefaultMetadata> collection) {
+		defaultMetadataCollection = collection;
+	}
 
 	/**
 	 * @param metadata

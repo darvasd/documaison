@@ -25,6 +25,7 @@ public class DefaultMetadata extends AbstractMetadata {
 		Metadata ret = new Metadata();
 		ret.name = this.name;
 		ret.value = this.value;
+		ret.metadataType = this.metadataType;
 		return ret;
 	}
 
@@ -32,43 +33,43 @@ public class DefaultMetadata extends AbstractMetadata {
 		this.parent = parent;
 	}
 
-	public MetadataType getMetadataType() {
-		return metadataType;
-	}
+//	public MetadataType getMetadataType() {
+//		return metadataType;
+//	}
 
 	/**
 	 * @return the name
 	 */
-	public String getName() {
-		return name;
-	}
+//	public String getName() {
+//		return name;
+//	}
 
-	/**
-	 * @return the value
-	 */
-	public String getValue() {
-		return value;
-	}
+//	/**
+//	 * @return the value
+//	 */
+//	public String getValue() {
+//		return value;
+//	}
 
-	public void setMetadataType(MetadataType metadataType) {
-		this.metadataType = metadataType;
-	}
+//	public void setMetadataType(MetadataType metadataType) {
+//		this.metadataType = metadataType;
+//	}
 
 	/**
 	 * @param name
 	 *            the name to set
 	 */
-	public void setName(String name) {
-		this.name = name;
-	}
+//	public void setName(String name) {
+//		this.name = name;
+//	}
 
-	@Override
-	protected void setValueInternal(String value) {
-		this.value = value;
-	}
+//	@Override
+//	protected void setValueInternal(String value) {
+//		this.value = value;
+//	}
 
-	@Override
-	protected String getValueInternal() {
-		return this.value;
-	}
+//	@Override
+//	protected String getValueInternal() {
+//		return this.value;
+//	}
 }

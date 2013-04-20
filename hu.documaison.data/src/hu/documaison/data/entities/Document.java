@@ -149,6 +149,10 @@ public class Document extends DatabaseObject {
 	public Collection<Metadata> getMetadataCollection() {
 		return metadataCollection;
 	}
+	
+	public void setMetadataCollection(ForeignCollection<Metadata> collection) {
+		this.metadataCollection = collection;
+	}
 
 	public Metadata getMetadata(String metadataName) {
 		if (this.metadataCollection == null) {
@@ -184,6 +188,10 @@ public class Document extends DatabaseObject {
 	 */
 	public Collection<Comment> getCommentCollection() {
 		return commentCollection;
+	}
+	
+	public void setCommentCollection(ForeignCollection<Comment> collection) {
+		this.commentCollection = collection;
 	}
 
 	/**
