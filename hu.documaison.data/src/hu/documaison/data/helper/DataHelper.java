@@ -46,4 +46,18 @@ public class DataHelper {
 		}
 		return ret.concat("}");
 	}
+
+	public static boolean isDOI(String string) {
+		if (string != null && string.startsWith("doi:")) {
+			return true;
+		}
+		return false;
+	}
+
+	public static String doiToUrl(String text) {
+		if (isDOI(text)) {
+			return text.replaceAll("doi:", "http://dx.doi.org/");
+		} else
+			return "";
+	}
 }

@@ -13,6 +13,7 @@ public class SettingsData {
 	private boolean indexingEnabled;
 	private boolean evernoteIndexingEnabled;
 	private String computerId;
+	private String crossRefKey;
 	
 	public String getDatabaseFileLocation() {
 		return databaseFileLocation;
@@ -57,6 +58,15 @@ public class SettingsData {
 	@XmlElement
 	public void setComputerId(String computerId) {
 		this.computerId = computerId;
+	}
+	
+	public String getCrossRefKey() {
+		return crossRefKey;
+	}
+	
+	@XmlElement
+	public void setCrossRefKey(String crossRefKey) {
+		this.crossRefKey = crossRefKey;
 	}
 
 	@Override

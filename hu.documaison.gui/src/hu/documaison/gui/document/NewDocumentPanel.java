@@ -1,8 +1,10 @@
 package hu.documaison.gui.document;
 
 import hu.documaison.Application;
+import hu.documaison.bll.ws.doidata.DoiQuery;
 import hu.documaison.data.entities.Document;
 import hu.documaison.data.entities.DocumentType;
+import hu.documaison.data.entities.Metadata;
 import hu.documaison.data.exceptions.UnableToCreateException;
 import hu.documaison.data.exceptions.UnknownDocumentTypeException;
 import hu.documaison.data.helper.DataHelper;
@@ -12,6 +14,7 @@ import hu.documaison.gui.ViewManager;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.List;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Font;
@@ -46,7 +49,7 @@ public class NewDocumentPanel extends InnerPanel {
 	protected void createComposite() {
 
 		Label locLabel = new Label(this, SWT.None);
-		locLabel.setText("Document location (file or URL):");
+		locLabel.setText("Document location (file or URL or DOI):");
 		FormData data = new FormData();
 		data.top = new FormAttachment(titleLabel, 25);
 		data.left = new FormAttachment(0, 20);
@@ -69,7 +72,7 @@ public class NewDocumentPanel extends InnerPanel {
 
 		Label hintLabel = new Label(this, SWT.WRAP);
 		hintLabel
-				.setText("The document location shall be an absolute path in case of a local files or an URL, started with \"http://\" in case of remote documents.");
+				.setText("The document location shall be an absolute path in case of a local files or an URL, started with \"http://\" in case of remote documents, started with \"doi:\" for DOI query.");
 		// hintLabel.setBackground(new Color(getDisplay(), 255, 255, 204));
 		FontData[] fD = hintLabel.getFont().getFontData();
 		fD[0].setHeight(10);
@@ -112,7 +115,7 @@ public class NewDocumentPanel extends InnerPanel {
 		data.left = new FormAttachment(0, 150);
 		data.right = new FormAttachment(100, -100);
 		nextBtn.setLayoutData(data);
-		
+
 		cancelBtn = new Button(this, SWT.PUSH);
 		cancelBtn.setText("Cancel");
 		data = new FormData();
@@ -121,7 +124,6 @@ public class NewDocumentPanel extends InnerPanel {
 		cancelBtn.setLayoutData(data);
 
 		addEventListeners();
-		
 
 	}
 
@@ -156,6 +158,27 @@ public class NewDocumentPanel extends InnerPanel {
 							typeIdMap.get(typeCombo.getItem(typeCombo
 									.getSelectionIndex())));
 					doc.setLocation(locText.getText());
+
+					// DOI
+					if (DataHelper.isDOI(locText.getText())) {
+						doc.setLocation(DataHelper.doiToUrl(locText.getText()));
+						
+						try {
+							List<Metadata> mdList = DoiQuery.query(doc, locText.getText());
+							if (mdList == null){
+								throw new IllegalArgumentException("mdList null");
+							}
+							for (Metadata md : mdList){
+								doc.addMetadata(md);
+							}
+						} catch (Exception ex) {
+							NotificationWindow.showError("DOI query error",
+									"Failed to load the data from the DOI database. ("
+											+ ex.getMessage() + ")");
+							return;
+						}
+					}
+					
 					MetadataInputPanel panel = (MetadataInputPanel) (ViewManager
 							.getDefault().showView("metaedit",
 							NewDocumentPanel.this));
@@ -186,9 +209,9 @@ public class NewDocumentPanel extends InnerPanel {
 				}
 			}
 		});
-		
+
 		cancelBtn.addListener(SWT.Selection, new Listener() {
-			
+
 			@Override
 			public void handleEvent(Event arg0) {
 				ViewManager.getDefault().showView("documents");
@@ -218,7 +241,8 @@ public class NewDocumentPanel extends InnerPanel {
 		nextBtn.setEnabled(false);
 		if (locText.getText().isEmpty() == false) {
 			File f = new File(locText.getText());
-			if (f.exists() || DataHelper.isURL(locText.getText())) {
+			if (f.exists() || DataHelper.isURL(locText.getText())
+					|| DataHelper.isDOI(locText.getText())) {
 				if (typeCombo.getSelectionIndex() != -1) {
 					nextBtn.setEnabled(true);
 				}

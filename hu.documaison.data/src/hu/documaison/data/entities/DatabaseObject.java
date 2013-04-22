@@ -1,6 +1,7 @@
 package hu.documaison.data.entities;
 
 import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 public abstract class DatabaseObject {
@@ -8,6 +9,7 @@ public abstract class DatabaseObject {
 	
 	//@DatabaseField(generatedId = true, allowGeneratedIdInsert = true, columnName=ID)
 	@Id
+	@GeneratedValue
 	@Column(name = ID)
 	private int id;
 

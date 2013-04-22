@@ -20,6 +20,20 @@ public class Metadata extends AbstractMetadata {
 		setMetadataType(type);
 		setParent(parent);
 	}
+	
+	public Metadata(Document parent, String name, String value) {
+		setMetadataType(MetadataType.Text);
+		setParent(parent);
+		setName(name);
+		setValue(value);
+	}
+	
+	public Metadata(Document parent, String name, int value) {
+		setMetadataType(MetadataType.Text);
+		setParent(parent);
+		setName(name);
+		setValue(value);
+	}
 
 	public void setParent(Document parent) {
 		this.parent = parent;

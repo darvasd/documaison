@@ -9,5 +9,7 @@
 			<attribute name="javadoc_location" value="jar:platform:/resource/hu.documaison.dal/lib/ormlite-core-4.45-javadoc.jar!/"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry combineaccessrules="false" kind="src" path="/hu.documaison.settings"/>
+	<classpathentry kind="lib" path="/hu.documaison.dal/lib/log4j-1.2.17.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
