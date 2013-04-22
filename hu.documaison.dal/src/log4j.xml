@@ -17,7 +17,10 @@
 </appender>
 
 
-
+<logger name="com.j256.ormlite">
+	<level value="error"/>
+	<appender-ref ref="APPR"/>
+</logger>
 <logger name="DocuMaison">
 	<level value="info"/>
 	<appender-ref ref="APPR"/>

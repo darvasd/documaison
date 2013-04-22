@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- WARNING: Eclipse auto-generated file.
+              Any modifications will be overwritten.
+              To include a user specific buildfile here, simply create one in the same
+              directory with the processing instruction <?eclipse.ant.import?>
+              as the first entry and export the buildfile again. -->
+<project basedir="." default="build" name="hu.documaison.test">
+    <property environment="env"/>
+    <property name="hu.documaison.dal.location" value="../hu.documaison.dal"/>
+    <property name="ECLIPSE_HOME" value="D:/Programok/EclipseJuno"/>
+    <property name="junit.output.dir" value="junit"/>
+    <property name="hu.documaison.data.location" value="../hu.documaison.data"/>
+    <property name="hu.documaison.settings.location" value="../hu.documaison.settings"/>
+    <property name="debuglevel" value="source,lines,vars"/>
+    <property name="target" value="1.6"/>
+    <property name="source" value="1.6"/>
+    <path id="hu.documaison.data.classpath">
+        <pathelement location="${hu.documaison.data.location}/bin"/>
+        <pathelement location="${hu.documaison.dal.location}/lib/geronimo-jpa_2.0_spec-1.1.jar"/>
+        <pathelement location="${hu.documaison.dal.location}/lib/ormlite-core-4.45.jar"/>
+        <pathelement location="${hu.documaison.dal.location}/lib/log4j-1.2.17.jar"/>
+    </path>
+    <path id="hu.documaison.settings.classpath">
+        <pathelement location="${hu.documaison.settings.location}/bin"/>
+        <pathelement location="${hu.documaison.settings.location}/jaxb-api.jar"/>
+        <pathelement location="${hu.documaison.settings.location}/jaxb-impl.jar"/>
+    </path>
+    <path id="hu.documaison.dal.classpath">
+        <pathelement location="${hu.documaison.dal.location}/bin"/>
+        <pathelement location="${hu.documaison.dal.location}/sqlite-jdbc-3.7.2.jar"/>
+        <pathelement location="${hu.documaison.dal.location}/lib/log4j-1.2.17.jar"/>
+        <pathelement location="${hu.documaison.dal.location}/lib/ormlite-core-4.45.jar"/>
+        <pathelement location="${hu.documaison.dal.location}/lib/ormlite-jdbc-4.45.jar"/>
+        <path refid="hu.documaison.data.classpath"/>
+        <path refid="hu.documaison.settings.classpath"/>
+    </path>
+    <path id="JUnit 4.libraryclasspath">
+        <pathelement location="${ECLIPSE_HOME}/plugins/org.junit_4.10.0.v4_10_0_v20120426-0900/junit.jar"/>
+        <pathelement location="${ECLIPSE_HOME}/plugins/org.hamcrest.core_1.1.0.v20090501071000.jar"/>
+    </path>
+    <path id="hu.documaison.test.classpath">
+        <pathelement location="bin"/>
+        <pathelement location="lib/mockito-all-1.9.5.jar"/>
+        <path refid="hu.documaison.dal.classpath"/>
+        <path refid="hu.documaison.data.classpath"/>
+        <path refid="JUnit 4.libraryclasspath"/>
+        <pathelement location="${hu.documaison.dal.location}/lib/ormlite-core-4.45.jar"/>
+    </path>
+    <target name="init">
+        <mkdir dir="bin"/>
+        <copy includeemptydirs="false" todir="bin">
+            <fileset dir="src">
+                <exclude name="**/*.ucls"/>
+                <exclude name="**/*.java"/>
+            </fileset>
+        </copy>
+    </target>
+    <target name="clean">
+        <delete dir="bin"/>
+    </target>
+    <target depends="clean" name="cleanall">
+        <ant antfile="build.xml" dir="${hu.documaison.data.location}" inheritAll="false" target="clean"/>
+        <ant antfile="build.xml" dir="${hu.documaison.settings.location}" inheritAll="false" target="clean"/>
+        <ant antfile="build.xml" dir="${hu.documaison.dal.location}" inheritAll="false" target="clean"/>
+    </target>
+    <target depends="build-subprojects,build-project" name="build"/>
+    <target name="build-subprojects">
+        <ant antfile="build.xml" dir="${hu.documaison.data.location}" inheritAll="false" target="build-project"/>
+        <ant antfile="build.xml" dir="${hu.documaison.settings.location}" inheritAll="false" target="build-project"/>
+        <ant antfile="build.xml" dir="${hu.documaison.dal.location}" inheritAll="false" target="build-project"/>
+    </target>
+    <target depends="init" name="build-project">
+        <echo message="${ant.project.name}: ${ant.file}"/>
+        <javac debug="true" debuglevel="${debuglevel}" destdir="bin" includeantruntime="false" source="${source}" target="${target}">
+            <src path="src"/>
+            <classpath refid="hu.documaison.test.classpath"/>
+        </javac>
+    </target>
+    <target description="Build all projects which reference this project. Useful to propagate changes." name="build-refprojects"/>
+    <target name="AllDataTests">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="hu.documaison.test.data.AllDataTests" todir="${junit.output.dir}"/>
+            <classpath refid="hu.documaison.test.classpath"/>
+        </junit>
+    </target>
+    <target name="AllTests">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="hu.documaison.test.AllTests" todir="${junit.output.dir}"/>
+            <classpath refid="hu.documaison.test.classpath"/>
+        </junit>
+    </target>
+    <target name="CommentTest">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="hu.documaison.test.data.CommentTest" todir="${junit.output.dir}"/>
+            <classpath refid="hu.documaison.test.classpath"/>
+        </junit>
+    </target>
+    <target name="DataHelperTest">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="hu.documaison.test.data.helper.DataHelperTest" todir="${junit.output.dir}"/>
+            <classpath refid="hu.documaison.test.classpath"/>
+        </junit>
+    </target>
+    <target name="DefaultMetadataTest">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="hu.documaison.test.data.DefaultMetadataTest" todir="${junit.output.dir}"/>
+            <classpath refid="hu.documaison.test.classpath"/>
+        </junit>
+    </target>
+    <target name="DocumentTagConnectionTest">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="hu.documaison.test.data.DocumentTagConnectionTest" todir="${junit.output.dir}"/>
+            <classpath refid="hu.documaison.test.classpath"/>
+        </junit>
+    </target>
+    <target name="DocumentTest">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="hu.documaison.test.data.DocumentTest" todir="${junit.output.dir}"/>
+            <classpath refid="hu.documaison.test.classpath"/>
+        </junit>
+    </target>
+    <target name="DocumentTypeTest">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="hu.documaison.test.data.DocumentTypeTest" todir="${junit.output.dir}"/>
+            <classpath refid="hu.documaison.test.classpath"/>
+        </junit>
+    </target>
+    <target name="ExpressionTest">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="hu.documaison.test.data.search.ExpressionTest" todir="${junit.output.dir}"/>
+            <classpath refid="hu.documaison.test.classpath"/>
+        </junit>
+    </target>
+    <target name="ExpressionTwoOpTest">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="hu.documaison.test.data.search.ExpressionTwoOpTest" todir="${junit.output.dir}"/>
+            <classpath refid="hu.documaison.test.classpath"/>
+        </junit>
+    </target>
+    <target name="MetadataTest">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="hu.documaison.test.data.MetadataTest" todir="${junit.output.dir}"/>
+            <classpath refid="hu.documaison.test.classpath"/>
+        </junit>
+    </target>
+    <target name="ParameteredCtorTests">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="hu.documaison.test.data.ParameteredCtorTests" todir="${junit.output.dir}"/>
+            <classpath refid="hu.documaison.test.classpath"/>
+        </junit>
+    </target>
+    <target name="TagTest">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="hu.documaison.test.data.TagTest" todir="${junit.output.dir}"/>
+            <classpath refid="hu.documaison.test.classpath"/>
+        </junit>
+    </target>
+    <target name="junitreport">
+        <junitreport todir="${junit.output.dir}">
+            <fileset dir="${junit.output.dir}">
+                <include name="TEST-*.xml"/>
+            </fileset>
+            <report format="frames" todir="${junit.output.dir}"/>
+        </junitreport>
+    </target>
+</project>

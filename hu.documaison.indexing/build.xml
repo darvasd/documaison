@@ -16,7 +16,9 @@
     <property name="source" value="1.6"/>
     <path id="hu.documaison.data.classpath">
         <pathelement location="${hu.documaison.data.location}/bin"/>
-        <pathelement location="${hu.documaison.dal.location}/ormlite-core-4.42.jar"/>
+        <pathelement location="${hu.documaison.dal.location}/lib/geronimo-jpa_2.0_spec-1.1.jar"/>
+        <pathelement location="${hu.documaison.dal.location}/lib/ormlite-core-4.45.jar"/>
+        <pathelement location="${hu.documaison.dal.location}/lib/log4j-1.2.17.jar"/>
     </path>
     <path id="hu.documaison.settings.classpath">
         <pathelement location="${hu.documaison.settings.location}/bin"/>
@@ -25,10 +27,10 @@
     </path>
     <path id="hu.documaison.dal.classpath">
         <pathelement location="${hu.documaison.dal.location}/bin"/>
-        <pathelement location="${hu.documaison.dal.location}/ormlite-core-4.42.jar"/>
-        <pathelement location="${hu.documaison.dal.location}/ormlite-jdbc-4.42.jar"/>
         <pathelement location="${hu.documaison.dal.location}/sqlite-jdbc-3.7.2.jar"/>
         <pathelement location="${hu.documaison.dal.location}/lib/log4j-1.2.17.jar"/>
+        <pathelement location="${hu.documaison.dal.location}/lib/ormlite-core-4.45.jar"/>
+        <pathelement location="${hu.documaison.dal.location}/lib/ormlite-jdbc-4.45.jar"/>
         <path refid="hu.documaison.data.classpath"/>
         <path refid="hu.documaison.settings.classpath"/>
     </path>
@@ -36,7 +38,7 @@
         <pathelement location="${hu.documaison.bll.location}/bin"/>
         <path refid="hu.documaison.dal.classpath"/>
         <path refid="hu.documaison.data.classpath"/>
-        <pathelement location="${hu.documaison.dal.location}/ormlite-core-4.42.jar"/>
+        <pathelement location="${hu.documaison.dal.location}/lib/ormlite-core-4.45.jar"/>
     </path>
     <path id="hu.documaison.indexing.classpath">
         <pathelement location="bin"/>
