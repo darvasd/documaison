@@ -39,6 +39,8 @@
         <path refid="hu.documaison.dal.classpath"/>
         <path refid="hu.documaison.data.classpath"/>
         <pathelement location="${hu.documaison.dal.location}/lib/ormlite-core-4.45.jar"/>
+        <path refid="hu.documaison.settings.classpath"/>
+        <pathelement location="${hu.documaison.dal.location}/lib/log4j-1.2.17.jar"/>
     </path>
     <target name="init">
         <mkdir dir="bin"/>
@@ -75,6 +77,11 @@
         <ant antfile="build.xml" dir="${hu.documaison.gui.location}" inheritAll="false" target="build"/>
         <ant antfile="build.xml" dir="${hu.documaison.indexing.location}" inheritAll="false" target="clean"/>
         <ant antfile="build.xml" dir="${hu.documaison.indexing.location}" inheritAll="false" target="build"/>
+    </target>
+    <target name="DoiQuery">
+        <java classname="hu.documaison.bll.ws.doidata.DoiQuery" failonerror="true" fork="yes">
+            <classpath refid="hu.documaison.bll.classpath"/>
+        </java>
     </target>
     <target name="Test">
         <java classname="Test" failonerror="true" fork="yes">

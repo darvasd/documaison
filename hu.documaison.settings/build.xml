@@ -6,6 +6,7 @@
               as the first entry and export the buildfile again. -->
 <project basedir="." default="build" name="hu.documaison.settings">
     <property environment="env"/>
+    <property name="hu.documaison.bll.location" value="../hu.documaison.bll"/>
     <property name="hu.documaison.dal.location" value="../hu.documaison.dal"/>
     <property name="hu.documaison.gui.location" value="../hu.documaison.gui"/>
     <property name="hu.documaison.indexing.location" value="../hu.documaison.indexing"/>
@@ -40,6 +41,8 @@
         </javac>
     </target>
     <target description="Build all projects which reference this project. Useful to propagate changes." name="build-refprojects">
+        <ant antfile="build.xml" dir="${hu.documaison.bll.location}" inheritAll="false" target="clean"/>
+        <ant antfile="build.xml" dir="${hu.documaison.bll.location}" inheritAll="false" target="build"/>
         <ant antfile="build.xml" dir="${hu.documaison.dal.location}" inheritAll="false" target="clean"/>
         <ant antfile="build.xml" dir="${hu.documaison.dal.location}" inheritAll="false" target="build"/>
         <ant antfile="build.xml" dir="${hu.documaison.gui.location}" inheritAll="false" target="clean"/>

@@ -1,0 +1,1 @@
+"c:\Program Files\Java\jdk1.7.0\bin\xjc" -p hu.documaison.bll.ws.doidata w:\GitRepos\documaison\hu.documaison.bll\src\hu\documaison\bll\ws\doidata\crossref_query_output2.0.xsd -d w:\temp\xjc\

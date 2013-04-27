@@ -6,7 +6,6 @@
               as the first entry and export the buildfile again. -->
 <project basedir="." default="build" name="hu.documaison.gui">
     <property environment="env"/>
-    <property name="SWT_JAR" value="D:/Programok/EclipseJuno/plugins/org.eclipse.swt.win32.win32.x86_64_3.100.1.v4234e.jar"/>
     <property name="hu.documaison.dal.location" value="../hu.documaison.dal"/>
     <property name="hu.documaison.data.location" value="../hu.documaison.data"/>
     <property name="hu.documaison.settings.location" value="../hu.documaison.settings"/>
@@ -40,6 +39,8 @@
         <path refid="hu.documaison.dal.classpath"/>
         <path refid="hu.documaison.data.classpath"/>
         <pathelement location="${hu.documaison.dal.location}/lib/ormlite-core-4.45.jar"/>
+        <path refid="hu.documaison.settings.classpath"/>
+        <pathelement location="${hu.documaison.dal.location}/lib/log4j-1.2.17.jar"/>
     </path>
     <path id="hu.documaison.indexing.classpath">
         <pathelement location="${hu.documaison.indexing.location}/bin"/>
@@ -50,11 +51,11 @@
     <path id="hu.documaison.gui.classpath">
         <pathelement location="bin"/>
         <pathelement location="opal-0.9.5.jar"/>
+        <pathelement location="lib/org.eclipse.swt.win32.win32.x86_64_3.100.1.v4234e.jar"/>
         <path refid="hu.documaison.settings.classpath"/>
         <path refid="hu.documaison.bll.classpath"/>
         <path refid="hu.documaison.data.classpath"/>
         <pathelement location="org.eclipse.nebula.widgets.compositetable_1.0.0.201211141419.jar"/>
-        <pathelement location="${SWT_JAR}"/>
         <path refid="hu.documaison.indexing.classpath"/>
     </path>
     <target name="init">
@@ -92,7 +93,7 @@
         </javac>
     </target>
     <target description="Build all projects which reference this project. Useful to propagate changes." name="build-refprojects"/>
-    <target name="DocuMaisonWindow">
+    <target name="run_gui">
         <java classname="hu.documaison.gui.DocuMaisonWindow" failonerror="true" fork="yes">
             <classpath refid="hu.documaison.gui.classpath"/>
         </java>

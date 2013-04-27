@@ -3,11 +3,11 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="opal-0.9.5.jar"/>
+	<classpathentry kind="lib" path="lib/org.eclipse.swt.win32.win32.x86_64_3.100.1.v4234e.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/hu.documaison.settings"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/hu.documaison.bll"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/hu.documaison.data"/>
 	<classpathentry kind="lib" path="org.eclipse.nebula.widgets.compositetable_1.0.0.201211141419.jar"/>
-	<classpathentry kind="var" path="SWT_JAR"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/hu.documaison.indexing"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
