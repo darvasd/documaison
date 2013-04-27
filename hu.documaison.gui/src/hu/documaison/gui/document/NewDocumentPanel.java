@@ -2,6 +2,7 @@ package hu.documaison.gui.document;
 
 import hu.documaison.Application;
 import hu.documaison.bll.ws.doidata.DoiQuery;
+import hu.documaison.data.entities.AbstractMetadata;
 import hu.documaison.data.entities.Document;
 import hu.documaison.data.entities.DocumentType;
 import hu.documaison.data.entities.Metadata;
@@ -168,10 +169,13 @@ public class NewDocumentPanel extends InnerPanel {
 							if (mdList == null){
 								throw new IllegalArgumentException("mdList null");
 							}
+							
+							// add the result of the query to the document
 							for (Metadata md : mdList){
 								doc.addMetadata(md);
 							}
 						} catch (Exception ex) {
+							// on any exception
 							NotificationWindow.showError("DOI query error",
 									"Failed to load the data from the DOI database. ("
 											+ ex.getMessage() + ")");
