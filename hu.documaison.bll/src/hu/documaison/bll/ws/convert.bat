@@ -1,0 +1,1 @@
+"c:\Program Files\Java\jdk1.7.0\bin\java" -Xmx128M -Djava.endorsed.dirs="d:\Programok\EclipseJuno\apache-cxf-2.7.4\lib\endorsed" -cp "d:\Programok\EclipseJuno\apache-cxf-2.7.4\lib\cxf-manifest.jar" -Djava.util.logging.config.file="d:\Programok\EclipseJuno\apache-cxf-2.7.4\etc\logging.properties" org.apache.cxf.tools.wsdlto.WSDLToJava DOIWsProxy.wsdl -frontend jaxws21

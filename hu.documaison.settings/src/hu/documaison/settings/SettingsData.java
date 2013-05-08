@@ -14,6 +14,7 @@ public class SettingsData {
 	private boolean evernoteIndexingEnabled;
 	private String computerId;
 	private String crossRefKey;
+	private String doiWsProxyAddress;
 	
 	public String getDatabaseFileLocation() {
 		return databaseFileLocation;
@@ -75,6 +76,15 @@ public class SettingsData {
 				+ ", indexedFolders=" + indexedFolders + ", indexingEnabled="
 				+ indexingEnabled + ", evernoteIndexingEnabled="
 				+ evernoteIndexingEnabled + "]";
+	}
+
+	public String getDoiWsProxyAddress() {
+		return doiWsProxyAddress;
+	}
+	
+	@XmlElement
+	public void setDoiWsProxyAddress(String doiWsProxyAddress) {
+		this.doiWsProxyAddress = doiWsProxyAddress;
 	}
 	
 	

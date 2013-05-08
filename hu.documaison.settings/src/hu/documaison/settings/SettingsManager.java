@@ -41,6 +41,7 @@ public class SettingsManager {
 		String currentDir = new File(".").getCanonicalPath();
 		data.setDatabaseFileLocation(currentDir + System.getProperty("file.separator") + "documaison.db");
 		data.setComputerId(System.getProperty("user.name", "user") + "@" + getComputerName());
+		data.setDoiWsProxyAddress("vm.ik.bme.hu:10809");
 		storeSettings(data);
 		return data;
 		

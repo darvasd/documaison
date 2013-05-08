@@ -1,6 +1,7 @@
 package hu.documaison.gui.document;
 
 import hu.documaison.Application;
+import hu.documaison.bll.ws.DoiWsHelper;
 import hu.documaison.bll.ws.doidata.DoiQuery;
 import hu.documaison.data.entities.AbstractMetadata;
 import hu.documaison.data.entities.Document;
@@ -165,15 +166,17 @@ public class NewDocumentPanel extends InnerPanel {
 						doc.setLocation(DataHelper.doiToUrl(locText.getText()));
 						
 						try {
-							List<Metadata> mdList = DoiQuery.query(doc, locText.getText());
-							if (mdList == null){
-								throw new IllegalArgumentException("mdList null");
-							}
+							DoiWsHelper.fillDocumentMetadata(locText.getText(), doc);
 							
-							// add the result of the query to the document
-							for (Metadata md : mdList){
-								doc.addMetadata(md);
-							}
+//							List<Metadata> mdList = DoiQuery.query(doc, locText.getText());
+//							if (mdList == null){
+//								throw new IllegalArgumentException("mdList null");
+//							}
+//							
+//							// add the result of the query to the document
+//							for (Metadata md : mdList){
+//								doc.addMetadata(md);
+//							}
 						} catch (Exception ex) {
 							// on any exception
 							NotificationWindow.showError("DOI query error",
